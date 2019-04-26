@@ -1,11 +1,7 @@
 package com.bianquan.springShop.common.utils;
 
 
-
-
-
 import org.apache.http.HttpStatus;
-
 import java.util.HashMap;
 import java.util.Map;
 
