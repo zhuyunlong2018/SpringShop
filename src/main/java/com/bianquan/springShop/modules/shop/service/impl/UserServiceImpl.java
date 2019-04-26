@@ -1,5 +1,6 @@
 package com.bianquan.springShop.modules.shop.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.validator.Assert;
 import com.bianquan.springShop.modules.shop.dao.UserDao;
@@ -9,49 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.List;
-import java.util.Map;
 @Service("userService")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Override
-    public UserEntity queryObject(Long userId) {
-        return userDao.queryObject(userId);
-    }
-
-    @Override
-    public List<UserEntity> queryList(Map<String, Object> map) {
-        return userDao.queryList(map);
-    }
-
-    @Override
-    public int queryTotal(Map<String, Object> map) {
-        return userDao.queryTotal(map);
-    }
-
-    @Override
-    public void save(Long mobile, String password) {
-        UserEntity user = new UserEntity();
-        user.setUserMobile(mobile);
-        userDao.save(user);
-    }
-
-    @Override
-    public void update(UserEntity user) {
-        userDao.update(user);
-    }
-
-    @Override
-    public void delete(Long userId) {
-        userDao.delete(userId);
-    }
-
-    @Override
-    public void deleteBatch(Long[] userIds) {
-        userDao.deleteBatch(userIds);
-    }
 
     @Override
     public UserEntity queryByMobile(Long mobile) {

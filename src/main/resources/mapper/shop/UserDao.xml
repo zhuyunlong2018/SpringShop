@@ -3,26 +3,6 @@
 
 <mapper namespace="com.bianquan.springShop.modules.shop.dao.UserDao">
 
-    <insert id="save" parameterType="com.bianquan.springShop.modules.shop.entity.UserEntity" useGeneratedKeys="true" keyProperty="userId">
-        insert into tb_user
-        (
-        `user_name`,
-        `user_mobile`,
-        `user_pwd`,
-        `create_time`
-        )
-        values
-        (
-        #{userName},
-        #{userMobile},
-        #{userPwd},
-        #{createTime}
-        )
-    </insert>
-
-    <select id="queryObject" resultType="com.bianquan.springShop.modules.shop.entity.UserEntity">
-        select * from tv_user where user_id = #{value}
-    </select>
 
     <select id="queryByMobile" resultType="com.bianquan.springShop.modules.shop.entity.UserEntity">
         select * from tv_user where user_mobile = #{value}

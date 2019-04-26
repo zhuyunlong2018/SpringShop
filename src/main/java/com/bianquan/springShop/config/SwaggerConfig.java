@@ -24,8 +24,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Spring Boot中使用Swagger2构建RESTful APIs")
-                .description("myapp")
+                .title("SpringShop APIs")
+                .description("商城开发api文档")
                 .termsOfServiceUrl("http://blog.csdn.net/java_yes")
                 .version("1.0").build();
     }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 
-@ConfigurationProperties(prefix = "shop.jwt")
+@ConfigurationProperties(prefix = "bianquan.jwt")
 @Component
 public class JwtUtils {
     private Logger logger = LoggerFactory.getLogger(getClass());
