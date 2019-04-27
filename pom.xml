@@ -24,6 +24,7 @@
 		<qcloud.cos.version>4.4</qcloud.cos.version>
 		<druid.version>1.1.13</druid.version>
 		<jwt.version>0.7.0</jwt.version>
+		<swagger.version>2.7.0</swagger.version>
 	</properties>
 
 	<dependencies>
@@ -122,13 +123,13 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.6.1</version>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.6.1</version>
+			<version>${swagger.version}</version>
 		</dependency>
 		<!--swagger依赖 END-->
 

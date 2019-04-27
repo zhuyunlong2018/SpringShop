@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserDao extends BaseMapper<UserEntity> {
 
-    UserEntity queryByMobile(long mobile);
+    UserEntity queryByMobile(String mobile);
 }

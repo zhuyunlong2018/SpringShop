@@ -2,15 +2,14 @@ package com.bianquan.springShop.modules.shop.controller;
 
 import com.bianquan.springShop.common.utils.R;
 import com.bianquan.springShop.common.validator.Assert;
+import com.bianquan.springShop.common.validator.ValidatorUtils;
+import com.bianquan.springShop.modules.shop.form.LoginForm;
 import com.bianquan.springShop.modules.shop.service.UserService;
 import com.bianquan.springShop.modules.utils.JwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +30,12 @@ public class Login {
 
     @PostMapping("login")
     @ApiOperation("登录")
-    public R login(long mobile, String password) {
-        Assert.isBlank(mobile, "手机号不能为空");
-        Assert.isBlank(password, "密码不能为空");
+    public R login(@RequestBody LoginForm form) {
+
+        ValidatorUtils.validateEntity(form);
 
         //用户登录
-        long userId = userService.login(mobile, password);
+        long userId = userService.login(form);
 
         //生成token
         String token = jwtUtils.generateToken(userId);

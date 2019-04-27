@@ -5,17 +5,17 @@ server:
     uri-encoding: UTF-8
     max-threads: 1000
     min-spare-threads: 30
-  port: 8081
+  port: 8080
   connection-timeout: 5000ms
   servlet:
     context-path: /
 
 
 spring:
-  # »·¾³ dev|test|prod
+  # ç¯å¢ƒ dev|test|prod
   profiles:
     active: dev
-  # jacksonÊ±¼ä¸ñÊ½»¯
+  # jacksonæ—¶é—´æ ¼å¼åŒ–
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -25,18 +25,18 @@ spring:
       max-request-size: 100MB
       enabled: true
   redis:
-    open: false  # ÊÇ·ñ¿ªÆôredis»º´æ  true¿ªÆô   false¹Ø±Õ
+    open: false  # æ˜¯å¦å¼€å¯redisç¼“å­˜  trueå¼€å¯   falseå…³é—­
     database: 0
     host: localhost
     port: 6379
-    password:    # ÃÜÂë£¨Ä¬ÈÏÎª¿Õ£©
-    timeout: 6000ms  # Á¬½Ó³¬Ê±Ê±³¤£¨ºÁÃë£©
+    password:    # å¯†ç ï¼ˆé»˜è®¤ä¸ºç©ºï¼‰
+    timeout: 6000ms  # è¿æ¥è¶…æ—¶æ—¶é•¿ï¼ˆæ¯«ç§’ï¼‰
     jedis:
       pool:
-        max-active: 1000  # Á¬½Ó³Ø×î´óÁ¬½ÓÊı£¨Ê¹ÓÃ¸ºÖµ±íÊ¾Ã»ÓĞÏŞÖÆ£©
-        max-wait: -1ms      # Á¬½Ó³Ø×î´ó×èÈûµÈ´ıÊ±¼ä£¨Ê¹ÓÃ¸ºÖµ±íÊ¾Ã»ÓĞÏŞÖÆ£©
-        max-idle: 10      # Á¬½Ó³ØÖĞµÄ×î´ó¿ÕÏĞÁ¬½Ó
-        min-idle: 5       # Á¬½Ó³ØÖĞµÄ×îĞ¡¿ÕÏĞÁ¬½Ó
+        max-active: 1000  # è¿æ¥æ± æœ€å¤§è¿æ¥æ•°ï¼ˆä½¿ç”¨è´Ÿå€¼è¡¨ç¤ºæ²¡æœ‰é™åˆ¶ï¼‰
+        max-wait: -1ms      # è¿æ¥æ± æœ€å¤§é˜»å¡ç­‰å¾…æ—¶é—´ï¼ˆä½¿ç”¨è´Ÿå€¼è¡¨ç¤ºæ²¡æœ‰é™åˆ¶ï¼‰
+        max-idle: 10      # è¿æ¥æ± ä¸­çš„æœ€å¤§ç©ºé—²è¿æ¥
+        min-idle: 5       # è¿æ¥æ± ä¸­çš„æœ€å°ç©ºé—²è¿æ¥
   mvc:
     throw-exception-if-no-handler-found: true
 #  resources:
@@ -46,21 +46,21 @@ spring:
 #mybatis
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
-  #ÊµÌåÉ¨Ãè£¬¶à¸öpackageÓÃ¶ººÅ»òÕß·ÖºÅ·Ö¸ô
+  #å®ä½“æ‰«æï¼Œå¤šä¸ªpackageç”¨é€—å·æˆ–è€…åˆ†å·åˆ†éš”
   typeAliasesPackage: com.bianquan.SpringShop.modules.*.entity
   global-config:
-    #Êı¾İ¿âÏà¹ØÅäÖÃ
+    #æ•°æ®åº“ç›¸å…³é…ç½®
     db-config:
-      #Ö÷¼üÀàĞÍ  AUTO:"Êı¾İ¿âID×ÔÔö", INPUT:"ÓÃ»§ÊäÈëID", ID_WORKER:"È«¾ÖÎ¨Ò»ID (Êı×ÖÀàĞÍÎ¨Ò»ID)", UUID:"È«¾ÖÎ¨Ò»ID UUID";
+      #ä¸»é”®ç±»å‹  AUTO:"æ•°æ®åº“IDè‡ªå¢", INPUT:"ç”¨æˆ·è¾“å…¥ID", ID_WORKER:"å…¨å±€å”¯ä¸€ID (æ•°å­—ç±»å‹å”¯ä¸€ID)", UUID:"å…¨å±€å”¯ä¸€ID UUID";
       id-type: AUTO
-      #×Ö¶Î²ßÂÔ IGNORED:"ºöÂÔÅĞ¶Ï",NOT_NULL:"·Ç NULL ÅĞ¶Ï"),NOT_EMPTY:"·Ç¿ÕÅĞ¶Ï"
+      #å­—æ®µç­–ç•¥ IGNORED:"å¿½ç•¥åˆ¤æ–­",NOT_NULL:"é NULL åˆ¤æ–­"),NOT_EMPTY:"éç©ºåˆ¤æ–­"
       field-strategy: NOT_NULL
-      #ÍÕ·åÏÂ»®Ïß×ª»»
+      #é©¼å³°ä¸‹åˆ’çº¿è½¬æ¢
       column-underline: true
       logic-delete-value: -1
       logic-not-delete-value: 0
     banner: false
-  #Ô­ÉúÅäÖÃ
+  #åŸç”Ÿé…ç½®
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
@@ -73,10 +73,10 @@ bianquan:
     open: false
   shiro:
     redis: false
-  # APPÄ£¿é£¬ÊÇÍ¨¹ıjwtÈÏÖ¤µÄ£¬Èç¹ûÒªÊ¹ÓÃAPPÄ£¿é£¬ÔòĞèÒªĞŞ¸Ä¡¾¼ÓÃÜÃØÔ¿¡¿
+  # APPæ¨¡å—ï¼Œæ˜¯é€šè¿‡jwtè®¤è¯çš„ï¼Œå¦‚æœè¦ä½¿ç”¨APPæ¨¡å—ï¼Œåˆ™éœ€è¦ä¿®æ”¹ã€åŠ å¯†ç§˜é’¥ã€‘
   jwt:
-    # ¼ÓÃÜÃØÔ¿
-    secret: f4e2e52034348f86b67cde581c0f9eb5[www.renren.io]
-    # tokenÓĞĞ§Ê±³¤£¬7Ìì£¬µ¥Î»Ãë
+    # åŠ å¯†ç§˜é’¥
+    secret: f4e2e52034348f86b67cde581c0f9eb5fdafd
+    # tokenæœ‰æ•ˆæ—¶é•¿ï¼Œ7å¤©ï¼Œå•ä½ç§’
     expire: 604800
     header: token
