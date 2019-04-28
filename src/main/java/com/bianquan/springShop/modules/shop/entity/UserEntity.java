@@ -2,6 +2,7 @@ package com.bianquan.springShop.modules.shop.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class UserEntity implements Serializable {
     private Long userId;
 
     //用户名
+    @ApiModelProperty("用户名")
     private String userName;
 
     //用户密码
