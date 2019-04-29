@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface CategoriesDao extends BaseMapper<CategoriesEntity> {
 
-    List<CategoriesEntity> list();
+    List<CategoriesEntity> listWithChildren();
 }

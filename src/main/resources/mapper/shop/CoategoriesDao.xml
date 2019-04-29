@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bianquan.springShop.modules.shop.dao.UserDao">
+<mapper namespace="com.bianquan.springShop.modules.shop.dao.CategoriesDao">
 
-<!--    <select id="list" resultType="com.bianquan.springShop.modules.shop.entity.CategoriesEntity">-->
-<!--        select * from sp_categories-->
-<!--    </select>-->
+    <!--形成递归查询-->
+    <resultMap id="childrenMap" type="com.bianquan.springShop.modules.shop.entity.CategoriesEntity">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <collection property="children" ofType="com.bianquan.springShop.modules.shop.entity.CategoriesEntity" select="listWithChildren" column="id"/>
+    </resultMap>
+    <select id="listWithChildren" resultType="com.bianquan.springShop.modules.shop.entity.CategoriesEntity" resultMap="childrenMap">
+        select * from sp_categories
+    </select>
 
 </mapper>

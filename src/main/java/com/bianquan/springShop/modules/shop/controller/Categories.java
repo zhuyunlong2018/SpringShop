@@ -25,10 +25,15 @@ public class Categories {
     public R list() {
 
         List<CategoriesEntity> list = categoriesService.list();
-
         return R.ok().put("data", list);
     }
 
+    @GetMapping("listWithChildren")
+    @ApiOperation("按层级获取所有分类")
+    public R listWithChildren() {
 
+        List<CategoriesEntity> list = categoriesService.queryWithChildren();
+        return R.ok().put("data", list);
+    }
 
 }

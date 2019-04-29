@@ -3,6 +3,7 @@ package com.bianquan.springShop.modules.shop.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -46,10 +47,10 @@ public class UserEntity implements Serializable {
     private String userAvatar;
 
     //用户等级
-    private int userLevel;
+    private Integer userLevel;
 
     //性别
-    private int gender;
+    private Integer gender;
 
     private Date createTime;
 

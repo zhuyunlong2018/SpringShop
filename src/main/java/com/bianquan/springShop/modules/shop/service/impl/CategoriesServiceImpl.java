@@ -16,7 +16,7 @@ public class CategoriesServiceImpl extends ServiceImpl<CategoriesDao, Categories
     private CategoriesDao categoriesDao;
 
     @Override
-    public List<CategoriesEntity> queryAll() {
-        return categoriesDao.list();
+    public List<CategoriesEntity> queryWithChildren() {
+        return categoriesDao.listWithChildren();
     }
 }

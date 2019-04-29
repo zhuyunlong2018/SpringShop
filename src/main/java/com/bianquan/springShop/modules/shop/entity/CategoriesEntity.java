@@ -1,11 +1,13 @@
 package com.bianquan.springShop.modules.shop.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @TableName("sp_categories")
@@ -14,16 +16,19 @@ public class CategoriesEntity {
 
     @ApiModelProperty(value = "分类id")
     @TableId
-    private long id;
+    private Long id;
 
     //父级id
-    private long pid;
+    private Long pid;
+
+    @TableField(exist = false)//表示该属性不为数据库表字段，但又是必须使用的。
+    private List<CategoriesEntity> children;
 
     //分类标题
     private String title;
 
     //分类状态
-    private int status;
+    private Integer status;
 
     //分类描述
     private String description;
