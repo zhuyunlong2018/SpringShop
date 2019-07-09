@@ -10,7 +10,7 @@
         <collection property="children" ofType="com.bianquan.springShop.modules.shop.entity.CategoriesEntity" select="listWithChildren" column="id"/>
     </resultMap>
     <select id="listWithChildren" resultType="com.bianquan.springShop.modules.shop.entity.CategoriesEntity" resultMap="childrenMap">
-        select * from sp_categories
+        select * from sp_categories where pid = #{pid} and status = 1
     </select>
 
 </mapper>

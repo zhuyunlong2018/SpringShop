@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CategoriesService extends IService<CategoriesEntity> {
 
-    List<CategoriesEntity> queryWithChildren();
+    List<CategoriesEntity> queryWithChildren(Long pid);
 
 }
