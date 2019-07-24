@@ -1,6 +1,6 @@
 package com.bianquan.springShop.modules.shop.controller;
 
-import com.bianquan.springShop.common.utils.R;
+import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.modules.shop.annotation.Login;
 import com.bianquan.springShop.modules.shop.annotation.LoginUser;
 import com.bianquan.springShop.modules.shop.entity.UserEntity;
@@ -26,8 +26,9 @@ public class User {
     @Login
     @GetMapping("userInfo")
     @ApiOperation("获取用户信息")
-    public R userInfo(@LoginUser UserEntity user) {
-        return R.ok().put("user", user);
+    public Response userInfo(@LoginUser UserEntity user) {
+
+        return Response.ok(user);
     }
 
 

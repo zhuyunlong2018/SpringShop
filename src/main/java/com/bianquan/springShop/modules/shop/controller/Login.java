@@ -1,7 +1,6 @@
 package com.bianquan.springShop.modules.shop.controller;
 
-import com.bianquan.springShop.common.utils.R;
-import com.bianquan.springShop.common.validator.Assert;
+import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.validator.ValidatorUtils;
 import com.bianquan.springShop.modules.shop.form.LoginForm;
 import com.bianquan.springShop.modules.shop.service.UserService;
@@ -30,7 +29,7 @@ public class Login {
 
     @PostMapping("login")
     @ApiOperation("登录")
-    public R login(@RequestBody LoginForm form) {
+    public Response login(@RequestBody LoginForm form) {
 
         ValidatorUtils.validateEntity(form);
 
@@ -44,11 +43,11 @@ public class Login {
         map.put("token", token);
         map.put("expire", jwtUtils.getExpire());
 
-        return R.ok(map);
+        return Response.ok(map);
     }
 
     @GetMapping("test")
-    public R test() {
-        return R.ok("dfdf");
+    public Response test() {
+        return Response.ok("dfdf");
     }
 }

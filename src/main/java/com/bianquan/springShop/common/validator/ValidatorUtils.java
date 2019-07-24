@@ -31,7 +31,7 @@ public class ValidatorUtils {
         if (!constraintViolations.isEmpty()) {
             StringBuffer msg = new StringBuffer();
             for (ConstraintViolation<Object> constraint: constraintViolations) {
-                msg.append(constraint.getMessage()).append("<br>");
+                msg.append(constraint.getMessage());
             }
             throw new RRException(msg.toString());
         }
