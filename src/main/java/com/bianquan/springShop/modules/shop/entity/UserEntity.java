@@ -3,7 +3,6 @@ package com.bianquan.springShop.modules.shop.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,7 +31,7 @@ public class UserEntity implements Serializable {
     private String userEmail;
 
     //用户状态
-    private int userStatus;
+    private Integer userStatus;
 
     //密码md5加密盐
     private String userPwdSalt;
