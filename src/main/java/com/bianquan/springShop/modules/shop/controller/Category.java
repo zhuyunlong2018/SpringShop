@@ -36,4 +36,11 @@ public class Category {
         return Response.ok(list);
     }
 
+    @GetMapping("/fetchList")
+    @ApiOperation("获取所有列表")
+    public Response fetchList() {
+        List<CategoryEntity> list = categoryService.list();
+        return Response.ok(list);
+    }
+
 }

@@ -9,15 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
-@Service("productService")
-public class ProductServiceImpl extends ServiceImpl<ProductDao, ProductEntity> implements ProductService {
+@Service
+public class ProductServiceImpl extends ServiceImpl<ProductDao,ProductEntity> implements ProductService {
 
     @Autowired
     private ProductDao productDao;
 
     @Override
-    public List<ProductEntity> queryList() {
-        return productDao.queryList();
+    public List<ProductEntity> fetchList() {
+        return productDao.fetchList();
     }
 }

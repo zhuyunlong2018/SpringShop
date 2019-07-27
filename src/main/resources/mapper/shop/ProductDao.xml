@@ -3,7 +3,12 @@
 
 <mapper namespace="com.bianquan.springShop.modules.shop.dao.ProductDao">
 
-    <select id="queryList" resultType="com.bianquan.springShop.modules.shop.entity.ProductEntity">
+    <resultMap id="entityList" type="com.bianquan.springShop.modules.shop.entity.ProductEntity">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+    </resultMap>
+
+    <select id="fetchList" resultMap="entityList">
         select * from sp_products
     </select>
 
