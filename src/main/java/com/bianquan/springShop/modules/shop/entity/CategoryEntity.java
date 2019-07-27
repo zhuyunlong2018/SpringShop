@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @TableName("sp_categories")
-public class CategoriesEntity {
+public class CategoryEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "分类id")
@@ -22,7 +23,7 @@ public class CategoriesEntity {
     private Long pid;
 
     @TableField(exist = false)//表示该属性不为数据库表字段，但又是必须使用的。
-    private List<CategoriesEntity> children;
+    private List<CategoryEntity> children;
 
     //分类标题
     private String title;
