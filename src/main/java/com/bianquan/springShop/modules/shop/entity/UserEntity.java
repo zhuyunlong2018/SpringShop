@@ -12,7 +12,7 @@ import java.util.Date;
  * 用户表
  */
 @Data
-@TableName("tv_user")
+@TableName("sp_user")
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

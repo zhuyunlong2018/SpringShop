@@ -20,16 +20,16 @@ public class Product {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/fetchList")
-    @ApiOperation("根据类型ID获取商品列表")
-    public Response fetchList(
+    @GetMapping("/fetchPageByCategory")
+    @ApiOperation("根据类型ID获取商品列表分页")
+    public Response fetchPageByCategory(
             @RequestParam("page") Integer currentPage,
             @RequestParam("size") Integer pageSize,
-            @RequestParam("cid") Long cid
+            @RequestParam("categoryId") Long categoryId
     ) {
         Page<ProductEntity> page = new Page<>(currentPage, pageSize);
         QueryWrapper<ProductEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("cid", cid)
+        queryWrapper.eq("category_id", categoryId)
                 .eq("status", 1);
         IPage<ProductEntity> list = productService.page(page, queryWrapper);
         return Response.ok(list);

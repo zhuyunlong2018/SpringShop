@@ -20,7 +20,7 @@ public class ProductEntity implements Serializable {
 
     private String image;
 
-    private Long cid;
+    private Long categoryId;
 
     private Integer status;
 }
