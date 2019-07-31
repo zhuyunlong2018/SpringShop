@@ -35,4 +35,10 @@ public class Product {
         return Response.ok(list);
     }
 
+    @GetMapping("/fetchById")
+    @ApiOperation("根据ID获取商品详情")
+    public Response fetchById(@RequestParam("id") Long id) {
+        return Response.ok(productService.fetchById(id));
+    }
+
 }

@@ -19,4 +19,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao,ProductEntity> im
     public List<ProductEntity> fetchList() {
         return productDao.fetchList();
     }
+
+    @Override
+    public ProductEntity fetchById(Long id) {
+        return productDao.fetchById(id);
+    }
 }

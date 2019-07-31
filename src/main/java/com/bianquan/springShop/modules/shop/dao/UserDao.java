@@ -8,5 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserDao extends BaseMapper<UserEntity> {
 
+    /**
+     * 通过手机号码获取用户
+     * @param mobile
+     * @return
+     */
     UserEntity queryByMobile(String mobile);
 }

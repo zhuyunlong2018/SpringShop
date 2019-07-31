@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProductService extends IService<ProductEntity> {
 
     public List<ProductEntity> fetchList();
+
+    public ProductEntity fetchById(Long id);
 }

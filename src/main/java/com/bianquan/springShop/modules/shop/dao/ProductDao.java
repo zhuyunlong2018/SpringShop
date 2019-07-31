@@ -8,5 +8,17 @@ import java.util.List;
 
 @Mapper
 public interface ProductDao extends BaseMapper<ProductEntity> {
-    public List<ProductEntity> fetchList();
+
+    /**
+     * 获取所有列表
+     * @return
+     */
+    List<ProductEntity> fetchList();
+
+    /**
+     * 通过ID获取商品详细信息
+     * @param id
+     * @return
+     */
+    ProductEntity fetchById(Long id);
 }
