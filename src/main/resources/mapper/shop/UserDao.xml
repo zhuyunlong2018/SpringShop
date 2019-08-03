@@ -5,7 +5,7 @@
 
     <!--通过手机号检索用户-->
     <select id="queryByMobile" resultType="com.bianquan.springShop.modules.shop.entity.UserEntity">
-        select * from tv_user where user_mobile = #{value}
+        select * from sp_user where user_mobile = #{value}
     </select>
 
 </mapper>

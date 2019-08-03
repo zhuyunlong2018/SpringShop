@@ -7,6 +7,11 @@ import java.util.List;
 
 public interface CategoryService extends IService<CategoryEntity> {
 
+    /**
+     * 通过pid递归获取所有子集信息
+     * @param pid
+     * @return
+     */
     List<CategoryEntity> queryWithChildren(Long pid);
 
 }

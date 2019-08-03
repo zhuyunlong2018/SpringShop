@@ -8,5 +8,10 @@ public interface UserService extends IService<UserEntity> {
 
     UserEntity queryByMobile(String mobile);
 
+    /**
+     * 用户登录
+     * @param form
+     * @return
+     */
     long login(LoginForm form);
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bianquan.springShop.modules.shop.dao.ShoppingCartDao">
+
+    <!-- 根据商品ID获取sku列表-->
+    <select id="fetchListWithProductSku" resultMap="entityList">
+        SELECT
+            c.id, c.user_id,c.product_sku_id,c.product_sku_title, c.number, c.add_price, c.create_time, c.update_time,
+            ps.id, ps.product_id, ps.description, ps.images, ps.price, ps.stock
+        FROM sp_shopping_cart c
+        LEFT JOIN sp_products_sku ps ON  c.product_sku_id=ps.id
+        WHERE c.user_id=#{userId}
+    </select>
+    <resultMap id="entityList" type="com.bianquan.springShop.modules.shop.entity.ShoppingCartEntity">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="product_sku_id" property="productSkuId" />
+        <result column="product_sku_title" property="productSkuTitle" />
+        <result column="number" property="number" />
+        <result column="add_price" property="addPrice" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <!-- 商品sku集合-->
+        <collection property="productSkuEntity" ofType="com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity">
+            <id property="id" column="id"/>
+            <result property="productId" column="product_id"/>
+            <result property="description" column="description"/>
+            <result property="images" column="images"/>
+            <result property="price" column="price"/>
+            <result property="stock" column="stock"/>
+        </collection>
+    </resultMap>
+
+</mapper>
