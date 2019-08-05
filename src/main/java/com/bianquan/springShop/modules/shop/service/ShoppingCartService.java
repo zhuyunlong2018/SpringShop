@@ -20,4 +20,16 @@ public interface ShoppingCartService extends IService<ShoppingCartEntity> {
      * @return
      */
     ShoppingCartEntity addAndUpdate(ShoppingCartEntity shoppingCartEntity);
+
+    /**
+     * 更新购物车产品数量
+     * @param shoppingCartEntity
+     */
+    void changeNumber(ShoppingCartEntity shoppingCartEntity);
+
+    /**
+     * 删除购物车中的某个产品
+     * @param shoppingCartEntity
+     */
+    void deleteOne(ShoppingCartEntity shoppingCartEntity);
 }

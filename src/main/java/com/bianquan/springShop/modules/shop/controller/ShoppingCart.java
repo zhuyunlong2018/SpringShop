@@ -39,4 +39,28 @@ public class ShoppingCart {
         ShoppingCartEntity shoppingCart = shoppingCartService.addAndUpdate(shoppingCartEntity);
         return Response.ok(shoppingCart);
     }
+
+    @Login
+    @PutMapping("/changeNum")
+    @ApiOperation("修改购物车某个商品数量")
+    public Response changeNum(
+            @LoginUser Long userId,
+            @RequestBody ShoppingCartEntity shoppingCartEntity
+    ) {
+        shoppingCartEntity.setUserId(userId);
+        shoppingCartService.changeNumber(shoppingCartEntity);
+        return Response.ok();
+    }
+
+    @Login
+    @DeleteMapping("/delete")
+    @ApiOperation("删除购物车中狗哥商品")
+    public Response delete(
+            @LoginUser Long userId,
+            @RequestBody ShoppingCartEntity shoppingCartEntity
+    ) {
+        shoppingCartEntity.setUserId(userId);
+        shoppingCartService.deleteOne(shoppingCartEntity);
+        return Response.ok();
+    }
 }

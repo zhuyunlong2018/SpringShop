@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.validator.Assert;
-import com.bianquan.springShop.modules.shop.controller.ShoppingCart;
 import com.bianquan.springShop.modules.shop.dao.ShoppingCartDao;
 import com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity;
 import com.bianquan.springShop.modules.shop.entity.ShoppingCartEntity;
@@ -63,5 +62,23 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartDao, Shoppi
             shoppingCartDao.updateById(shoppingCart);
         }
         return shoppingCart;
+    }
+
+    @Override
+    public void changeNumber(ShoppingCartEntity shoppingCartEntity) {
+        Assert.nonPositiveInteger(shoppingCartEntity.getNumber(), "数量必须为正整数");
+        QueryWrapper<ShoppingCartEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", shoppingCartEntity.getId())
+                .eq("user_id", shoppingCartEntity.getUserId());
+        shoppingCartEntity.setUpdateTime(new Date());
+        shoppingCartDao.update(shoppingCartEntity, queryWrapper);
+    }
+
+    @Override
+    public void deleteOne(ShoppingCartEntity shoppingCartEntity) {
+        QueryWrapper<ShoppingCartEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", shoppingCartEntity.getId())
+                .eq("user_id", shoppingCartEntity.getUserId());
+        shoppingCartDao.delete(queryWrapper);
     }
 }
