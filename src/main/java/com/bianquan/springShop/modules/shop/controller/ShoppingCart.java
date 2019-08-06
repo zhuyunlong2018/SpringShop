@@ -54,7 +54,7 @@ public class ShoppingCart {
 
     @Login
     @DeleteMapping("/delete")
-    @ApiOperation("删除购物车中狗哥商品")
+    @ApiOperation("删除购物车中的某个商品")
     public Response delete(
             @LoginUser Long userId,
             @RequestBody ShoppingCartEntity shoppingCartEntity

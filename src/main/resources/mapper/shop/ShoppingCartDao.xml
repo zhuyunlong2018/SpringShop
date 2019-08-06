@@ -22,7 +22,7 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <!-- 商品sku集合-->
-        <collection property="productSkuEntity" ofType="com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity">
+        <collection property="productSku" ofType="com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity">
             <id property="id" column="id"/>
             <result property="productId" column="product_id"/>
             <result property="description" column="description"/>

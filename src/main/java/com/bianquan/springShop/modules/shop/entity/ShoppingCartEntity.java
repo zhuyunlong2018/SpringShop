@@ -35,7 +35,7 @@ public class ShoppingCartEntity {
 
     //关联的商品sku
     @TableField(exist = false)
-    private ProductsSkuEntity productSkuEntity;
+    private ProductsSkuEntity productSku;
 
     private Date createTime;
 

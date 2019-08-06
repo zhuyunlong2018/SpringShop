@@ -33,7 +33,7 @@ reactShop的后端，使用springboot2框架
 #### 安装教程
 1. 下载源码
 ```shell
-$ git clone https://gitee.com/zhuyunlong2018/SpringShop
+$ git https://gitee.com/zhuyunlong2018/SpringShop.git
 
 ```
 2. 配置数据库
