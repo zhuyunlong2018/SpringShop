@@ -12,7 +12,7 @@
 	<artifactId>springShop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springShop</name>
-	<description>Demo project for Spring Boot</description>
+	<description>reactShop for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -25,7 +25,11 @@
 		<druid.version>1.1.13</druid.version>
 		<jwt.version>0.7.0</jwt.version>
 		<swagger.version>2.7.0</swagger.version>
+<<<<<<< HEAD
 		<quartz.version>2.2.3</quartz.version>
+=======
+		<lombok.version>1.16.4</lombok.version>
+>>>>>>> e507ab7e7eb437f0371d3712acf51ab7a6a71fdc
 	</properties>
 
 	<dependencies>
@@ -33,6 +37,8 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!--mybatis-plus START-->
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
@@ -49,26 +55,37 @@
 			<artifactId>mybatis-plus</artifactId>
 			<version>${mybatisplus.version}</version>
 		</dependency>
+		<!--mybatis-plus END-->
+
+		<!--mysql START-->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
 		</dependency>
+		<!--mysql END-->
 
+		<!--dev-tool START-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 			<scope>runtime</scope>
 		</dependency>
+		<!--dev-tool END-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--redis START-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+		<!--redis END-->
 
 		<!--postgresql驱动-->
 		<dependency>
@@ -108,17 +125,22 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!--JWT依赖 START-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jwt.version}</version>
 		</dependency>
+		<!--JWT依赖 END-->
 
+		<!--lombok依赖 START-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.4</version>
+			<version>${lombok.version}</version>
 		</dependency>
+		<!--lombok依赖 END-->
 
 		<!--swagger依赖 START-->
 		<dependency>
@@ -134,12 +156,13 @@
 		</dependency>
 		<!--swagger依赖 END-->
 
-		<!--集成httpClient-->
+		<!--集成httpClient START-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>${apache.httpcomponents.version}</version>
 		</dependency>
+		<!--集成httpClient END-->
 
 	</dependencies>
 
@@ -148,6 +171,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

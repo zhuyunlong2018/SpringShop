@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bianquan.springShop.modules.shop.dao.CategoryDao">
+
+    <!--根据id获取包含所有子类信息,形成递归查询-->
+    <select id="listWithChildren" resultType="com.bianquan.springShop.modules.shop.entity.CategoryEntity" resultMap="childrenMap">
+        select * from sp_categories where pid = #{pid} and status = 1
+    </select>
+    <resultMap id="childrenMap" type="com.bianquan.springShop.modules.shop.entity.CategoryEntity">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <collection property="children" ofType="com.bianquan.springShop.modules.shop.entity.CategoryEntity"
+                    select="listWithChildren" column="id"/>
+    </resultMap>
+
+
+</mapper>

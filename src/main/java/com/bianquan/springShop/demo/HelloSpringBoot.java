@@ -1,6 +1,6 @@
 package com.bianquan.springShop.demo;
 
-import com.bianquan.springShop.common.utils.R;
+import com.bianquan.springShop.common.utils.Response;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloSpringBoot {
     @GetMapping("/helloSpringBoot")
-    public R HelloSpring (){
+    public Response HelloSpring (){
         System.out.println("hello spring boot");
-        return R.ok("haole");
+        return Response.ok("haole");
     }
 }

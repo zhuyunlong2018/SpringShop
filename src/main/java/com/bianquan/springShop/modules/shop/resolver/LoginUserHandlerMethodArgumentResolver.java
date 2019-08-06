@@ -21,7 +21,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(UserEntity.class) && parameter.hasParameterAnnotation(LoginUser.class);
+        return (
+                parameter.getParameterType().isAssignableFrom(UserEntity.class) ||
+                        parameter.getParameterType().isAssignableFrom(Long.class)
+        ) &&
+                parameter.hasParameterAnnotation(LoginUser.class);
     }
 
     @Override
@@ -34,8 +38,13 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             return null;
         }
 
-        //获取用户信息
-        UserEntity user = userService.getById((Long)object);
+        //如果为Long类型，返回用户ID
+        if (parameter.getParameterType().isAssignableFrom(Long.class)) {
+            return object;
+        }
+
+        //返回用户实体
+        UserEntity user = userService.getById((Long) object);
         return user;
     }
 }

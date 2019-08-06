@@ -12,7 +12,7 @@ import java.util.Date;
  * 用户表
  */
 @Data
-@TableName("tv_user")
+@TableName("sp_user")
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +31,7 @@ public class UserEntity implements Serializable {
     private String userEmail;
 
     //用户状态
-    private int userStatus;
+    private Integer userStatus;
 
     //密码md5加密盐
     private String userPwdSalt;
