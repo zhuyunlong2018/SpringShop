@@ -3,13 +3,17 @@ package com.bianquan.springShop.modules.shop.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@FieldNameConstants(prefix = "")
 @TableName("sp_order_shipping")
 public class OrderShippingEntity implements Serializable {
+
+    private static final long serialVersionUID = 8990096521510799195L;
 
     //订单ID
     private String orderId;

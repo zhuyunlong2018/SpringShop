@@ -1,8 +1,8 @@
 package com.bianquan.springShop.modules.shop.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bianquan.springShop.common.exception.RRException;
+import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.common.validator.Assert;
 import com.bianquan.springShop.modules.shop.dao.ShoppingCartDao;
 import com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity;
@@ -34,9 +34,9 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartDao, Shoppi
 
         Assert.nonPositiveInteger(shoppingCartEntity.getNumber(), "数量必须为正整数");
         //检索该商品规格是否已在购物车中
-        QueryWrapper<ShoppingCartEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("product_sku_id", shoppingCartEntity.getProductSkuId())
-                    .eq("user_id", shoppingCartEntity.getUserId());
+        QWrapper<ShoppingCartEntity> queryWrapper = new QWrapper<>();
+        queryWrapper.eq(ShoppingCartEntity.PRODUCT_SKU_ID, shoppingCartEntity.getProductSkuId())
+                    .eq(ShoppingCartEntity.USER_ID, shoppingCartEntity.getUserId());
         ShoppingCartEntity shoppingCart = shoppingCartDao.selectOne(queryWrapper);
 
         Date date = new Date();
@@ -67,18 +67,18 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartDao, Shoppi
     @Override
     public void changeNumber(ShoppingCartEntity shoppingCartEntity) {
         Assert.nonPositiveInteger(shoppingCartEntity.getNumber(), "数量必须为正整数");
-        QueryWrapper<ShoppingCartEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", shoppingCartEntity.getId())
-                .eq("user_id", shoppingCartEntity.getUserId());
+        QWrapper<ShoppingCartEntity> queryWrapper = new QWrapper<>();
+        queryWrapper.eq(ShoppingCartEntity.ID, shoppingCartEntity.getId())
+                .eq(ShoppingCartEntity.USER_ID, shoppingCartEntity.getUserId());
         shoppingCartEntity.setUpdateTime(new Date());
         shoppingCartDao.update(shoppingCartEntity, queryWrapper);
     }
 
     @Override
     public void deleteOne(ShoppingCartEntity shoppingCartEntity) {
-        QueryWrapper<ShoppingCartEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", shoppingCartEntity.getId())
-                .eq("user_id", shoppingCartEntity.getUserId());
+        QWrapper<ShoppingCartEntity> queryWrapper = new QWrapper<>();
+        queryWrapper.eq(ShoppingCartEntity.ID, shoppingCartEntity.getId())
+                .eq(ShoppingCartEntity.USER_ID, shoppingCartEntity.getUserId());
         shoppingCartDao.delete(queryWrapper);
     }
 }

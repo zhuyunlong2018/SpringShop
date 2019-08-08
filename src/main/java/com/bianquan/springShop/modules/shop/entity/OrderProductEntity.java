@@ -4,12 +4,16 @@ package com.bianquan.springShop.modules.shop.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
 
 @Data
+@FieldNameConstants(prefix = "")
 @TableName("sp_order_product")
 public class OrderProductEntity implements Serializable {
+
+    private static final long serialVersionUID = 8898086405931282497L;
 
     @TableId
     private Long id;

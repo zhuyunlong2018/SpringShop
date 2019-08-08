@@ -4,15 +4,18 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@FieldNameConstants(prefix = "")
 @TableName("sp_products")
 public class ProductEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 5650088466120913205L;
 
     @TableId
     private Long id;

@@ -1,9 +1,8 @@
 package com.bianquan.springShop.modules.shop.controller;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.modules.shop.entity.ProductEntity;
 import com.bianquan.springShop.modules.shop.service.ProductService;
@@ -28,9 +27,9 @@ public class Product {
             @RequestParam("categoryId") Long categoryId
     ) {
         Page<ProductEntity> page = new Page<>(currentPage, pageSize);
-        QueryWrapper<ProductEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("category_id", categoryId)
-                .eq("status", 1);
+        QWrapper<ProductEntity> queryWrapper = new QWrapper<>();
+        queryWrapper.eq(ProductEntity.CATEGORY_ID, categoryId)
+                .eq(ProductEntity.STATUS, 1);
         IPage<ProductEntity> list = productService.page(page, queryWrapper);
         return Response.ok(list);
     }

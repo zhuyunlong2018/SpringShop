@@ -1,6 +1,6 @@
 package com.bianquan.springShop.modules.shop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.modules.shop.entity.CategoryEntity;
 import com.bianquan.springShop.modules.shop.service.CategoryService;
@@ -22,9 +22,9 @@ public class Category {
     @GetMapping("/rootList")
     @ApiOperation("获取所有根分类")
     public Response rootList() {
-        QueryWrapper<CategoryEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("pid", 0)
-                    .eq("status", 1);
+        QWrapper<CategoryEntity> queryWrapper = new QWrapper<>();
+        queryWrapper.eq(CategoryEntity.PID, 0)
+                    .eq(CategoryEntity.STATUS, 1);
         List<CategoryEntity> list = categoryService.list(queryWrapper);
         return Response.ok(list);
     }

@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@FieldNameConstants(prefix = "")
 @TableName("sp_categories")
 public class CategoryEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 6401730510323415538L;
 
     @ApiModelProperty(value = "分类id")
     @TableId
