@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bianquan.springShop.modules.shop.dao.AdDao">
+
+    <!-- 根据key获取广告banner列表-->
+    <select id="fetchListByKey" resultMap="entityList">
+        SELECT
+            a.id, a.title, a.link, a.image, a.content
+        FROM sp_ad a,sp_ad_position ap
+        WHERE a.position_id=ap.id AND ap.key=#{key}
+    </select>
+    <resultMap id="entityList" type="com.bianquan.springShop.modules.shop.entity.AdEntity">
+        <result column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="link" property="link" />
+        <result column="image" property="image" />
+        <result column="content" property="content" />
+    </resultMap>
+
+</mapper>

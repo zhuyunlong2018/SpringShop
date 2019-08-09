@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/shop")
-@Api("SHOP登录接口")
+@Api(tags = "SHOP登录接口")
 public class Login {
 
     @Autowired

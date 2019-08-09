@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/shop/user")
-@Api(description="用户操作")
+@Api(tags = "用户操作")
 public class User {
 
     @Autowired

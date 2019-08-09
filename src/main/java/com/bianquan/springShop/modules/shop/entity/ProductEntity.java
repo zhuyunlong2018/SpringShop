@@ -32,6 +32,9 @@ public class ProductEntity implements Serializable {
     //所属分类
     private Long categoryId;
 
+    //所属品牌ID
+    private Long brandId;
+
     //商品状态
     private Integer status;
 

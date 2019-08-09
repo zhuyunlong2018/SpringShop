@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shop/category")
-@Api("商品分类")
+@Api(tags = "商品分类")
 public class Category {
 
     @Autowired
