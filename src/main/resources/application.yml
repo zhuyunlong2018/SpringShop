@@ -24,6 +24,8 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
       enabled: true
+  main:
+    allow-bean-definition-overriding: true
   redis:
     open: false  # 是否开启redis缓存  true开启   false关闭
     database: 0
@@ -39,9 +41,14 @@ spring:
         min-idle: 5       # 连接池中的最小空闲连接
   mvc:
     throw-exception-if-no-handler-found: true
+  data:
+    elasticsearch:  # ElasticSearch 配置
+      cluster-name: elasticsearch
+      cluster-nodes: localhost:9300
+      repositories:
+        enabled: true
 #  resources:
 #    add-mappings: false
-
 
 #mybatis
 mybatis-plus:
@@ -68,7 +75,6 @@ mybatis-plus:
     jdbc-type-for-null: 'null'
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
 
 bianquan:
   redis:

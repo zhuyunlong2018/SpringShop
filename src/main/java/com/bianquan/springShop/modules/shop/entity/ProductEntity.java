@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,10 +15,12 @@ import java.util.List;
 @Data
 @FieldNameConstants(prefix = "")
 @TableName("sp_products")
+@Document(indexName = "sp_products", type = "doc")
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 5650088466120913205L;
 
+    @Id
     @TableId
     private Long id;
 

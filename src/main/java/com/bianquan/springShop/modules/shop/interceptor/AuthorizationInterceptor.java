@@ -2,7 +2,7 @@ package com.bianquan.springShop.modules.shop.interceptor;
 
 import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.modules.shop.annotation.Login;
-import com.bianquan.springShop.modules.utils.JwtUtils;
+import com.bianquan.springShop.modules.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtUtil jwtUtil;
 
     public static final String USER_KEY = "userId";
 
@@ -39,19 +39,19 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
 
         //用户登录凭证
-        String token = request.getHeader(jwtUtils.getHeader());
+        String token = request.getHeader(jwtUtil.getHeader());
         if (StringUtils.isBlank(token)) {
-            token = request.getParameter(jwtUtils.getHeader());
+            token = request.getParameter(jwtUtil.getHeader());
         }
 
         //凭证为空
         if (StringUtils.isBlank(token)) {
-            throw new RRException(jwtUtils.getHeader() + "不能为空", HttpStatus.UNAUTHORIZED.value());
+            throw new RRException(jwtUtil.getHeader() + "不能为空", HttpStatus.UNAUTHORIZED.value());
         }
 
-        Claims claims = jwtUtils.getClaimByToken(token);
-        if (claims == null || jwtUtils.isTokenExpired(claims.getExpiration())) {
-            throw new RRException(jwtUtils.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
+        Claims claims = jwtUtil.getClaimByToken(token);
+        if (claims == null || jwtUtil.isTokenExpired(claims.getExpiration())) {
+            throw new RRException(jwtUtil.getHeader() + "失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
         }
 
         //设置userId到request里，后续根据userId获取用户信息

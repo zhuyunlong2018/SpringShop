@@ -43,7 +43,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             return object;
         }
 
-        //返回用户实体
+        //否者返回用户实体
         UserEntity user = userService.getById((Long) object);
         return user;
     }

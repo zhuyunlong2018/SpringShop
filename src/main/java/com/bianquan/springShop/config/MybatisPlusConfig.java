@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @Configuration
-@MapperScan("com.bianquan.springShop.modules.shop.dao")
+@MapperScan("com.bianquan.springShop.modules.*.dao")
 public class MybatisPlusConfig {
 
     /**

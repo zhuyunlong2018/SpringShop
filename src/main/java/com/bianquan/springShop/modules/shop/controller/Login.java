@@ -4,7 +4,7 @@ import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.validator.ValidatorUtils;
 import com.bianquan.springShop.modules.shop.form.LoginForm;
 import com.bianquan.springShop.modules.shop.service.UserService;
-import com.bianquan.springShop.modules.utils.JwtUtils;
+import com.bianquan.springShop.modules.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class Login {
     private UserService userService;
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtUtil jwtUtils;
 
     @PostMapping("login")
     @ApiOperation("登录")

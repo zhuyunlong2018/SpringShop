@@ -4,6 +4,7 @@ package com.bianquan.springShop.modules.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-
-@ConfigurationProperties(prefix = "bianquan.jwt")
 @Component
-public class JwtUtils {
+@Data
+@ConfigurationProperties(prefix = "bianquan.jwt")
+public class JwtUtil {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private String secret;
@@ -60,31 +61,6 @@ public class JwtUtils {
      */
     public boolean isTokenExpired(Date expiration) {
         return expiration.before(new Date());
-    }
-
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public long getExpire() {
-        return expire;
-    }
-
-    public void setExpire(long expire) {
-        this.expire = expire;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
     }
 
 }

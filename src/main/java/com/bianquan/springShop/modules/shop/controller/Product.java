@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.modules.shop.entity.ProductEntity;
+import com.bianquan.springShop.modules.shop.repository.ProductRepository;
 import com.bianquan.springShop.modules.shop.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,9 @@ public class Product {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping("/fetchPageByCategory")
     @ApiOperation("根据类型ID获取商品列表分页")
@@ -40,4 +44,10 @@ public class Product {
         return Response.ok(productService.fetchById(id));
     }
 
+    @PostMapping("/test")
+    @ApiOperation("test")
+    public Response elasticTest(@RequestBody ProductEntity productEntity) {
+        //TODO elasticsearch暂且搁置
+        return Response.ok(productRepository.save(productEntity));
+    }
 }
