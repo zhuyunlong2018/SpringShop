@@ -4,6 +4,9 @@ package com.bianquan.springShop.modules.admin.controller;
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.modules.admin.dao.AdminDao;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
+import com.bianquan.springShop.modules.admin.serivice.AdminService;
+import com.bianquan.springShop.modules.config.shiro.JwtToken;
+import com.bianquan.springShop.modules.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -32,6 +35,12 @@ public class AdminLogin {
     @Autowired
     private AdminDao adminDao;
 
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     @ApiOperation("登录")
     public Response login(String username, String password, HttpServletRequest request) {
@@ -48,6 +57,7 @@ public class AdminLogin {
 //        User user = userService.login(username, password);
 
         try {
+
             SecurityUtils.getSubject().login(token);
         } catch (UnknownAccountException e) {
             log.error("对用户[{}]进行登录验证,验证未通过,用户不存在", username);
@@ -79,9 +89,25 @@ public class AdminLogin {
 
         //token信息
         Subject subject = SecurityUtils.getSubject();
-        Serializable tokenId = subject.getSession().getId();
+//        Serializable tokenId = subject.getSession().getId();
+        String tokenBack = jwtUtil.generateToken(8);
+//        AuthenticationToken token= new JwtToken(strToken);
 
-        return Response.ok(tokenId);
+
+        return Response.ok(tokenBack);
+    }
+
+    @PostMapping("/doLogin")
+    @ApiOperation("登录接口")
+    public Response doLogin(String username, String password) {
+        String jwt = adminService.login(username, password);
+        System.out.println("login jwt:" + jwt);
+//        Subject subject = SecurityUtils.getSubject();
+//        AuthenticationToken token= new JwtToken(jwt);
+
+//        subject.login(token);
+
+        return Response.ok(jwt);
     }
 
     @PostMapping("/register")

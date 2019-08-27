@@ -1,10 +1,13 @@
 package com.bianquan.springShop.modules.admin.serivice.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.modules.admin.dao.AdminDao;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
+import com.bianquan.springShop.modules.utils.JwtUtil;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,25 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
 
     @Autowired
     private AdminDao adminDao;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Override
+    public String login(String username, String password) {
+        AdminEntity admin = queryByName(username);
+        if (null == admin) {
+            throw new RRException("账号不存在");
+        }
+        String mdPassword = new Md5Hash(password, admin.getSalt(), 3).toString();
+        if (!mdPassword.equals(admin.getPassword())) {
+            throw new RRException("密码错误");
+        }
+
+        String token = jwtUtil.generateToken(8);
+
+        return token;
+    }
 
     @Override
     public Set<String> getUserPermissions(Integer id) {

@@ -1,7 +1,13 @@
 package com.bianquan.springShop.modules.config.shiro;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
+import com.bianquan.springShop.modules.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -20,6 +26,14 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JwtToken;
+    }
 
     /**
      * 授权方法
@@ -50,22 +64,47 @@ public class MyRealm extends AuthorizingRealm {
      * 认证方法
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        //通过token获取用户账号
-        String userName = (String) authenticationToken.getPrincipal();
-        if (userName != null) {
-            //数据库中请求用户信息
-            AdminEntity adminEntity = adminService.queryByName(userName);
-            String password = adminEntity.getPassword();
-            System.out.println(password);
-            System.out.println(adminEntity.getSalt());
-            ByteSource salt = ByteSource.Util.bytes(adminEntity.getSalt());
-            SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userName, password, getName());
-            //设置盐，用来核对密码
-            simpleAuthenticationInfo.setCredentialsSalt(salt);
-            return simpleAuthenticationInfo;
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+            throws AuthenticationException {
+
+        String token = (String)authenticationToken.getPrincipal();
+
+        System.out.println("token: " + token);
+
+        if (ObjectUtils.isNull(token) || StringUtils.isBlank(token)) {
+            throw new AuthenticationException(jwtUtil.getHeader()+"不能为空");
         }
-        return null;
+
+        Claims claims = jwtUtil.getClaimByToken(token);
+
+        if (ObjectUtils.isNull(claims)) {
+            throw new AuthenticationException(jwtUtil.getHeader()+"无效");
+        }
+
+        if (jwtUtil.isTokenExpired(claims.getExpiration())) {
+            throw new AuthenticationException(jwtUtil.getHeader()+"token过期");
+        }
+
+        System.out.println("now token is ok" +  getName());
+        return new SimpleAuthenticationInfo(token, token, "my_realm");
+
+
+
+
+        //通过token获取用户账号
+//        String userName = (String) authenticationToken.getPrincipal();
+//        System.out.println(userName);
+//        if (userName != null) {
+//            //数据库中请求用户信息
+//            AdminEntity adminEntity = adminService.queryByName(userName);
+//            String password = adminEntity.getPassword();
+//            ByteSource salt = ByteSource.Util.bytes(adminEntity.getSalt());
+//            SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userName, password, getName());
+//            //设置盐，用来核对密码
+//            simpleAuthenticationInfo.setCredentialsSalt(salt);
+//            return simpleAuthenticationInfo;
+//        }
+//        return null;
     }
 
 

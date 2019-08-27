@@ -7,6 +7,8 @@ import java.util.Set;
 
 public interface AdminService extends IService<AdminEntity> {
 
+    String login(String username, String password);
+
     Set<String> getUserPermissions(Integer id);
 
     AdminEntity queryAdmin(Integer id);
