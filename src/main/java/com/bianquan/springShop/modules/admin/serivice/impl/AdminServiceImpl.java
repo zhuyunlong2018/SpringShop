@@ -27,6 +27,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
 
     @Override
     public String login(String username, String password) {
+        //TODO 参数验证
         AdminEntity admin = queryByName(username);
         if (null == admin) {
             throw new RRException("账号不存在");
@@ -36,7 +37,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
             throw new RRException("密码错误");
         }
 
-        String token = jwtUtil.generateToken(8);
+        String token = jwtUtil.generateToken(admin.getId());
 
         return token;
     }
@@ -57,6 +58,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
 //        }
         //用户权限列表
         Set<String> permsSet = new HashSet<>();
+        permsSet.add("test1");
 //        for(String perms : permsList){
 //            if(StringUtils.isBlank(perms)){
 //                continue;

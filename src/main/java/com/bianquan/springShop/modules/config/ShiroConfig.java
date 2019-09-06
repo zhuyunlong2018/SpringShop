@@ -56,16 +56,18 @@ public class ShiroConfig {
         filters.put("jwt", authFilter);
         bean.setFilters(filters);
 
-
-        //配置登录的url和登录成功的url以及验证失败的url
-        bean.setLoginUrl("/admin/login");
-//        bean.setSuccessUrl("/home");
-//        bean.setUnauthorizedUrl("/index");
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/index", "anon");
-        filterChainDefinitionMap.put("/admin/test", "jwt");
-        filterChainDefinitionMap.put("/admin/**","anon");
+        filterChainDefinitionMap.put("/shop/**", "anon");
+
+        filterChainDefinitionMap.put("/**/*.css", "anon");
+        filterChainDefinitionMap.put("/**/*.js", "anon");
+        filterChainDefinitionMap.put("/**/*.html", "anon");
+        filterChainDefinitionMap.put("/swagger/**", "anon");
+        filterChainDefinitionMap.put("/**/login", "anon");
+        filterChainDefinitionMap.put("/admin/**", "jwt");
+        filterChainDefinitionMap.put("/", "anon");
+
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }
@@ -81,7 +83,6 @@ public class ShiroConfig {
         MyRealm myRealm = new MyRealm();
         myRealm.setAuthorizationCachingEnabled(false);
         //自定义realm添加加密方式，使用token时为明文模式
-//        myRealm.setCredentialsMatcher(matcher);
         return myRealm;
     }
 

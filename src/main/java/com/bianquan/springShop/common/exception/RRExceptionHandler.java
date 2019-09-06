@@ -3,6 +3,8 @@ package com.bianquan.springShop.common.exception;
 
 
 import com.bianquan.springShop.common.utils.Response;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -47,6 +49,18 @@ public class RRExceptionHandler {
     public Response handleException(Exception e){
         logger.error(e.getMessage(), e);
         return Response.error();
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public Response handleException(AuthorizationException e) {
+        logger.error(e.getMessage(), e);
+        return Response.error("没有相关权限");
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public Response handleException(AuthenticationException e) {
+        logger.error(e.getMessage(), e);
+        return Response.error(e.getMessage());
     }
 }
 
