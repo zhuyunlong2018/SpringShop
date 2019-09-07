@@ -1,6 +1,6 @@
 HELP.md
-/target/
-!.mvn/wrapper/maven-wrapper.jar
+/shop-spring/target/
+!/shop_spring/.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated

@@ -51,16 +51,16 @@ public class ShiroConfig {
      * 这个类也负责对form里输入的密码进行编码
      * 处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
      */
-    @Bean("hashedCredentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-        //指定加密方式为MD5
-        credentialsMatcher.setHashAlgorithmName("MD5");
-        //加密次数
-        credentialsMatcher.setHashIterations(3);
-        credentialsMatcher.setStoredCredentialsHexEncoded(true);
-        return credentialsMatcher;
-    }
+//    @Bean("hashedCredentialsMatcher")
+//    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+//        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+//        //指定加密方式为MD5
+//        credentialsMatcher.setHashAlgorithmName("MD5");
+//        //加密次数
+//        credentialsMatcher.setHashIterations(3);
+//        credentialsMatcher.setStoredCredentialsHexEncoded(true);
+//        return credentialsMatcher;
+//    }
 
     @Bean(name="shiroFilter")
     public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager manager) {
@@ -92,7 +92,7 @@ public class ShiroConfig {
 
     @Bean("myRealm")
     @DependsOn("lifecycleBeanPostProcessor")//可选
-    public MyRealm myRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher) {
+    public MyRealm myRealm() {
         MyRealm myRealm = new MyRealm();
         myRealm.setAuthorizationCachingEnabled(false);
         //自定义realm添加加密方式，使用token时为明文模式
