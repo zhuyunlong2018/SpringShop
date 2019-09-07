@@ -10,7 +10,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -18,12 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 自定义shiro过滤器
+ */
 public class AuthFilter extends BasicHttpAuthenticationFilter {
 
     private Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
-
-    @Autowired
-    JwtUtil jwtUtil;
 
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
@@ -66,7 +65,7 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         if(StringUtils.isBlank(token)){
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setContentType("application/json;charset=utf-8");
-            String json = new Gson().toJson(Response.error(HttpStatus.SC_UNAUTHORIZED, jwtUtil.getHeader() +"不能为空"));
+            String json = new Gson().toJson(Response.error(HttpStatus.SC_UNAUTHORIZED, JwtUtil.HEADER_TOKEN +"不能为空"));
             httpResponse.getWriter().print(json);
             return false;
         }
@@ -81,9 +80,9 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
      * @return
      */
     private String getRequestToken(HttpServletRequest request) {
-        String token = request.getHeader(jwtUtil.getHeader());
+        String token = request.getHeader(JwtUtil.HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
-            token = request.getParameter(jwtUtil.getHeader());
+            token = request.getParameter(JwtUtil.HEADER_TOKEN);
         }
         return token;
     }

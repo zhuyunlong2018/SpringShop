@@ -8,6 +8,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -40,7 +41,7 @@ public class RRExceptionHandler {
 
     @ExceptionHandler(DuplicateKeyException.class)
     public Response handleDuplicateKeyException(DuplicateKeyException e){
-        logger.error(e.getMessage(), e);
+        logger.error(e.getMessage());
         return Response.error("数据库中已存在该记录");
     }
 
@@ -53,13 +54,13 @@ public class RRExceptionHandler {
 
     @ExceptionHandler(AuthorizationException.class)
     public Response handleException(AuthorizationException e) {
-        logger.error(e.getMessage(), e);
+        logger.error(e.getMessage());
         return Response.error("没有相关权限");
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public Response handleException(AuthenticationException e) {
-        logger.error(e.getMessage(), e);
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Response handleException(HttpRequestMethodNotSupportedException e) {
+        logger.error(e.getMessage());
         return Response.error(e.getMessage());
     }
 }

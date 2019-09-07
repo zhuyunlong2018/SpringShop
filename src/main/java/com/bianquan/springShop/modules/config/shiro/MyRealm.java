@@ -3,6 +3,7 @@ package com.bianquan.springShop.modules.config.shiro;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
 import com.bianquan.springShop.modules.utils.JwtUtil;
+import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -15,6 +16,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
 import java.util.Set;
 
 public class MyRealm extends AuthorizingRealm {
@@ -32,21 +34,24 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 授权方法
+     *
      * @param principalCollection
      * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 
-        //获取管理员ID
-        String userId = principalCollection.getPrimaryPrincipal().toString();
+        //获取管理员信息
+        String json = principalCollection.getPrimaryPrincipal().toString();
+        Map map = new Gson().fromJson(json, Map.class);
+        Double id = (Double) map.get("id");
 
-            //获取管理员权限列表
-            Set<String> permissions = adminService.getUserPermissions(Integer.parseInt(userId));
+        //获取管理员权限列表
+        Set<String> permissions = adminService.getUserPermissions(id.intValue());
 
-            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-            info.setStringPermissions(permissions);
-            return info;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        info.setStringPermissions(permissions);
+        return info;
     }
 
     /**
@@ -56,21 +61,20 @@ public class MyRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException {
 
-        String token = (String)authenticationToken.getPrincipal();
+        String token = (String) authenticationToken.getPrincipal();
 
         if (ObjectUtils.isNull(token) || StringUtils.isBlank(token)) {
-            throw new AuthenticationException(jwtUtil.getHeader()+"不能为空");
+            throw new AuthenticationException(jwtUtil.getHeader() + "不能为空");
         }
 
         Claims claims = jwtUtil.getClaimByToken(token);
 
         if (ObjectUtils.isNull(claims)) {
-            throw new AuthenticationException(jwtUtil.getHeader()+"无效");
+            throw new AuthenticationException(jwtUtil.getHeader() + "无效");
         }
         if (jwtUtil.isTokenExpired(claims.getExpiration())) {
-            throw new AuthenticationException(jwtUtil.getHeader()+"token过期");
+            throw new AuthenticationException(jwtUtil.getHeader() + "token过期");
         }
-        System.out.println(claims.getSubject());
         return new SimpleAuthenticationInfo(claims.getSubject(), token, "my_realm");
     }
 

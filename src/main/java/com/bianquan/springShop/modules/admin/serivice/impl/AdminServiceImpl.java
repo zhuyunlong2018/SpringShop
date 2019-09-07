@@ -7,14 +7,13 @@ import com.bianquan.springShop.modules.admin.dao.AdminDao;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
 import com.bianquan.springShop.modules.utils.JwtUtil;
+import com.google.gson.Gson;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> implements AdminService {
@@ -37,8 +36,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
             throw new RRException("密码错误");
         }
 
-        String token = jwtUtil.generateToken(admin.getId());
-
+        Map map = new HashMap();
+        map.put("id", admin.getId());
+        map.put("name", admin.getName());
+        String token = jwtUtil.generateToken(new Gson().toJson(map));
         return token;
     }
 

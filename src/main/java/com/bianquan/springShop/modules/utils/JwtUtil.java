@@ -1,7 +1,6 @@
 package com.bianquan.springShop.modules.utils;
 
 
-import com.bianquan.springShop.common.utils.ObjectTranscoder;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,26 +22,44 @@ public class JwtUtil {
     private long expire;
     private String header;
 
+    public static String HEADER_TOKEN = "token";
+
     /**
-     * 生成token
+     * 生成token -- 商城移动端，使用用户id生成
      * @param userId
      * @return
      */
     public String generateToken(long userId) {
-        Date nowDate = new Date();
+        return doGenerateToken(userId + "");
+    }
 
+    /**
+     * 生成token--管理后台，使用管理员json生成，防止商城端的token被拿来管理后台越权访问
+     * @param str
+     * @return
+     */
+    public String generateToken(String str) {
+        return doGenerateToken(str);
+    }
+
+    private String doGenerateToken(String str) {
+        Date nowDate = new Date();
         //过期时间
         Date expireDate = new Date(nowDate.getTime() + expire * 1000);
-
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject(userId + "")
+                .setSubject(str)
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
+    /**
+     * 解析token
+     * @param token
+     * @return
+     */
     public Claims getClaimByToken(String token) {
         try{
             return Jwts.parser()

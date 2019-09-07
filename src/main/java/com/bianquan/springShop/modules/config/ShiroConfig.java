@@ -7,7 +7,6 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
@@ -22,10 +21,28 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
+/**
+ * spring集合shiro配置
+ */
 @Configuration
 public class ShiroConfig {
 
+
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
+        proxyCreator.setProxyTargetClass(true);
+        return proxyCreator;
+    }
+
+    /**
+     * lifecycleBeanPostProcessor是负责生命周期的 , 初始化和销毁的类
+     * (可选)
+     */
+    @Bean("lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
 
     /**
      * 密码校验规则HashedCredentialsMatcher
@@ -46,35 +63,31 @@ public class ShiroConfig {
     }
 
     @Bean(name="shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager manager,
-                                              @Qualifier("authFilter")AuthFilter authFilter) {
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") DefaultWebSecurityManager manager) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
 
         //自定义filter过滤
         Map<String, Filter> filters = new HashMap<>();
-        filters.put("jwt", authFilter);
+        //此处AuthFilter如果用bean注入，将会使spring提前注入自定义filter导致下面的anon匿名访问无效，使用如下new创建对象将在filter内无法使用autowire
+        filters.put("jwt", new AuthFilter());
         bean.setFilters(filters);
 
         //配置访问权限
-        LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
+        Map<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/shop/**", "anon");
 
         filterChainDefinitionMap.put("/**/*.css", "anon");
         filterChainDefinitionMap.put("/**/*.js", "anon");
         filterChainDefinitionMap.put("/**/*.html", "anon");
         filterChainDefinitionMap.put("/swagger/**", "anon");
-        filterChainDefinitionMap.put("/**/login", "anon");
-        filterChainDefinitionMap.put("/admin/**", "jwt");
+        filterChainDefinitionMap.put("/admin/login", "anon");
+        filterChainDefinitionMap.put("/admin/logout", "anon");
         filterChainDefinitionMap.put("/", "anon");
+        filterChainDefinitionMap.put("/admin/**", "jwt");
 
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
-    }
-
-    @Bean("authFilter")
-    public AuthFilter authFilter() {
-        return new AuthFilter();
     }
 
     @Bean("myRealm")
@@ -110,34 +123,6 @@ public class ShiroConfig {
 
         manager.setSessionManager(sessionManager);
         return manager;
-    }
-
-    @Bean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
-        proxyCreator.setProxyTargetClass(true);
-        return proxyCreator;
-    }
-
-    /**
-     * 开启shiro 的AOP注解支持
-     * @param securityManager
-     * @return
-     */
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(org.apache.shiro.mgt.SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
-
-    /**
-     * lifecycleBeanPostProcessor是负责生命周期的 , 初始化和销毁的类
-     * (可选)
-     */
-    @Bean("lifecycleBeanPostProcessor")
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
     }
 
 }

@@ -2,27 +2,27 @@ package com.bianquan.springShop;
 
 import com.bianquan.springShop.common.utils.ObjectTranscoder;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Test {
 
     @org.junit.Test
     public void test() throws UnsupportedEncodingException {
-        AdminEntity admin = new AdminEntity();
-        admin.setName("test admin");
+        Map map = new HashMap();
+        map.put("name", "zhangsan");
+        map.put("age", 10.9);
 
-        byte[] serialize = ObjectTranscoder.serialize(admin);
+        String json = new Gson().toJson(map);
 
-        String ser = new String(serialize, "ISO-8859-1");
+        System.out.println(json);
 
-
-        byte[] by = ser.getBytes("ISO-8859-1");
-        System.out.println(by==serialize);
-        System.out.println(ser.equals(by.toString()));
-        System.out.println(by);
-
-        AdminEntity newAdmin = (AdminEntity) ObjectTranscoder.deserialize(by);
-        System.out.println(newAdmin);
+        Map<Object, Object> objectObjectHashMap = new HashMap<>();
+        objectObjectHashMap = new Gson().fromJson(json, Map.class);
+        Double age = (Double) objectObjectHashMap.get("age");
+        System.out.println(age.intValue());
     }
 }

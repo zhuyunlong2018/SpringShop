@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 校验token
+ * shop端校验token
  */
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
