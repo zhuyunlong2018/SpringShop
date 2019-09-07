@@ -57,14 +57,11 @@ export default class SXAjax {
         instance.defaults.timeout = 10000;
         // instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
         // instance.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-        const token = document.head.querySelector('meta[name="csrf-token"]');
-        //laravel csrf验证???
-        instance.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 
         //jwt token
         let user = getLoginUser()
         if (user) {
-            instance.defaults.headers.common['Authorization'] = "Bearer" + user.token;
+            instance.defaults.headers.common['token'] = user.token;
         }
         instance.defaults.headers.post['Content-Type'] = 'application/json';
         instance.defaults.headers.get['Content-Type'] = 'application/json';
@@ -138,10 +135,10 @@ export default class SXAjax {
         const defaultsContentType = instance.defaults.headers[method]['Content-Type'] || '';
         const contentType = (options.headers && options.headers['Content-Type']) || '';
         if (
-            (defaultsContentType && defaultsContentType.indexOf('application/x-www-form-urlencoded') > -1)
-            || contentType.indexOf('application/x-www-form-urlencoded') > -1
+            (defaultsContentType && defaultsContentType.indexOf('application/json') > -1)
+            || contentType.indexOf('application/json') > -1
         ) {
-            data = stringify(data);
+            // data = stringify(data);
         }
 
         let params = {};
@@ -164,7 +161,7 @@ export default class SXAjax {
                     this.onShowSuccessTip(response, successTip);
                     resolve(response.data.data, response);
                 } else {
-                    this.onShowErrorTip(response.data.msg, errorTip);
+                    this.onShowErrorTip(response.data, errorTip);
                     reject(response.data);
                 }
             }, err => {

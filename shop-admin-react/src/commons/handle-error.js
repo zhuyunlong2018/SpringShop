@@ -11,31 +11,32 @@ import {toLogin} from './index';
  */
 function getErrorTip({error, errorTip}) {
     const ajaxTip = getCurrentLocal()?.ajaxTip || {};
+
+
     if (errorTip && errorTip !== true) return errorTip;
+    console.log(error)
+    if (error && error.msg) {
+        const {code, msg} = error;
 
-    if (error && error.response) {
-        const {status, data} = error.response;
-
-        if (data.code === 4002) { // 需要登录
+        if (code === 4002) { // 需要登录
             return toLogin();
         }
-
         // 后端自定义信息
-        if (data.msg) return data.msg;
+        if (msg) return msg;
 
-        if (status === 403) {
+        if (code === 403) {
             return ajaxTip.noAccess;
         }
 
-        if (status === 404) {
+        if (code === 404) {
             return ajaxTip.notFound;
         }
 
-        if (status === 504) {
+        if (code === 504) {
             return ajaxTip.serverBusy;
         }
 
-        if (status === 500) {
+        if (code === 500) {
             return ajaxTip.serverBusy;
         }
     }
@@ -51,9 +52,7 @@ export default function handleError({error, errorTip}) {
     const ajaxTip = getCurrentLocal()?.ajaxTip || {};
 
     if (errorTip === false) return;
-
     const description = getErrorTip({error, errorTip});
-    console.log(ajaxTip.error)
     console.log(description)
     notification.error({
         message: ajaxTip.error,

@@ -88,7 +88,7 @@ export function appendChildrenByKey(treeData, key, child) {
  * @returns {boolean}
  */
 export function hasParent(rows, row) {
-    let parentKey = row.parent_key;
+    let parentKey = row.parentKey;
     return rows.find(r => r.key === parentKey);
 }
 
@@ -154,7 +154,7 @@ export function convertToTree(rows, parentNode = null) {
         let node = toDo.shift();
         // 获取子节点。
         rows.forEach(row => {
-            if (row.parent_key === node.key) {
+            if (row.parentKey === node.key) {
                 let child = cloneDeep(row);
                 let parentKeys = [node.key];
                 if (node.parentKeys) {

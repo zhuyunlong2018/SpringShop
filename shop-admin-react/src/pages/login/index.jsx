@@ -36,7 +36,7 @@ export default class extends Component {
 
         // 开发时方便测试，填写表单
         if (process.env.NODE_ENV === 'development') {
-            setFieldsValue({ userName: 'admin', password: '123456' });
+            setFieldsValue({ username: 'admin', password: '123456' });
         }
     }
 
@@ -45,7 +45,7 @@ export default class extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.setState({ loading: true, message: '' });
-
+    
                 login(values, { noEmpty: true, successTip: '请求成功！' })
                     .then(user => {
                         this.setState({ loading: false });
@@ -70,9 +70,8 @@ export default class extends Component {
         const { loading, message } = this.state;
 
         // Only show error after a field is touched.
-        const userNameError = isFieldTouched('userName') && getFieldError('userName');
+        const userNameError = isFieldTouched('username') && getFieldError('username');
         const passwordError = isFieldTouched('password') && getFieldError('password');
-        const codeError = isFieldTouched('code') && getFieldError('code');
 
         return (
             <div styleName="root" className="login-bg">
@@ -91,7 +90,7 @@ export default class extends Component {
                             validateStatus={userNameError ? 'error' : ''}
                             help={userNameError || ''}
                         >
-                            {getFieldDecorator('userName', {
+                            {getFieldDecorator('username', {
                                 rules: [{ required: true, message: local.userNameEmptyTip }],
                             })(
                                 <Input allowClear autoFocus prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="用户名" />
@@ -105,16 +104,6 @@ export default class extends Component {
                                 rules: [{ required: true, message: local.passwordEmptyTip }],
                             })(
                                 <Input.Password prefix={<Icon type="lock" style={{ fontSize: 13 }} />} placeholder="密码" />
-                            )}
-                        </Form.Item>
-                        <Form.Item
-                            validateStatus={codeError ? 'error' : ''}
-                            help={codeError || ''}
-                        >
-                            {getFieldDecorator('code', {
-                                rules: [{ required: true, message: "请输入动态码" }],
-                            })(
-                                <Input allowClear autoFocus prefix={<Icon type="lock" style={{ fontSize: 13 }} />} placeholder="账号动态码" />
                             )}
                         </Form.Item>
                         <Button

@@ -18,7 +18,7 @@ export default class App extends React.Component {
             // 获取系统菜单 和 随菜单携带过来的权限
             this.state.loading = true;
             menu.getRoutes({
-                params: { userId: loginUser ?.id},
+                params: {},
                 onResolve: (res) => {
                     let menus = res || [];
                     const { permissions } = getMenuTreeDataAndPermissions(menus);
