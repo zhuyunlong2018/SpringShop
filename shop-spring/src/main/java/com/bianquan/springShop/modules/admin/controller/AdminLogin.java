@@ -6,6 +6,7 @@ import com.bianquan.springShop.common.validator.Assert;
 import com.bianquan.springShop.modules.admin.dao.AdminDao;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
+import com.bianquan.springShop.modules.admin.form.LoginForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
 
 @RestController
@@ -35,11 +37,9 @@ public class AdminLogin extends AbstractController {
 
     @PostMapping("/login")
     @ApiOperation("登录接口")
-    public Response login(String username, String password) {
-        Assert.isBlank(username, "用户名不能为空");
-        Assert.isBlank(password, "密码不能为空");
-        String jwt = adminService.login(username, password);
-        return Response.ok(jwt);
+    public Response login(@RequestBody LoginForm loginForm) {
+        Map<String, Object> map = adminService.login(loginForm.getUsername(), loginForm.getPassword());
+        return Response.ok(map);
     }
 
     @PostMapping("/register")

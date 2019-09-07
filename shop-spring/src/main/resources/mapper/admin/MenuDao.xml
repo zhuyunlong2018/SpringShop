@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bianquan.springShop.modules.admin.dao.MenuDao">
+
+    <sql id="table_field">id,`key`,parent_key,`local`,`text`,`target`,icon,path,url,`order`,`type`,code</sql>
+
+    <!--获取用户关联前端路由-->
+    <select id="getRoutes" resultType="com.bianquan.springShop.modules.admin.entity.MenuEntity">
+        SELECT  <include refid="table_field"></include>
+        FROM sp_menus WHERE `key` IN
+        <foreach collection="list" item="key" index="index" open="(" close=")" separator=",">
+            #{key}
+        </foreach>
+    </select>
+
+    <!--获取所有列表-->
+    <select id="getList" resultType="com.bianquan.springShop.modules.admin.entity.MenuEntity">
+        SELECT  <include refid="table_field"></include>
+        FROM sp_menus
+    </select>
+
+</mapper>

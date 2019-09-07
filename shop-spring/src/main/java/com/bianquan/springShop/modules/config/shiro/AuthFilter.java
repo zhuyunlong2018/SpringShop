@@ -10,6 +10,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -110,5 +111,16 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         }
         return false;
     }
+
+    @Override
+    public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue)
+            throws Exception {
+        HttpServletRequest req = (HttpServletRequest)request;
+        if(req.getMethod().equals(RequestMethod.OPTIONS.name())){
+            return true;
+        }
+        return super.onPreHandle(request, response, mappedValue);
+    }
+
 
 }

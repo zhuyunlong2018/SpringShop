@@ -25,22 +25,23 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
     private JwtUtil jwtUtil;
 
     @Override
-    public String login(String username, String password) {
-        //TODO 参数验证
+    public Map<String, Object> login(String username, String password) {
         AdminEntity admin = queryByName(username);
         if (null == admin) {
             throw new RRException("账号不存在");
         }
+        //密码校验
         String mdPassword = new Md5Hash(password, admin.getSalt(), 3).toString();
         if (!mdPassword.equals(admin.getPassword())) {
             throw new RRException("密码错误");
         }
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("id", admin.getId());
         map.put("name", admin.getName());
-        String token = jwtUtil.generateToken(new Gson().toJson(map));
-        return token;
+        String token =  jwtUtil.generateToken(new Gson().toJson(map));
+        map.put("token", token);
+        return map;
     }
 
     @Override
