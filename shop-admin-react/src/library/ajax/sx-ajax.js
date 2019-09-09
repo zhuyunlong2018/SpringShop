@@ -105,7 +105,7 @@ export default class SXAjax {
         const CancelToken = axios.CancelToken;
         let cancel;
 
-        const isGet = method === 'get';
+        const isGet = (method === 'get') || (method === 'delete');
         const isMock = this.isMock(url, data, method, options);
 
         let instance = this.instance;

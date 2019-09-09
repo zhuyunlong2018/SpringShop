@@ -25,8 +25,8 @@ export default class index extends Component {
     columns = [
         // key 与parentKey自动生成了，不需要展示和编辑
         // {title: 'key', dataIndex: 'key', key: 'key'},
-        {title: 'id', dataIndex: 'id', key: 'id'},
-        {title: 'parentKey', dataIndex: 'parentKey', key: 'parentKey'},
+        // {title: 'id', dataIndex: 'id', key: 'id'},
+        // {title: 'parentKey', dataIndex: 'parentKey', key: 'parentKey'},
         {
             title: '名称', dataIndex: 'text', key: 'text', width: 250,
             render: (value, record) => {
@@ -164,9 +164,9 @@ export default class index extends Component {
      * 删除菜单
      */
     handleDeleteNode = (record) => {
-        const { id } = record;
+        const { key } = record;
         this.setState({ loading: true });
-        del({ id })
+        del({ key })
             .then(() => {
                 this.setState({ visible: false });
                 this.fetchMenus();
@@ -186,7 +186,6 @@ export default class index extends Component {
                 const { key } = values;
                 this.setState({ loading: true });
                 const ajax = key ? edit(values) : add(values);
-                console.log(values)
                 ajax.then(() => {
                     this.setState({ visible: false });
                     this.fetchMenus();
