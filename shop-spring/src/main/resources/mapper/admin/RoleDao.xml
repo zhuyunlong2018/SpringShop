@@ -3,10 +3,16 @@
 
 <mapper namespace="com.bianquan.springShop.modules.admin.dao.RoleDao">
 
+    <sql id="table_field">id, name, description, permissions</sql>
+
     <!--通过管理员ID检索关联所有角色-->
     <select id="getRolesWithMenusByUserId" resultType="com.bianquan.springShop.modules.admin.entity.RoleEntity">
-        SELECT id, name, description, permissions FROM
+        SELECT <include refid="table_field"></include> FROM
         sp_admin_role ar LEFT JOIN sp_roles r ON ar.role_id=r.id WHERE admin_id = #{userId}
     </select>
 
+    <!--检查角色是否被使用-->
+    <select id="checkRoleIsUsed" resultType="java.lang.Integer">
+        SELECT count(1) FROM sp_admin_role WHERE role_id = #{id}
+    </select>
 </mapper>

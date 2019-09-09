@@ -8,6 +8,7 @@ import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
 import com.bianquan.springShop.modules.utils.JwtUtil;
 import com.google.gson.Gson;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
         Map<String, Object> map = new HashMap<>();
         map.put("id", admin.getId());
         map.put("name", admin.getName());
-        String token =  jwtUtil.generateToken(new Gson().toJson(map));
+        String token = jwtUtil.generateToken(new Gson().toJson(map));
         map.put("token", token);
         return map;
     }
@@ -71,14 +72,63 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
     }
 
     @Override
-    public AdminEntity queryAdmin(Integer id) {
-        return new AdminEntity();
-    }
-
-    @Override
     public AdminEntity queryByName(String name) {
         QWrapper<AdminEntity> queryWrapper = new QWrapper<>();
         queryWrapper.eq(AdminEntity.NAME, name);
-        return this.getOne(queryWrapper);
+        return getOne(queryWrapper);
+    }
+
+    @Override
+    public Map<String, Object> queryPageWithRole(int currentPage, int pageSize) {
+        int currentIndex = (currentPage - 1) * pageSize;
+        List<AdminEntity> list = adminDao.fetchWithRolesByPage(currentIndex, pageSize);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("total", count());
+        map.put("list", list);
+        return map;
+    }
+
+    @Override
+    public Boolean addAdmin(AdminEntity adminEntity) {
+        //校验是否重名
+        AdminEntity checkName = queryByName(adminEntity.getName());
+        if (checkName != null) {
+            throw new RRException(adminEntity.getName() + "已存在");
+        }
+        //生成盐（部分，需要存入数据库中）
+        String random = new SecureRandomNumberGenerator().nextBytes().toHex();
+        //将原始密码加盐（上面生成的盐），并且用md5算法加密三次，将最后结果存入数据库中
+        String mdPassword = new Md5Hash("123456", random, 3).toString();
+        adminEntity.setPassword(mdPassword);
+        adminEntity.setSalt(random);
+        boolean result = save(adminEntity);
+        if (result || adminEntity.getRoles() != null) {
+            //添加角色关系
+            adminDao.addRoleRelations(adminEntity);
+        }
+        return result;
+    }
+
+    @Override
+    public Boolean editAdmin(AdminEntity adminEntity) {
+        //检验是否重名
+        QWrapper<AdminEntity> wrapper = new QWrapper<>();
+        wrapper.eq(AdminEntity.NAME, adminEntity.getName())
+                .ne(AdminEntity.ID, adminEntity.getId());
+        if (count(wrapper) > 0) {
+            throw new RRException(adminEntity.getName() + "已被使用");
+        }
+
+        return null;
+    }
+
+    @Override
+    public Boolean deleteAdmin(int id) {
+        boolean result = removeById(id);
+        if (result) {
+            //删除角色关系
+            adminDao.deleteAllRoleRelations(id);
+        }
+        return null;
     }
 }

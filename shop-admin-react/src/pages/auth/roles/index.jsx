@@ -60,10 +60,16 @@ export default class RoleList extends Component {
     }
 
 
+    /**
+     * 处理添加
+     */
     handleAdd = () => {
         this.setState({ role: void null, visible: true });
     };
 
+    /**
+     * 处理删除
+     */
     handleDelete = (id) => {
         // TODO
         this.setState({ loading: true });

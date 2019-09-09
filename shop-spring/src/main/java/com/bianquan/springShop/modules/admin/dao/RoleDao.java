@@ -10,4 +10,6 @@ import java.util.List;
 public interface RoleDao extends BaseMapper<RoleEntity> {
 
     List<RoleEntity> getRolesWithMenusByUserId(Integer userId);
+
+    Integer checkRoleIsUsed(int id);
 }

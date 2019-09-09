@@ -1,7 +1,9 @@
 package com.bianquan.springShop;
 
 import com.bianquan.springShop.common.utils.QWrapper;
+import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.bianquan.springShop.modules.admin.entity.MenuEntity;
+import com.bianquan.springShop.modules.admin.serivice.AdminService;
 import com.bianquan.springShop.modules.admin.serivice.MenuService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +18,7 @@ import java.util.List;
 public class SpringShopApplicationTests {
 
 	@Autowired
-	private MenuService menuService;
+	private AdminService adminService;
 
 	@Test
 	public void contextLoads() {
@@ -25,13 +27,7 @@ public class SpringShopApplicationTests {
 	@Test
 	public void	selectCount() {
 
-		QWrapper<MenuEntity> wrapper = new QWrapper<>();
-		wrapper.eq(MenuEntity.PARENT_KEY, "1567993150Y7YvA");
-		List<MenuEntity> list = menuService.list(wrapper);
-		System.out.println(list.size());
 
-		int count = menuService.count(wrapper);
-		System.out.println(count);
 
 	}
 

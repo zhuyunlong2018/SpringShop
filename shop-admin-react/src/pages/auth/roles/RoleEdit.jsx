@@ -58,7 +58,7 @@ export default class RoleEdit extends Component {
                 this.setSelectedRowKeys([]);
                 this.setState({ data: {}, selectedRowKeys: [] });
             } else {
-                const selectedRowKeys = role.permissions;
+                const selectedRowKeys = role.permissions.split(",");
                 this.setState({ data: role, selectedRowKeys });
                 // 如果不是所有的子级都选中，删除父级的key，父级为半选状态
                 this.setSelectedRowKeys(selectedRowKeys);
@@ -165,10 +165,10 @@ export default class RoleEdit extends Component {
         const { key } = record;
 
         // 半选
-        if (halfSelectedRowKeys.includes(key)) return { checked: false, indeterminate: true };
+        if (halfSelectedRowKeys.includes(key)) return { selectedRowKeys: false, indeterminate: true };
 
         // 全选
-        if (selectedRowKeys.includes(key)) return { checked: true, indeterminate: false };
+        if (selectedRowKeys.includes(key)) return { selectedRowKeys: true, indeterminate: false };
 
         return {};
     };

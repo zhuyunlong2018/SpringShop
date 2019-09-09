@@ -75,7 +75,7 @@ export default class AdminCenter extends Component {
         params.page = pageNum
         params.pageSize = pageSize
         getAdmins(params).then(admins => {
-            this.setState({ dataSource: admins.data, total: admins.total });
+            this.setState({ dataSource: admins.list, total: admins.total });
         })
             .finally(() => this.setState({ loading: false }));
     }

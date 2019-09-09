@@ -1,6 +1,8 @@
 package com.bianquan.springShop.modules.admin.serivice.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.modules.admin.dao.RoleDao;
 import com.bianquan.springShop.modules.admin.entity.RoleEntity;
 import com.bianquan.springShop.modules.admin.serivice.RoleService;
@@ -27,5 +29,32 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, RoleEntity> implements
             permissions.addAll(list);
         }
         return permissions;
+    }
+
+    @Override
+    public Boolean saveRole(RoleEntity roleEntity) {
+        String permission = "";
+        for (String key: roleEntity.getKeys()) {
+            if (!"".equals(key)) {
+                permission += key + ",";
+            }
+        }
+        roleEntity.setPermissions(permission);
+        boolean result;
+        if (null != roleEntity.getId()) {
+            result = updateById(roleEntity);
+        } else {
+            result = save(roleEntity);
+        }
+        return result;
+    }
+
+    @Override
+    public Boolean deleteRole(int id) {
+        Integer check = roleDao.checkRoleIsUsed(id);
+        if (SqlHelper.retCount(check) > 0) {
+            throw new RRException("角色已绑定用户，请先取消关联");
+        }
+        return removeById(id);
     }
 }

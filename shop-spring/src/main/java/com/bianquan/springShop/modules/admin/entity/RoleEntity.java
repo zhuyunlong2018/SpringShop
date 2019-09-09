@@ -1,10 +1,13 @@
 package com.bianquan.springShop.modules.admin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
+
+import java.util.List;
 
 @Data
 @FieldNameConstants(prefix = "")
@@ -22,4 +25,8 @@ public class RoleEntity {
 
     //权限记录
     private String permissions;
+
+    @TableField(exist = false)
+    private List<String> keys;
+
 }

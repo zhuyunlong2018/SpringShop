@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bianquan.springShop.modules.admin.dao.AdminDao">
+
+    <sql id="table_field">id,name,description,status</sql>
+
+    <!--通过管理员ID检索关联所有角色-->
+    <select id="fetchWithRolesByPage" resultMap="fetchWithRolesType">
+        SELECT <include refid="table_field"></include> FROM
+        sp_admin limit #{currIndex} , #{pageSize}
+    </select>
+    <resultMap type="com.bianquan.springShop.modules.admin.entity.AdminEntity" id="fetchWithRolesType">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="status" property="status"/>
+        <collection property="roles"
+                    ofType="com.bianquan.springShop.modules.admin.entity.RoleEntity"
+                    javaType="java.util.ArrayList"
+                    select="com.bianquan.springShop.modules.admin.dao.RoleDao.getRolesWithMenusByUserId"
+                    column="id" />
+    </resultMap>
+
+    <!--通过管理员ID删除角色关联关系-->
+    <delete id="deleteAllRoleRelations">
+        DELETE from sp_admin_role WHERE admin_id=#{adminId}
+    </delete>
+
+    <insert id="addRoleRelations">
+        INSERT INTO
+    </insert>
+
+</mapper>
