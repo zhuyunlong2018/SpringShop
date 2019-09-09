@@ -20,4 +20,11 @@ public interface MenuDao extends BaseMapper<MenuEntity> {
      * @return
      */
     List<MenuEntity> getList();
+
+    /**
+     * 通过key删除菜单
+     * @param key
+     * @return
+     */
+    int deleteByKey(String key);
 }

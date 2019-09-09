@@ -20,4 +20,9 @@
         FROM sp_menus
     </select>
 
+    <!--通过可以删除-->
+    <delete id="deleteByKey">
+        DELETE  FROM sp_menus WHERE `key`=#{key}
+    </delete>
+
 </mapper>

@@ -8,6 +8,11 @@ import java.io.*;
  */
 public class ObjectTranscoder {
 
+    /**
+     * 对象序列化
+     * @param value
+     * @return
+     */
     public static byte[] serialize(Object value) {
         if (value == null) {
             throw new NullPointerException("Can't serialize null");
@@ -35,6 +40,11 @@ public class ObjectTranscoder {
         return rv;
     }
 
+    /**
+     * 反序列化为对象
+     * @param in
+     * @return
+     */
     public static Object deserialize(byte[] in) {
         Object rv=null;
         ByteArrayInputStream bis = null;

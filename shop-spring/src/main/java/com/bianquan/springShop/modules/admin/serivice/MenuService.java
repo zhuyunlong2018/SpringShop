@@ -13,4 +13,11 @@ public interface MenuService extends IService<MenuEntity> {
      * @return
      */
     List<MenuEntity> getRoutes(List<String> list);
+
+    /**
+     * 通过key删除菜单
+     * @param key
+     * @return
+     */
+    Boolean delByKey(String key);
 }

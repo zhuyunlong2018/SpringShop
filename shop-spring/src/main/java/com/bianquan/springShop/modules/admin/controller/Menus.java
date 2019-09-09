@@ -1,11 +1,10 @@
 package com.bianquan.springShop.modules.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bianquan.springShop.common.exception.RRException;
-import com.bianquan.springShop.common.utils.QWrapper;
+import com.bianquan.springShop.common.utils.CommonUtils;
+import com.bianquan.springShop.common.utils.DateUtil;
 import com.bianquan.springShop.common.utils.Response;
-import com.bianquan.springShop.modules.admin.dao.MenuDao;
 import com.bianquan.springShop.modules.admin.entity.MenuEntity;
 import com.bianquan.springShop.modules.admin.serivice.MenuService;
 import com.bianquan.springShop.modules.admin.serivice.RoleService;
@@ -23,9 +22,6 @@ public class Menus extends AbstractController {
 
     @Autowired
     MenuService menuService;
-
-    @Autowired
-    MenuDao menuDao;
 
     @Autowired
     RoleService roleService;
@@ -46,16 +42,16 @@ public class Menus extends AbstractController {
     @GetMapping("/getMenus")
     @ApiOperation("获取后台所有菜单列表")
     public Response getMenus() {
-        return Response.ok(menuDao.getList());
+        return Response.ok(menuService.list());
     }
 
     @PostMapping("/add")
     @ApiOperation("添加一个菜单")
     public Response add(@RequestBody MenuEntity menuEntity) {
-        System.out.println(menuEntity.toString());
-        //TODO 生成随机key
-        int result = menuDao.insert(menuEntity);
-        if (result == 0) {
+        //生成随机key
+        menuEntity.setKey(DateUtil.timeStamp() + CommonUtils.randomStr(5));
+        boolean result = menuService.save(menuEntity);
+        if (!result) {
             throw new RRException("添加失败");
         }
         return Response.ok();
@@ -64,8 +60,8 @@ public class Menus extends AbstractController {
     @PutMapping("/edit")
     @ApiOperation("编辑一个菜单")
     public Response edit(@RequestBody MenuEntity menuEntity) {
-        int result = menuDao.updateById(menuEntity);
-        if (result == 0) {
+        boolean result = menuService.updateById(menuEntity);
+        if (!result) {
             throw new RRException("更新失败");
         }
         return Response.ok();
@@ -73,8 +69,11 @@ public class Menus extends AbstractController {
 
     @DeleteMapping("/del")
     @ApiOperation("删除一个菜单")
-    public Response del() {
-
+    public Response del(@RequestParam(value = "key") String key) {
+        Boolean result = menuService.delByKey(key);
+        if (!result) {
+            throw new RRException("删除失败");
+        }
         return Response.ok();
     }
 }
