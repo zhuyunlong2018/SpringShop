@@ -23,7 +23,6 @@
  * * * * * * * * * * * * * * * * * * * * * * * **/
 
 import axios from 'axios';
-import { stringify } from 'qs';
 import { getLoginUser } from "@/commons"
 
 export default class SXAjax {

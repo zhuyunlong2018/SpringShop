@@ -5,7 +5,7 @@ import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.validator.Assert;
 import com.bianquan.springShop.dao.shop.UserDao;
 import com.bianquan.springShop.entity.shop.UserEntity;
-import com.bianquan.springShop.modules.shop.form.LoginForm;
+import com.bianquan.springShop.web.shop.form.LoginForm;
 import com.bianquan.springShop.service.shop.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

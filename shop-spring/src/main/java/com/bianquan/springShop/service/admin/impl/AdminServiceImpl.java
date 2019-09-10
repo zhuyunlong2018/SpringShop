@@ -6,7 +6,7 @@ import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.dao.admin.AdminDao;
 import com.bianquan.springShop.entity.admin.AdminEntity;
 import com.bianquan.springShop.service.admin.AdminService;
-import com.bianquan.springShop.modules.utils.JwtUtil;
+import com.bianquan.springShop.common.utils.JwtUtil;
 import com.google.gson.Gson;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;

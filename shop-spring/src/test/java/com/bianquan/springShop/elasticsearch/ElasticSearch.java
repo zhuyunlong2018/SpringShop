@@ -2,7 +2,7 @@ package com.bianquan.springShop.elasticsearch;
 
 
 import com.bianquan.springShop.entity.shop.ProductEntity;
-import com.bianquan.springShop.modules.shop.repository.ProductRepository;
+import com.bianquan.springShop.web.shop.repository.ProductRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

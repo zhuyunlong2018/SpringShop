@@ -91,7 +91,6 @@ export default class DatabaseConfig extends Component {
             database: {
                 tableNames,
                 tableColumns,
-                gettingTableNames,
                 gettingTableColumns,
                 showConfig,
             },
