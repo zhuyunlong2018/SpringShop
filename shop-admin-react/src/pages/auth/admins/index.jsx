@@ -33,10 +33,13 @@ export default class AdminCenter extends Component {
         {
             title: '绑定角色', dataIndex: 'roles', key: 'roles',
             render: (value, record) => {
-                const roles = value.map((element) =>
-                    <Tag key={element.id+element.name} color="magenta">{element.name}</Tag>
-                );
-                return (<div>{roles}</div>);
+                if (value) {
+                    const roles = value.map((element) =>
+                        <Tag key={element.id + element.name} color="magenta">{element.name}</Tag>
+                    );
+                    return (<div>{roles}</div>);
+                }
+                return ""
             }
         },
         {
@@ -90,7 +93,7 @@ export default class AdminCenter extends Component {
 
     handleEdit = (admin) => {
         if (!admin.selectRoles) {
-            let data = {...admin, selectRoles: []}
+            let data = { ...admin, selectRoles: [] }
             admin.roles.forEach(element => {
                 data.selectRoles.push(element.id)
             });
@@ -114,7 +117,7 @@ export default class AdminCenter extends Component {
 
     onOke(admin) {
         if (this.state.admin) {
-            let dataSource = [ ...this.state.dataSource ]
+            let dataSource = [...this.state.dataSource]
             for (let index in dataSource) {
                 if (dataSource[index].id === admin.id) {
                     dataSource[index] = admin

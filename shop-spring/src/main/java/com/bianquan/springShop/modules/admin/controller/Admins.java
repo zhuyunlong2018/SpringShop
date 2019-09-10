@@ -1,15 +1,13 @@
 package com.bianquan.springShop.modules.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.utils.Response;
-import com.bianquan.springShop.common.validator.Assert;
 import com.bianquan.springShop.common.validator.ValidatorUtils;
 import com.bianquan.springShop.modules.admin.entity.AdminEntity;
+import com.bianquan.springShop.modules.admin.entity.RoleEntity;
 import com.bianquan.springShop.modules.admin.serivice.AdminService;
-import com.bianquan.springShop.modules.shop.entity.ProductEntity;
+import com.bianquan.springShop.modules.admin.serivice.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,9 @@ public class Admins extends AbstractController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/getAdmins")
     @ApiOperation("获取管理员列表")
@@ -42,6 +43,8 @@ public class Admins extends AbstractController {
         if (!result) {
             throw new RRException("添加失败");
         }
+        List<RoleEntity> roles = roleService.getRolesByAdminId(adminEntity.getId());
+        adminEntity.setRoles(roles);
         return Response.ok(adminEntity);
     }
 
@@ -53,6 +56,8 @@ public class Admins extends AbstractController {
         if (!result) {
             throw new RRException("更新失败");
         }
+        List<RoleEntity> roles = roleService.getRolesByAdminId(adminEntity.getId());
+        adminEntity.setRoles(roles);
         return Response.ok(adminEntity);
     }
 

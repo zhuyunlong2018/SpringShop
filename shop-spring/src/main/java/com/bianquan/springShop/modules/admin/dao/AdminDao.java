@@ -26,8 +26,8 @@ public interface AdminDao extends BaseMapper<AdminEntity> {
 
     /**
      * 添加管理员角色关联关系
-     * @param adminEntity
+     * @param adminId
      * @return
      */
-    Integer addRoleRelations(AdminEntity adminEntity);
+    Integer addRoleRelations(int adminId, List<Integer> roleIds);
 }

@@ -104,7 +104,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
         boolean result = save(adminEntity);
         if (result || adminEntity.getRoles() != null) {
             //添加角色关系
-            adminDao.addRoleRelations(adminEntity);
+            adminDao.addRoleRelations(adminEntity.getId(), adminEntity.getSelectRoles());
         }
         return result;
     }
@@ -118,8 +118,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
         if (count(wrapper) > 0) {
             throw new RRException(adminEntity.getName() + "已被使用");
         }
-
-        return null;
+        boolean result = updateById(adminEntity);
+        if (result) {
+            //删除原来角色关系，填写新的角色关系
+            adminDao.deleteAllRoleRelations(adminEntity.getId());
+            adminDao.addRoleRelations(adminEntity.getId(), adminEntity.getSelectRoles());
+        }
+        return result;
     }
 
     @Override
@@ -129,6 +134,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, AdminEntity> impleme
             //删除角色关系
             adminDao.deleteAllRoleRelations(id);
         }
-        return null;
+        return result;
     }
 }

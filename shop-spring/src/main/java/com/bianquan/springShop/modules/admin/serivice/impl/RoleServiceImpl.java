@@ -20,8 +20,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, RoleEntity> implements
     private RoleDao roleDao;
 
     @Override
-    public List<String> getRolesByUserId(Integer userId) {
-        List<RoleEntity> roleList = roleDao.getRolesWithMenusByUserId(userId);
+    public List<String> getPermissionByAdminId(Integer adminId) {
+        List<RoleEntity> roleList = roleDao.getRolesWithMenusByUserId(adminId);
         List<String> permissions = new ArrayList<>();
         List<String> list;
         for (RoleEntity role : roleList) {
@@ -56,5 +56,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, RoleEntity> implements
             throw new RRException("角色已绑定用户，请先取消关联");
         }
         return removeById(id);
+    }
+
+    @Override
+    public List<RoleEntity> getRolesByAdminId(int id) {
+        return roleDao.getRolesWithMenusByUserId(id);
     }
 }

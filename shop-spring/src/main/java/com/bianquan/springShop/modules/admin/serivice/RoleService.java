@@ -2,18 +2,17 @@ package com.bianquan.springShop.modules.admin.serivice;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bianquan.springShop.modules.admin.entity.RoleEntity;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.List;
 
 public interface RoleService extends IService<RoleEntity> {
 
     /**
-     * 通过用户ID获取用户角色
-     * @param userId
+     * 通过用户ID获取用户关联角色绑定的菜单权限
+     * @param adminId
      * @return
      */
-    List<String> getRolesByUserId(Integer userId);
+    List<String> getPermissionByAdminId(Integer adminId);
 
 
     /**
@@ -29,4 +28,11 @@ public interface RoleService extends IService<RoleEntity> {
      * @return
      */
     Boolean deleteRole(int id);
+
+    /**
+     * 通过管理员ID获取关联角色列表
+     * @param id
+     * @return
+     */
+    List<RoleEntity> getRolesByAdminId(int id);
 }

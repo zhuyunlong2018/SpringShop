@@ -31,7 +31,7 @@ public class Menus extends AbstractController {
     public Response getUserRoutes() {
 
         //获取管理员关联角色的前端页面权限
-        List<String> permission = roleService.getRolesByUserId(getUserId());
+        List<String> permission = roleService.getPermissionByAdminId(getUserId());
         if (permission.isEmpty()) {
             throw new RRException("您没有相关权限");
         }

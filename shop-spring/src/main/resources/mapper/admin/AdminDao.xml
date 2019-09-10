@@ -18,7 +18,7 @@
                     ofType="com.bianquan.springShop.modules.admin.entity.RoleEntity"
                     javaType="java.util.ArrayList"
                     select="com.bianquan.springShop.modules.admin.dao.RoleDao.getRolesWithMenusByUserId"
-                    column="id" />
+                    column="id"/>
     </resultMap>
 
     <!--通过管理员ID删除角色关联关系-->
@@ -27,7 +27,12 @@
     </delete>
 
     <insert id="addRoleRelations">
-        INSERT INTO
+        INSERT INTO sp_admin_role (admin_id, role_id)
+        VALUES
+        <foreach collection="roleIds" item="item" index="index"
+                 separator=",">
+            ( #{adminId}, #{item})
+        </foreach>
     </insert>
 
 </mapper>

@@ -9,7 +9,17 @@ import java.util.List;
 @Mapper
 public interface RoleDao extends BaseMapper<RoleEntity> {
 
+    /**
+     * 通过用户ID 获取关联的橘色列表
+     * @param userId
+     * @return
+     */
     List<RoleEntity> getRolesWithMenusByUserId(Integer userId);
 
+    /**
+     * 检查角色是否被管理员关联了
+     * @param id
+     * @return
+     */
     Integer checkRoleIsUsed(int id);
 }
