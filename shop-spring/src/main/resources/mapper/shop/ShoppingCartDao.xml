@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bianquan.springShop.modules.shop.dao.ShoppingCartDao">
+<mapper namespace="com.bianquan.springShop.dao.shop.ShoppingCartDao">
 
     <!-- 根据商品ID获取sku列表-->
     <select id="fetchListWithProductSku" resultMap="entityList">
@@ -12,7 +12,7 @@
         LEFT JOIN sp_products_sku ps ON  c.product_sku_id=ps.id
         WHERE c.user_id=#{userId}
     </select>
-    <resultMap id="entityList" type="com.bianquan.springShop.modules.shop.entity.ShoppingCartEntity">
+    <resultMap id="entityList" type="com.bianquan.springShop.entity.shop.ShoppingCartEntity">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="product_sku_id" property="productSkuId" />
@@ -22,7 +22,7 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <!-- 商品sku集合-->
-        <collection property="productSku" ofType="com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity">
+        <collection property="productSku" ofType="com.bianquan.springShop.entity.shop.ProductsSkuEntity">
             <id property="id" column="id"/>
             <result property="productId" column="product_id"/>
             <result property="description" column="description"/>

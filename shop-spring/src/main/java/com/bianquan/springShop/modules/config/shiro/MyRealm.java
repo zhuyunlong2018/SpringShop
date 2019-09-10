@@ -1,7 +1,7 @@
 package com.bianquan.springShop.modules.config.shiro;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.bianquan.springShop.modules.admin.serivice.AdminService;
+import com.bianquan.springShop.service.admin.Permissions;
 import com.bianquan.springShop.modules.utils.JwtUtil;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class MyRealm extends AuthorizingRealm {
 
     @Autowired
-    private AdminService adminService;
+    private Permissions permissionsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -47,8 +47,7 @@ public class MyRealm extends AuthorizingRealm {
         Double id = (Double) map.get("id");
 
         //获取管理员权限列表
-        Set<String> permissions = adminService.getUserPermissions(id.intValue());
-
+        Set<String> permissions = permissionsService.getUserPermissions(id.intValue());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setStringPermissions(permissions);
         return info;

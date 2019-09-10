@@ -1,6 +1,6 @@
 package com.bianquan.springShop.modules.shop.repository;
 
-import com.bianquan.springShop.modules.shop.entity.ProductEntity;
+import com.bianquan.springShop.entity.shop.ProductEntity;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

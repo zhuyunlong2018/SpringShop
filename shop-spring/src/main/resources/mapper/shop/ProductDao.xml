@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bianquan.springShop.modules.shop.dao.ProductDao">
+<mapper namespace="com.bianquan.springShop.dao.shop.ProductDao">
 
     <!--获取商品列表-->
     <select id="fetchList" resultMap="entityList">
         select * from sp_products
     </select>
-    <resultMap id="entityList" type="com.bianquan.springShop.modules.shop.entity.ProductEntity">
+    <resultMap id="entityList" type="com.bianquan.springShop.entity.shop.ProductEntity">
         <id column="id" property="id" />
     </resultMap>
 
@@ -24,7 +24,7 @@
         WHERE
             p.id=#{id}
     </select>
-    <resultMap id="managerProductEntity" type="com.bianquan.springShop.modules.shop.entity.ProductEntity">
+    <resultMap id="managerProductEntity" type="com.bianquan.springShop.entity.shop.ProductEntity">
         <id column="id" property="id" />
         <result property="title" column="title"/>
         <result property="sellPoint" column="sell_point"/>
@@ -34,20 +34,20 @@
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <!-- 商品属性集合-->
-        <collection property="attributes" ofType="com.bianquan.springShop.modules.shop.entity.ProductAttributesEntity">
+        <collection property="attributes" ofType="com.bianquan.springShop.entity.shop.ProductAttributesEntity">
             <id property="id" column="id"/>
             <result property="productId" column="product_id"/>
             <result property="paramData" column="param_data"/>
         </collection>
         <!-- 商品详情集合-->
-        <collection property="desc" ofType="com.bianquan.springShop.modules.shop.entity.ProductDescEntity">
+        <collection property="desc" ofType="com.bianquan.springShop.entity.shop.ProductDescEntity">
             <id property="productId" column="product_id"/>
             <result property="productDesc" column="product_desc"/>
         </collection>
         <!-- 商品sku数据集合-->
         <collection property="sku"  column="product_id"
-                    select="com.bianquan.springShop.modules.shop.dao.ProductsSkuDao.fetchListByProductId"
-                    ofType="com.bianquan.springShop.modules.shop.entity.ProductsSkuEntity">
+                    select="com.bianquan.springShop.dao.shop.ProductsSkuDao.fetchListByProductId"
+                    ofType="com.bianquan.springShop.entity.shop.ProductsSkuEntity">
         </collection>
     </resultMap>
 

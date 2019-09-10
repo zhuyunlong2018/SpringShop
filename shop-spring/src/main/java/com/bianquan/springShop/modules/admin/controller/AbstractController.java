@@ -1,6 +1,5 @@
 package com.bianquan.springShop.modules.admin.controller;
 
-import com.bianquan.springShop.modules.admin.entity.AdminEntity;
 import com.google.gson.Gson;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;

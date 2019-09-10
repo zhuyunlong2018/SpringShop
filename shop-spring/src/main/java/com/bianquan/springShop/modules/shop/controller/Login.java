@@ -3,7 +3,7 @@ package com.bianquan.springShop.modules.shop.controller;
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.validator.ValidatorUtils;
 import com.bianquan.springShop.modules.shop.form.LoginForm;
-import com.bianquan.springShop.modules.shop.service.UserService;
+import com.bianquan.springShop.service.shop.UserService;
 import com.bianquan.springShop.modules.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

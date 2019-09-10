@@ -1,9 +1,9 @@
 package com.bianquan.springShop.modules.shop.controller;
 
 import com.bianquan.springShop.common.utils.Response;
-import com.bianquan.springShop.modules.shop.dao.AdDao;
-import com.bianquan.springShop.modules.shop.entity.AdEntity;
-import com.bianquan.springShop.modules.shop.service.AdService;
+import com.bianquan.springShop.dao.shop.AdDao;
+import com.bianquan.springShop.entity.shop.AdEntity;
+import com.bianquan.springShop.service.shop.AdService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

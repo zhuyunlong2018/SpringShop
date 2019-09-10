@@ -1,9 +1,9 @@
 package com.bianquan.springShop.modules.shop.resolver;
 
 import com.bianquan.springShop.modules.shop.annotation.LoginUser;
-import com.bianquan.springShop.modules.shop.entity.UserEntity;
+import com.bianquan.springShop.entity.shop.UserEntity;
 import com.bianquan.springShop.modules.shop.interceptor.AuthorizationInterceptor;
-import com.bianquan.springShop.modules.shop.service.UserService;
+import com.bianquan.springShop.service.shop.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

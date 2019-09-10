@@ -2,11 +2,10 @@ package com.bianquan.springShop.modules.shop.controller;
 
 import com.bianquan.springShop.common.utils.QWrapper;
 import com.bianquan.springShop.common.utils.Response;
-import com.bianquan.springShop.modules.shop.entity.CategoryEntity;
-import com.bianquan.springShop.modules.shop.service.CategoryService;
+import com.bianquan.springShop.entity.shop.CategoryEntity;
+import com.bianquan.springShop.service.shop.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

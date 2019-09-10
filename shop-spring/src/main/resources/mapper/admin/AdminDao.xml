@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bianquan.springShop.modules.admin.dao.AdminDao">
+<mapper namespace="com.bianquan.springShop.dao.admin.AdminDao">
 
     <sql id="table_field">id,name,description,status</sql>
 
@@ -10,14 +10,14 @@
         SELECT <include refid="table_field"></include> FROM
         sp_admin limit #{currIndex} , #{pageSize}
     </select>
-    <resultMap type="com.bianquan.springShop.modules.admin.entity.AdminEntity" id="fetchWithRolesType">
+    <resultMap type="com.bianquan.springShop.entity.admin.AdminEntity" id="fetchWithRolesType">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="status" property="status"/>
         <collection property="roles"
-                    ofType="com.bianquan.springShop.modules.admin.entity.RoleEntity"
+                    ofType="com.bianquan.springShop.entity.admin.RoleEntity"
                     javaType="java.util.ArrayList"
-                    select="com.bianquan.springShop.modules.admin.dao.RoleDao.getRolesWithMenusByUserId"
+                    select="com.bianquan.springShop.dao.admin.RoleDao.getRolesWithMenusByUserId"
                     column="id"/>
     </resultMap>
 
