@@ -10,7 +10,7 @@ export default class FontIconInput extends Component {
     };
     state = {};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
 
     }
 

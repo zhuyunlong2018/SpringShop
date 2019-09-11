@@ -13,18 +13,16 @@ export default {
 
     setTitle: (title) => {
         const local = getCurrentLocal();
-
         if (title && title.local) {
             const text = local.menu[title.local];
             if (text) title.text = text;
         }
-
         return {title};
     },
 
     setBreadcrumbs: (breadcrumbs) => {
+        //TODO 修复面包屑国际化
         const local = getCurrentLocal();
-
         if (breadcrumbs && breadcrumbs.length) {
             breadcrumbs.forEach(item => {
                 if (item.local) {
@@ -37,6 +35,7 @@ export default {
         return {breadcrumbs};
     },
     appendBreadcrumbs: (appendBreadcrumbs, state) => {
+        console.log(appendBreadcrumbs)
         let {breadcrumbs = []} = state;
         breadcrumbs = breadcrumbs.concat(appendBreadcrumbs);
         return {breadcrumbs};

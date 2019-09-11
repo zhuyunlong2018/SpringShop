@@ -1,9 +1,9 @@
 import { getTopNodeByNode } from '@/library/utils/tree-utils';
 import { uniqueArray } from '@/library/utils';
 import { getMenuTreeDataAndPermissions, getSelectedMenuByPath } from '../commons';
-import { getCurrentLocal } from '@/i18n';
 import { getRoutes } from "@/api/menu"
 
+const getItem = (key) => window.localStorage.getItem(key);
 export const types = {
     GET_MENU_STATUS: 'MENU:GET_MENU_STATUS',    // 防止各个模块冲突，预订[模块名:]开头
 };
@@ -30,18 +30,18 @@ export default {
         payload: ({ params } = {}) => getRoutes(params),
         reducer: {
             resolve: (state, { payload: menus }) => {
-
+                const chooseLan = getItem("system-local")
+                console.log(chooseLan)
                 // 首次获取数据之后进行国际化处理
-                const i18n = getCurrentLocal();
                 const localedMenus = menus.map(item => {
-                    const { local } = item;
-                    const text = i18n.menu[local];
-                    if (text) return { ...item, text };
+                    const { text, local } = item;
+                    if (chooseLan === "en_GB" && local) {
+                        return { ...item, text:local, local: text }
+                    }
                     return { ...item };
                 });
 
                 const { menuTreeData } = getMenuTreeDataAndPermissions(localedMenus);
-
                 return { menus: menuTreeData };
             },
         },
@@ -49,7 +49,7 @@ export default {
 
     setKeepOtherOpen: (keepOtherOpen) => ({ keepOtherOpen }),
     setOpenKeys: (openKeys) => ({ openKeys }),
-    setMenus: (menus) => ({ menus }),
+    setMenus: (menus) => ({menus}),
     getMenuStatus: (arg, state) => {
         const path = window.location.pathname;
         const { keepOtherOpen } = state;

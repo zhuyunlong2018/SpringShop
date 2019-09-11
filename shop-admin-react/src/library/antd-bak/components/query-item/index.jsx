@@ -38,7 +38,7 @@ export default class QueryItem extends Component {
 
     state = {};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {formRef, form, loadOptions} = this.props;
 
         if (formRef) formRef(form);

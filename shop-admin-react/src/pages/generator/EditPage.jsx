@@ -169,7 +169,7 @@ export default class EditPage extends Component {
         },
     ];
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {formRef, form, validate} = this.props;
         if (formRef) formRef(form);
         if (validate) validate(this.validate);
@@ -186,7 +186,7 @@ export default class EditPage extends Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {form: {setFieldsValue}} = this.props;
         const oldName = this.props.baseInfo.name.value;
         const name = nextProps.baseInfo.name.value;

@@ -15,7 +15,9 @@ export default class HeaderUser extends Component {
     };
 
     handleMenuClick = ({key}) => {
-        this.props.action.system.setLocal(key);
+        if (key !== this.props.local) {
+            this.props.action.system.setLocal(key);
+        }
     };
 
     render() {

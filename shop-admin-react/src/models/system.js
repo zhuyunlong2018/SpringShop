@@ -19,6 +19,7 @@ export default {
         tabs: [],                   // 所有的tab配置 {path, text, icon, component, active, scrollTop}
         keepPage: true,             // 页面切换回去之后，保持内容，通过显示隐藏div实现，不知道会有什么坑！！！性能？各个互相干扰？
         smallFrame: false,           // 手机上等小屏幕布局
+        menuI18n: {},
     },
 
     syncStorage: {
@@ -118,13 +119,24 @@ export default {
     },
 
     /**
+     * 将后台存储的菜单添加到本地国际化中
+     * @param {array}} menus 
+     */
+    appendMenuI18n(menus) {
+        menus.forEach(element => {
+            const {text, local, key} = element
+            if (local) i18n[0].i18n.menu[key] = local
+            i18n[1].i18n.menu[key] = text
+        });
+    },
+
+    /**
      * 设置主题颜色
      * @param primaryColor
      * @returns {{primaryColor: *}}
      */
     setPrimaryColor: (primaryColor) => {
         setItem('primaryColor', primaryColor);
-
         return {primaryColor};
     },
 
@@ -136,7 +148,6 @@ export default {
     setLocal: (local) => {
         const localI18n = i18n.find(item => item.local === local).i18n;
         setItem('system-local', local);
-
         return {local: local, i18n: localI18n}
     },
 

@@ -34,7 +34,7 @@ export default class AdminCrud extends Component {
         previewCodeModalVisible: false,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.action.generator.getSrcDirs();
     }
 

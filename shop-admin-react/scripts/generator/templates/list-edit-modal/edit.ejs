@@ -15,7 +15,7 @@ export class <%= capitalName %>Edit extends Component {
         onSubmit: PropTypes.func.isRequired,
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {visible} = nextProps;
         if (!visible) {
             this.handleReset();

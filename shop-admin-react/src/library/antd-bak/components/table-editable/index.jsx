@@ -30,7 +30,7 @@ export default class FieldsTable extends Component {
 
     state = {};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {formRef, form} = this.props;
         if (formRef) formRef(form);
     }

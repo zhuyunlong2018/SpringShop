@@ -54,7 +54,7 @@ export default class PopPrompt extends Component {
         visible: false,
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // 如果 props 传入 visible,则直接更新
         if ('visible' in nextProps) {
             this.setState({

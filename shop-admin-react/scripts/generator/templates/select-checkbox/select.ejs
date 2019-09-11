@@ -23,7 +23,7 @@ export default class <%= capitalName %>Select extends Component {
         options: [],
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.$service.<%= lowercaseName %>Service
             .getAll()
             .then(list => {

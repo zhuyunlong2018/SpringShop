@@ -21,7 +21,7 @@ import {keepAliveRoutes} from './routes';
     },
 })
 export default class KeepAuthRoute extends React.Component {
-    componentWillUpdate() {
+    UNSAFE_componentWillUpdate() {
         if (this.tabsChange) {
             this.tabsChange = false;
             this.props.action.system.setTabs(this.tabs);
@@ -91,7 +91,7 @@ export default class KeepAuthRoute extends React.Component {
 
                             console.time('active');
 
-                            // 在componentWillUpdate中执行 system.setTabs
+                            // 在UNSAFE_componentWillUpdate中执行 system.setTabs
                             // 加快tab页切换，开发：80ms左右，生产：10ms左右
                             // 避免 Warning: Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.
                             this.tabsChange = true;

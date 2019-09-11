@@ -193,18 +193,18 @@ export function getMenuTreeDataAndPermissions(menus) {
 }
 
 /**
- * 树形菜单国际化处理
+ * 树形菜单国际化处理,系统菜单直接改为后端获取
  * @param menuTreeData
- * @param i18n
  */
-export function setMenuI18n(menuTreeData, i18n) {
+export function setMenuI18n(menuTreeData) {
     const treeData = [...menuTreeData];
-
     renderNode(treeData, (item) => {
-        const text = i18n[item.local];
-        if (text) item.text = text;
+        const {local,text} = item
+        if (local) {
+            item.text = local
+            item.local = text
+        }
     });
-
     return treeData;
 }
 

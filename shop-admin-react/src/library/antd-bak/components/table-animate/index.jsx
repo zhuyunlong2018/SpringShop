@@ -38,7 +38,7 @@ export default function (OriTable) {
             }
         };
 
-        componentWillReceiveProps(nextProps) {
+        UNSAFE_componentWillReceiveProps(nextProps) {
             let {animationDuring} = this.props;
             const nextDataSource = nextProps.dataSource || [];
             const dataSource = this.props.dataSource || [];

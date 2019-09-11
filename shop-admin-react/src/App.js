@@ -12,7 +12,7 @@ export default class App extends React.Component {
         this.props.action.getStateFromStorage();
 
         const { system, menu } = this.props.action;
-
+        
         const loginUser = getLoginUser();
         if (loginUser) {
             // 获取系统菜单 和 随菜单携带过来的权限
@@ -21,6 +21,8 @@ export default class App extends React.Component {
                 params: {},
                 onResolve: (res) => {
                     let menus = res || [];
+                    //将请求到的菜单添加到国际化中
+                    system.appendMenuI18n(menus)
                     const { permissions } = getMenuTreeDataAndPermissions(menus);
 
                     if (loginUser) {

@@ -34,7 +34,7 @@ export default store => next => action => {
     }
 
     function setMenuLocal() {
-        const localedMenus = setMenuI18n(menus, i18n.menu);
+        const localedMenus = setMenuI18n(menus);
         store.dispatch({
             type: setMenusActionType,
             payload: localedMenus,
@@ -76,6 +76,7 @@ export default store => next => action => {
 
     function setBreadcrumbsLocal() {
         if (breadcrumbs && breadcrumbs.length) {
+            
             const localedBreadcrumbs = breadcrumbs.map(item => {
                 if (item.local) {
                     const text = i18n.menu[item.local];

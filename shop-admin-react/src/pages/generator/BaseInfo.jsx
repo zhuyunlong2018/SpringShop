@@ -27,7 +27,7 @@ import {firstLowerCase, firstUpperCase, allUpperCase} from './utils';
 export default class BaseInfo extends Component {
     state = {};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {formRef, form, validate} = this.props;
         if (formRef) formRef(form);
 

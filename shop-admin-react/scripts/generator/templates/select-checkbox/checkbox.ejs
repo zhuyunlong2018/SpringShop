@@ -25,7 +25,7 @@ export class <%= capitalName %>Checkbox extends Component {
         options: [],
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.props.$service.<%= lowercaseName %>Service
             .getAll()
             .then(list => {

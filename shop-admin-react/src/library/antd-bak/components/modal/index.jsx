@@ -6,7 +6,7 @@ import 'antd/lib/modal/style/css';
 
 export default class ModalComponent extends Component {
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.props.beforeOpen && this.props.beforeOpen();
         }

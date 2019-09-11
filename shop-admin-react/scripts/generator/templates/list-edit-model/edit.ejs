@@ -16,7 +16,7 @@ export default class <%= capitalName %>Edit extends Component {
         isAdd: true,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {id} = this.props.match.params;
 
         if (id === ':id') {

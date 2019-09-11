@@ -56,7 +56,7 @@ export default class FieldsTable extends Component {
 
     static getValues = getValues;
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {formRef, form, submitRef} = this.props;
         if (formRef) formRef(form);
 

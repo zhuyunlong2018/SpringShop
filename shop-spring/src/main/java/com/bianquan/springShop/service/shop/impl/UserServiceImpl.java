@@ -1,5 +1,7 @@
 package com.bianquan.springShop.service.shop.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.validator.Assert;
@@ -10,6 +12,8 @@ import com.bianquan.springShop.service.shop.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements UserService {
@@ -31,6 +35,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
             throw new RRException("密码错误");
         }
         return user.getUserId();
+    }
+
+    @Override
+    public IPage<UserEntity> getPage(int currentPage, int pageSize) {
+        Page<UserEntity> page = new Page<>(currentPage, pageSize);
+        IPage<UserEntity> list = page(page);
+        return list;
     }
 
 
