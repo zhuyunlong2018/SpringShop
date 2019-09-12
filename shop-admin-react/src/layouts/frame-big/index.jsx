@@ -79,12 +79,13 @@ export default class FrameTopSideMenu extends Component {
             title: prevTitle,
             breadcrumbs: prevBreadcrumbs,
         } = this.props;
-
+        console.log("big")
         const selectedMenu = getSelectedMenuByPath(window.location.pathname, menus);
         let breadcrumbs = [];
         let title = '';
         if (selectedMenu) {
             title = {
+                key: selectedMenu.key,
                 text: selectedMenu.text,
                 local: selectedMenu.local,
             };

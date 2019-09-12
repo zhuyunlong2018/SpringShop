@@ -20,18 +20,21 @@ export default {
         return {title};
     },
 
+    /**
+     * 切换语言时重置面包屑国际化
+     */
     setBreadcrumbs: (breadcrumbs) => {
-        //TODO 修复面包屑国际化
-        const local = getCurrentLocal();
+        //修复面包屑国际化
+        const i18n = getCurrentLocal();
         if (breadcrumbs && breadcrumbs.length) {
             breadcrumbs.forEach(item => {
-                if (item.local) {
-                    const text = local.menu[item.local];
+                const {local, key} = item
+                if (local) {
+                    const text = i18n.menu[key];
                     if (text) item.text = text;
                 }
             })
         }
-
         return {breadcrumbs};
     },
     appendBreadcrumbs: (appendBreadcrumbs, state) => {

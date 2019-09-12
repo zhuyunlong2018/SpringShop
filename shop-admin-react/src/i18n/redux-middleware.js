@@ -44,7 +44,9 @@ export default store => next => action => {
 
     function setTitleLocal() {
         if (title && title.local) {
-            const text = i18n.menu[title.local];
+            const text = i18n.menu[title.key];
+            //TODO 修复国际化错误
+            console.log(title)
             if (text) {
                 title.text = text;
                 store.dispatch({
@@ -56,30 +58,31 @@ export default store => next => action => {
     }
 
     function setTabsLocal() {
+        //TODO 修复国际化
         const newTabs = tabs.map(item => {
-            let {text} = item;
-            const newText = i18n.menu[text?.local];
-
-            if (newText) {
-                text = {...text, text: newText};
+            let {local, key} = item;
+            if (local) {
+                const text = i18n.menu[key];
                 return {...item, text};
             }
-
             return {...item};
         });
-
+        console.log(newTabs)
         store.dispatch({
             type: setTabsActionType,
             payload: newTabs,
         });
     }
 
+    /**
+     * 初始化设置面包屑国际化
+     */
     function setBreadcrumbsLocal() {
         if (breadcrumbs && breadcrumbs.length) {
-            
             const localedBreadcrumbs = breadcrumbs.map(item => {
-                if (item.local) {
-                    const text = i18n.menu[item.local];
+                const {local, key} = item
+                if (local) {
+                    const text = i18n.menu[key];
                     if (text) return {...item, text};
                 }
                 return {...item};

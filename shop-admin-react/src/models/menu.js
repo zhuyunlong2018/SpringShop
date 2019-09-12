@@ -2,6 +2,7 @@ import { getTopNodeByNode } from '@/library/utils/tree-utils';
 import { uniqueArray } from '@/library/utils';
 import { getMenuTreeDataAndPermissions, getSelectedMenuByPath } from '../commons';
 import { getRoutes } from "@/api/menu"
+import {getCurrentLocal} from "@/i18n/index";
 
 const getItem = (key) => window.localStorage.getItem(key);
 export const types = {
@@ -30,17 +31,15 @@ export default {
         payload: ({ params } = {}) => getRoutes(params),
         reducer: {
             resolve: (state, { payload: menus }) => {
-                const chooseLan = getItem("system-local")
-                console.log(chooseLan)
                 // 首次获取数据之后进行国际化处理
+                const i18n = getCurrentLocal();
                 const localedMenus = menus.map(item => {
-                    const { text, local } = item;
-                    if (chooseLan === "en_GB" && local) {
-                        return { ...item, text:local, local: text }
+                    const { key, local } = item;
+                    if (local) {
+                        return { ...item, text: i18n.menu[key] }
                     }
                     return { ...item };
                 });
-
                 const { menuTreeData } = getMenuTreeDataAndPermissions(localedMenus);
                 return { menus: menuTreeData };
             },

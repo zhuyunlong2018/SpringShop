@@ -43,7 +43,7 @@ export default class FrameTopSideMenu extends Component {
     constructor(...props) {
         super(...props);
         const {action: {menu, side}} = this.props;
-
+        
         setTimeout(() => { // 等待getStateFromStorage获取配置之后再设置
             menu.getMenuStatus();
             side.show();
@@ -78,7 +78,7 @@ export default class FrameTopSideMenu extends Component {
             title: prevTitle,
             breadcrumbs: prevBreadcrumbs,
         } = this.props;
-
+        console.log("small")
         const selectedMenu = getSelectedMenuByPath(window.location.pathname, menus);
         let breadcrumbs = [];
         let title = '';
@@ -116,9 +116,10 @@ export default class FrameTopSideMenu extends Component {
                 local: selectedMenu.local,
             });
         }
-
+        
         // 从菜单中没有获取到，有肯能是当前页面设置了，但是没有菜单对应
         if (!breadcrumbs.length && prevBreadcrumbs && prevBreadcrumbs.length) {
+        
             page.setBreadcrumbs(prevBreadcrumbs);
         } else {
             page.setBreadcrumbs(breadcrumbs);

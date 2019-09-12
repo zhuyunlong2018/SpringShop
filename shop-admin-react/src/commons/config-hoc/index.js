@@ -113,7 +113,6 @@ export default (options) => {
                     // 刷新时候，由于设置顺序问题，需要timeout
                     setTimeout(() => system.setCurrentTabTitle(nextTitle));
                 }
-
                 // 页面面包屑导航
                 if (breadcrumbs === false) {
                     page.setBreadcrumbs([]);
@@ -121,11 +120,9 @@ export default (options) => {
 
                 if (breadcrumbs && breadcrumbs !== true) {
                     let nextBreadcrumbs = breadcrumbs;
-
                     if (typeof breadcrumbs === 'function') {
                         nextBreadcrumbs = breadcrumbs(this.props);
                     }
-
                     page.setBreadcrumbs(nextBreadcrumbs);
                 }
 
