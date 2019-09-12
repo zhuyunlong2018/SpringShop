@@ -101,7 +101,6 @@ export default class Side extends Component {
             sideDragging,
             style,
         } = this.props;
-
         sideWidth = sideCollapsed ? sideCollapsedWidth : sideWidth;
         const sideInnerWidth = sideWidth + scrollBarWidth;
         const outerOverFlow = sideCollapsed ? 'visible' : 'hidden';

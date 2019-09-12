@@ -1,5 +1,5 @@
 import {session} from '@/library/utils/storage';
-import {getNodeByPropertyAndValue, convertToTree, renderNode} from '@/library/utils/tree-utils';
+import {getNodeByPropertyAndValue, convertToTree } from '@/library/utils/tree-utils';
 import pathToRegexp from "path-to-regexp/index";
 import {ROUTE_BASE_NAME} from '@/router/AppRouter';
 
@@ -190,22 +190,6 @@ export function getMenuTreeDataAndPermissions(menus) {
 
     const menuTreeData = convertToTree(orderedData);
     return {menuTreeData, permissions}
-}
-
-/**
- * 树形菜单国际化处理,系统菜单直接改为后端获取
- * @param menuTreeData
- */
-export function setMenuI18n(menuTreeData) {
-    const treeData = [...menuTreeData];
-    renderNode(treeData, (item) => {
-        const {local,text} = item
-        if (local) {
-            item.text = local
-            item.local = text
-        }
-    });
-    return treeData;
 }
 
 /**

@@ -1,7 +1,9 @@
 import React from 'react';
+import { LocaleProvider } from 'antd';
 import AppRouter from './router/AppRouter';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import { connect } from './models';
-import Local from './i18n/Local';
+import moment from 'moment';
 import { getMenuTreeDataAndPermissions, getLoginUser, setLoginUser } from './commons'
 
 @connect()
@@ -12,7 +14,7 @@ export default class App extends React.Component {
         this.props.action.getStateFromStorage();
 
         const { system, menu } = this.props.action;
-        
+
         const loginUser = getLoginUser();
         if (loginUser) {
             // 获取系统菜单 和 随菜单携带过来的权限
@@ -22,7 +24,6 @@ export default class App extends React.Component {
                 onResolve: (res) => {
                     let menus = res || [];
                     //将请求到的菜单添加到国际化中
-                    system.appendMenuI18n(menus)
                     const { permissions } = getMenuTreeDataAndPermissions(menus);
 
                     if (loginUser) {
@@ -40,7 +41,8 @@ export default class App extends React.Component {
                 },
             });
         }
-
+        // 设置语言
+        moment.locale('zh-cn')
     }
 
     state = {
@@ -49,9 +51,9 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Local>
+            <LocaleProvider locale={zhCN}>
                 <AppRouter />
-            </Local>
+            </LocaleProvider>
         );
     }
 }

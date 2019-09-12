@@ -1,4 +1,3 @@
-import i18n, {defaultLang} from '../i18n';
 import theme from "@/theme";
 
 // 进行本地存储同步，syncState中的同步是区分用户的，会导致未登录的页面与登录的页面有差异
@@ -12,9 +11,6 @@ export default {
         loading: false,             // 全局loading
         loginUser: void 0,          // 当前登录用户
         permissions: [],            // 当前登录用户权限
-        local: defaultLang.local,   // 默认语言
-        i18n: defaultLang.i18n,     // 默认语言集
-        autoLocal: true,            // 是否根据浏览器自动获取语言，如果false，将默认简体中文
         primaryColor,               // 主题主颜色
         tabs: [],                   // 所有的tab配置 {path, text, icon, component, active, scrollTop}
         keepPage: true,             // 页面切换回去之后，保持内容，通过显示隐藏div实现，不知道会有什么坑！！！性能？各个互相干扰？
@@ -118,18 +114,6 @@ export default {
     },
 
     /**
-     * 将后台存储的菜单添加到本地国际化中
-     * @param {array}} menus 
-     */
-    appendMenuI18n(menus) {
-        menus.forEach(element => {
-            const {text, local, key} = element
-            if (local) i18n[0].i18n.menu[key] = local
-            i18n[1].i18n.menu[key] = text
-        });
-    },
-
-    /**
      * 设置主题颜色
      * @param primaryColor
      * @returns {{primaryColor: *}}
@@ -137,17 +121,6 @@ export default {
     setPrimaryColor: (primaryColor) => {
         setItem('primaryColor', primaryColor);
         return {primaryColor};
-    },
-
-    /**
-     * 设置语言
-     * @param local
-     * @returns {{local: *, i18n: {application, ajaxTip, menu, login, setting}}}
-     */
-    setLocal: (local) => {
-        const localI18n = i18n.find(item => item.local === local).i18n;
-        setItem('system-local', local);
-        return {local: local, i18n: localI18n}
     },
 
     /**

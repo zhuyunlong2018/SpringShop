@@ -10,7 +10,7 @@ import { getMenus, add, edit, del } from "@/api/menu"
 
 @config({
     path: '/menu-permission',
-    title: { local: 'menus', text: '菜单&权限', icon: 'lock' },
+    title: { text: '菜单&权限', icon: 'lock' },
 })
 @Form.create()
 export default class index extends Component {
@@ -40,7 +40,6 @@ export default class index extends Component {
         { title: 'path', dataIndex: 'path', key: 'path', width: 100 },
         { title: 'url', dataIndex: 'url', key: 'url', width: 250 },
         { title: 'target', dataIndex: 'target', key: 'target', width: 60 },
-        { title: '国际化', dataIndex: 'local', key: 'local', width: 60 },
         {
             title: '类型', dataIndex: 'type', key: 'type', width: 60,
             render: value => {
@@ -125,7 +124,6 @@ export default class index extends Component {
             path,
             url,
             target,
-            local,
             type = 1,
             code,
             order,
@@ -140,7 +138,6 @@ export default class index extends Component {
                 path,
                 url,
                 target,
-                local,
                 type,
                 code,
                 order,
@@ -275,12 +272,6 @@ export default class index extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col span={12}>
-                                <FormElement
-                                    label="国际化"
-                                    field="local"
-                                />
-                            </Col>
                             <Col span={12}>
                                 <FormElement
                                     label="排序"

@@ -83,6 +83,7 @@ export default class Index extends Component {
             wrapper: {
                 position: 'inherit',
                 zIndex: '100',
+                right: '-130px',
             },
         };
 
