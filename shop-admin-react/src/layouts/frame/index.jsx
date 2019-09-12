@@ -1,24 +1,24 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {BackTop, Spin} from 'antd';
-import {Helmet} from 'react-helmet';
-import {withRouter} from 'react-router-dom';
+import { BackTop, Spin } from 'antd';
+import { Helmet } from 'react-helmet';
+import { withRouter } from 'react-router-dom';
 import PageHead from '../page-head';
 import Header from '../header';
 import Side from '../side';
 import PageTabs from '../page-tabs';
-import {connect} from '@/models/index';
-import {getSelectedMenuByPath} from '@/commons';
-import {PAGE_FRAME_LAYOUT} from '@/models/settings';
+import { connect } from '@/models/index';
+import { getSelectedMenuByPath } from '@/commons';
+import { PAGE_FRAME_LAYOUT } from '@/models/settings';
 import './style.less';
 
 @withRouter
 @connect(state => {
-    const {selectedMenu, menus} = state.menu;
-    const {title, breadcrumbs, showHead} = state.page;
-    const {show: showSide, width, collapsed, collapsedWidth, dragging} = state.side;
-    const {loading} = state.system;
-    const {pageFrameLayout, pageHeadFixed, pageHeadShow, tabsShow} = state.settings;
+    const { selectedMenu, menus } = state.menu;
+    const { title, breadcrumbs, showHead } = state.page;
+    const { show: showSide, width, collapsed, collapsedWidth, dragging } = state.side;
+    const { loading } = state.system;
+    const { pageFrameLayout, pageHeadFixed, pageHeadShow, tabsShow } = state.settings;
     return {
         menus,
         selectedMenu,
@@ -41,7 +41,7 @@ import './style.less';
 export default class FrameTopSideMenu extends Component {
     constructor(...props) {
         super(...props);
-        const {action: {menu, side}} = this.props;
+        const { action: { menu, side } } = this.props;
 
         setTimeout(() => { // 等待getStateFromStorage获取配置之后再设置
             menu.getMenuStatus();
@@ -70,7 +70,7 @@ export default class FrameTopSideMenu extends Component {
 
     setTitleAndBreadcrumbs() {
         const {
-            action: {page},
+            action: { page },
             pageHeadShow,
             menus,
             title: prevTitle,
@@ -173,7 +173,7 @@ export default class FrameTopSideMenu extends Component {
 
             if (pageHeadFixed) {
                 pageHead = (
-                    <div styleName={`page-head-fixed ${tabsShow ? 'with-tabs' : ''}`} style={{left: hasSide ? sideWidth : 0, transitionDuration}}>
+                    <div styleName={`page-head-fixed ${tabsShow ? 'with-tabs' : ''}`} style={{ left: hasSide ? sideWidth : 0, transitionDuration }}>
                         {pageHead}
                     </div>
                 );
@@ -182,7 +182,7 @@ export default class FrameTopSideMenu extends Component {
 
         if (isSideMenu) pageHead = null;
 
-        const titleText = title?.text || title;
+        const titleText = title ?.text || title;
         const titleIsString = typeof titleText === 'string';
 
         const topSpaceClass = ['content-top-space'];
@@ -193,15 +193,15 @@ export default class FrameTopSideMenu extends Component {
 
         return (
             <div styleName="base-frame" className="no-print">
-                <Helmet title={titleIsString ? titleText : ''}/>
-                <BackTop/>
-                <Header/>
-                <Side layout={layout} theme={theme}/>
-                <div styleName={topSpaceClass.join(' ')}/>
+                <Helmet title={titleIsString ? titleText : ''} />
+                <BackTop />
+                <Header />
+                <Side layout={layout} theme={theme} />
+                <div styleName={topSpaceClass.join(' ')} />
                 {pageHead}
-                {tabsShow ? <div styleName="page-tabs" style={{left: hasSide ? sideWidth : 0, transitionDuration}}><PageTabs/></div> : null}
-                <div styleName="global-loading" style={{display: globalLoading ? 'block' : 'none'}}>
-                    <Spin spinning size="large"/>
+                {tabsShow ? <div styleName="page-tabs" style={{ left: hasSide ? sideWidth : 0, transitionDuration }}><PageTabs /></div> : null}
+                <div styleName="global-loading" style={{ display: globalLoading ? 'block' : 'none' }}>
+                    <Spin spinning size="large" />
                 </div>
             </div>
         );

@@ -6,6 +6,10 @@ import {UserAvatar} from '@/library/antd';
 import ModifyPassword from './ModifyPassword';
 import './style.less';
 
+/**
+ * 用户头像
+ */
+
 const Item = Menu.Item;
 
 export default class HeaderUser extends Component {

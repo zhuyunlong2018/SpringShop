@@ -1,19 +1,21 @@
 package com.bianquan.springShop.common.utils;
 
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtil {
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
@@ -91,6 +93,29 @@ public class RedisUtil {
         }
         return value;
     }
+
+    /**
+     * scan 实现
+     * @param pattern	表达式
+     */
+    public List<String> scan(String pattern) {
+        ArrayList<String> keys = new ArrayList<>();
+        redisTemplate.execute((RedisConnection connection) -> {
+            try (Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().
+                    count(1000).match(pattern).build())) {
+                while (cursor.hasNext()) {
+                    byte[] next = cursor.next();
+                    keys.add(new String(next));
+                }
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        });
+        return keys;
+    }
+
 
     // ============================String=============================
 

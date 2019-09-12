@@ -4,6 +4,7 @@ import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.utils.RedisUtil;
 import com.bianquan.springShop.dao.admin.MenuDao;
 import com.bianquan.springShop.entity.admin.MenuEntity;
+import com.bianquan.springShop.web.admin.controller.SystemController;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ public class Permissions {
 
     private static final Logger logger = LoggerFactory.getLogger(Permissions.class);
 
+    private static final String permissionSubKey = "permission_key_for_";
+
     @Autowired
     private RoleService roleService;
 
@@ -37,7 +40,7 @@ public class Permissions {
      * @return
      */
     private static String permissionKey(Integer adminId) {
-        return "permission_key_for_" + adminId;
+        return permissionSubKey + adminId;
     }
 
     /**
@@ -74,6 +77,11 @@ public class Permissions {
      */
     public void removePermissionsCache() {
         //TODO 如果修改了权限信息，相应的需要清除缓存，考虑编辑情况较少，可以暴力清除所有管理员权限缓存
+        List<String> keys = redisUtil.scan(permissionSubKey+"*");
+        System.out.println(keys);
+        for (String key:keys) {
+            redisUtil.delete(key);
+        }
     }
 
     /**

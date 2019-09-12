@@ -7,6 +7,7 @@ import HeaderUser from '../header-user';
 import HeaderMenu from '../header-menu';
 import HeaderFullScreen from '../header-full-screen';
 import ThemeColorPicker from '../header-color-picker';
+import HeaderRefresh from '../header-refresh';
 import {connect} from '../../models/index';
 import {PAGE_FRAME_LAYOUT} from '@/models/settings';
 import Breadcrumb from '../breadcrumb';
@@ -114,6 +115,7 @@ export default class Header extends Component {
                 )}
 
                 <div styleName="right">
+                    <HeaderRefresh styleName="action" className="header-action"/>
                     <HeaderFullScreen styleName="action" className="header-action"/>
                     <ThemeColorPicker styleName="action" className="header-action"/>
                     <HeaderUser styleName="action" className="header-action" theme={theme}/>

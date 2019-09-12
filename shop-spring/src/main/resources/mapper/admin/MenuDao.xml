@@ -3,7 +3,7 @@
 
 <mapper namespace="com.bianquan.springShop.dao.admin.MenuDao">
 
-    <sql id="table_field">id,`key`,parent_key,`local`,`text`,`target`,icon,path,url,`order`,`type`,code</sql>
+    <sql id="table_field">id,`key`,parent_key,`text`,`target`,icon,path,url,`order`,`type`,code</sql>
 
     <!--获取用户关联前端路由-->
     <select id="getRoutes" resultType="com.bianquan.springShop.entity.admin.MenuEntity">

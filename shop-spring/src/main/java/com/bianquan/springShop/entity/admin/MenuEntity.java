@@ -29,10 +29,6 @@ public class MenuEntity implements Serializable {
     //上级标识
     private String parentKey;
 
-    //本地化描述
-    @TableField("`local`")
-    private String local;
-
     //描述
     @TableField("`text`")
     private String text;

@@ -16,7 +16,7 @@ export default class HeaderMenu extends Component {
 
     static defaultProps = {
         dataSource: [],
-        theme: 'default',
+        theme: 'light',
         selectedKeys: [],
     };
 
