@@ -2,6 +2,7 @@ package com.bianquan.springShop.entity.shop;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -28,6 +29,7 @@ public class UserEntity implements Serializable {
     private String userName;
 
     //用户密码
+    @JsonIgnore
     private String userPwd;
 
     //用户邮箱
@@ -37,6 +39,7 @@ public class UserEntity implements Serializable {
     private Integer userStatus;
 
     //密码md5加密盐
+    @JsonIgnore
     private String userPwdSalt;
 
     //简介

@@ -78,7 +78,6 @@ public class Permissions {
     public void removePermissionsCache() {
         //TODO 如果修改了权限信息，相应的需要清除缓存，考虑编辑情况较少，可以暴力清除所有管理员权限缓存
         List<String> keys = redisUtil.scan(permissionSubKey+"*");
-        System.out.println(keys);
         for (String key:keys) {
             redisUtil.delete(key);
         }

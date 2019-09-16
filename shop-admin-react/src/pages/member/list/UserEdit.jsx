@@ -81,21 +81,21 @@ export default class UserEdit extends Component {
                         label="姓名"
                         field="name"
                         decorator={{
-                            initialValue: data.name,
+                            initialValue: data.userName,
                             rules: [
                                 { required: true, message: '请输入姓名！' },
                             ],
                         }}
                     />
                     <FormElement
-                        label="年龄"
-                        field="age"
+                        label="邮箱"
+                        field="email"
                         min={0}
                         step={1}
                         decorator={{
-                            initialValue: data.age,
+                            initialValue: data.userEmail,
                             rules: [
-                                { required: true, message: '请输入年龄！' },
+                                { required: true, message: '请输入邮箱！' },
                             ],
                         }}
                     />
@@ -103,7 +103,7 @@ export default class UserEdit extends Component {
                         label="手机号"
                         field="mobile"
                         decorator={{
-                            initialValue: data.mobile,
+                            initialValue: data.userMobile,
                             rules: [
                                 { required: true, message: '请输入手机号码！' },
                             ],

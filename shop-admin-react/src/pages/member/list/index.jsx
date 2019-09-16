@@ -56,37 +56,13 @@ export default class UserCenter extends Component {
                 placeholder: '请输入用户名',
                 itemStyle: { flex: '0 0 200px' }, // 固定宽度
             },
-            {
-                collapsedShow: true,
-                type: 'number',
-                field: 'age',
-                label: '年龄',
-                min: 0,
-                max: 150,
-                step: 1,
-                placeholder: '请输入年龄',
-                itemStyle: { flex: '0 0 200px' }, // 固定宽度
-            },
         ],
     ];
 
     columns = [
-        { title: '用户名', dataIndex: 'name', key: 'name' },
-        { title: '年龄', dataIndex: 'age', key: 'age' },
-        {
-            title: '工作', dataIndex: 'job', key: 'job',
-            render: (value) => {
-                const job = this.state.jobs.find(item => item.value === value);
-                return job ? job.label : '';
-            }
-        },
-        {
-            title: '职位', dataIndex: 'position', key: 'position',
-            render: (value) => {
-                const position = this.state.positions.find(item => item.value === value);
-                return position ? position.label : '';
-            }
-        },
+        { title: '用户名', dataIndex: 'userName', key: 'name' },
+        { title: '手机号', dataIndex: 'userMobile', key: 'mobile' },
+        { title: '邮箱', dataIndex: 'userEmail', key: 'email' },
         {
             title: '操作', dataIndex: 'operator', key: 'operator',
             render: (value, record) => {
@@ -125,7 +101,7 @@ export default class UserCenter extends Component {
         params.page = pageNum
         params.pageSize = pageSize
         getUsers(params).then(users => {
-            this.setState({ dataSource: users.data, total: users.total });
+            this.setState({ dataSource: users.records, total: users.total });
         })
             .finally(() => this.setState({ loading: false }));
     }
