@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Row, Col, Popconfirm} from 'antd';
+import {Form, Row, Col} from 'antd';
 import {FormElement} from '@/library/antd';
 import pluralize from 'pluralize';
 import {connect} from '@/models';
@@ -36,7 +36,7 @@ export default class BaseInfo extends Component {
 
 
     componentDidMount() {
-
+        this.props.onRef(this)
     }
 
     validate = () => {
@@ -118,16 +118,6 @@ export default class BaseInfo extends Component {
                     </Col>
 
                     <Col span={span}>
-                        <FormElement form={null}>
-                            <a style={{marginLeft: 16}} onClick={this.handleShowMore}>{showMore ? '隐藏更多' : '显示更多'}</a>
-                            <Popconfirm title="您确认清空吗？" onConfirm={() => this.props.form.resetFields()}>
-                                <a style={{marginLeft: 16}}>清空</a>
-                            </Popconfirm>
-                        </FormElement>
-                    </Col>
-                </Row>
-                <Row style={{display: showMore ? 'block' : 'none'}}>
-                    <Col span={span}>
                         <FormElement
                             label="全部大写命名"
                             field="allCapitalName"
@@ -138,6 +128,8 @@ export default class BaseInfo extends Component {
                             }}
                         />
                     </Col>
+                </Row>
+                <Row style={{display: showMore ? 'block' : 'none'}}>
 
                     <Col span={span}>
                         <FormElement
@@ -165,13 +157,6 @@ export default class BaseInfo extends Component {
 
                     <Col span={span}>
                         <FormElement
-                            label="权限前缀"
-                            field="permissionPrefix"
-                        />
-                    </Col>
-
-                    <Col span={span}>
-                        <FormElement
                             label="大写-驼峰命名"
                             field="capitalName"
                             decorator={{
@@ -179,6 +164,13 @@ export default class BaseInfo extends Component {
                                     {required: true, message: '请输入首字母大写驼峰命名',},
                                 ],
                             }}
+                        />
+                    </Col>
+
+                    <Col span={span}>
+                        <FormElement
+                            label="权限前缀"
+                            field="permissionPrefix"
                         />
                     </Col>
                 </Row>

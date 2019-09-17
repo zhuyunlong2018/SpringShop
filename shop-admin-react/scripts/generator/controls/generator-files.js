@@ -64,6 +64,15 @@ module.exports = {
             generates.push(generateFile(config));
         }
 
+        //TODO 生成api文件
+        generates.push(generateFile({
+            template: "templates/ajax.ejs",
+            ajaxUrl: listPage ? listPage.ajaxUrl : editPage.ajaxUrl,
+            outPutFile: path.resolve(__dirname + "/../../../src/api/", baseInfo.name + ".js")
+        }));
+
+        console.log(path.resolve(__dirname + "/../../../src/api/", baseInfo.name + ".js"))
+
         Promise.all(generates).then(() => {
             res.send({ code: 200, data: true });
         });

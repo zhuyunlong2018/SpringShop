@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Card, Button, Collapse, Checkbox, Modal} from 'antd';
+import React, { Component } from 'react'
+import { Button, Collapse, Checkbox, Modal, Popconfirm } from 'antd';
 import PageContent from '@/layouts/page-content';
 import FixBottom from '@/layouts/fix-bottom';
 import BaseInfo from '../BaseInfo';
@@ -16,15 +16,16 @@ const Panel = Collapse.Panel;
 
 @config({
     path: '/admin-crud',
-    title: { text: '代码生成', icon: 'code'},
+    title: { text: '代码生成', icon: 'code' },
     connect: state => ({
         srcDirectories: state.generator.srcDirectories,
         showDatabaseConfig: state.database.showConfig,
+        baseInfo: state.baseInfo,
     }),
 })
 export default class AdminCrud extends Component {
     state = {
-        activePanelKeys: ['database', 'listPage', 'editPage', 'listEditModel'],
+        activePanelKeys: ['basename', 'database', 'listPage', 'editPage', 'listEditModel'],
         checkedPanels: {
             listPage: true,
             editPage: true,
@@ -39,7 +40,7 @@ export default class AdminCrud extends Component {
     }
 
     handleSubmit = () => {
-        const {checkedPanels} = this.state;
+        const { checkedPanels } = this.state;
         const allPromise = [this.validateBaseInfo()];
 
         if (checkedPanels.listPage) {
@@ -71,6 +72,8 @@ export default class AdminCrud extends Component {
                     params.listEditModel = values.shift();
                 }
 
+                //TODO 将生成api文件放在前端位置配置
+
                 this.doSubmit(params, baseInfo);
 
             }).catch(console.error);
@@ -82,7 +85,7 @@ export default class AdminCrud extends Component {
 
         fileKeys.forEach(key => {
             const config = params[key];
-            const {outPutDir, outPutFile} = config;
+            const { outPutDir, outPutFile } = config;
             files.push({
                 fileDir: outPutDir,
                 fileName: outPutFile,
@@ -92,11 +95,11 @@ export default class AdminCrud extends Component {
 
         // 校验文件是否存在
         this.props.action.generator.checkFileExist({
-            params: {files},
+            params: { files },
             onResolve: (result) => {
                 const existFiles = [];
                 if (result && result.length) {
-                    result.forEach(({fileName, exist}) => {
+                    result.forEach(({ fileName, exist }) => {
                         if (exist) {
                             existFiles.push(fileName);
                         }
@@ -108,29 +111,29 @@ export default class AdminCrud extends Component {
                         content: (
                             <span>
                                 <div>如下文件已存在，是否覆盖？</div>
-                                {existFiles.map(item => <div key={item} style={{color: 'red'}}>{item}</div>)}
-                             </span>
+                                {existFiles.map(item => <div key={item} style={{ color: 'red' }}>{item}</div>)}
+                            </span>
                         ),
                         okText: '确认',
                         cancelText: '取消',
                         onOk: () => {
-                            this.props.action.generator.generatorFiles({params: {baseInfo, ...params}, successTip: '生成成功！'});
+                            this.props.action.generator.generatorFiles({ params: { baseInfo, ...params }, successTip: '生成成功！' });
                         },
                     });
 
                 }
-                this.props.action.generator.generatorFiles({params: {baseInfo, ...params}, successTip: '生成成功！'});
+                this.props.action.generator.generatorFiles({ params: { baseInfo, ...params }, successTip: '生成成功！' });
             }
         });
     };
 
     handlePanelChange = (activePanelKeys) => {
-        this.setState({activePanelKeys});
+        this.setState({ activePanelKeys });
     };
 
     handlePanelCheckboxChange = (checked, key) => {
         const activePanelKeys = [...this.state.activePanelKeys];
-        const checkedPanels = {...this.state.checkedPanels};
+        const checkedPanels = { ...this.state.checkedPanels };
         checkedPanels[key] = checked;
 
         const activePanelKeyIndex = activePanelKeys.indexOf(key);
@@ -143,11 +146,11 @@ export default class AdminCrud extends Component {
             activePanelKeys.splice(activePanelKeyIndex, 1)
         }
 
-        this.setState({checkedPanels, activePanelKeys});
+        this.setState({ checkedPanels, activePanelKeys });
     };
 
     getPanelProps = (title, key) => {
-        const {checkedPanels} = this.state;
+        const { checkedPanels } = this.state;
         const checked = checkedPanels[key];
         const titleStyle = {};
 
@@ -179,7 +182,7 @@ export default class AdminCrud extends Component {
             this.validateBaseInfo(),
             this.validateListPage(),
         ]).then(([baseInfo, listPage]) => {
-            const params = {baseInfo, pageInfo: listPage};
+            const params = { baseInfo, pageInfo: listPage };
             this.props.action.generator
                 .getFileContent({
                     params,
@@ -193,7 +196,7 @@ export default class AdminCrud extends Component {
             this.validateBaseInfo(),
             this.validateEditPage(),
         ]).then(([baseInfo, editPage]) => {
-            const params = {baseInfo, pageInfo: editPage};
+            const params = { baseInfo, pageInfo: editPage };
             this.props.action.generator
                 .getFileContent({
                     params,
@@ -207,7 +210,7 @@ export default class AdminCrud extends Component {
             this.validateBaseInfo(),
             this.validateListEditModel(),
         ]).then(([baseInfo, listEditModel]) => {
-            const params = {baseInfo, pageInfo: listEditModel};
+            const params = { baseInfo, pageInfo: listEditModel };
             this.props.action.generator
                 .getFileContent({
                     params,
@@ -216,12 +219,17 @@ export default class AdminCrud extends Component {
         }).catch(console.error);
     };
 
+    preventDefault(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     previewCode = (content) => {
-        this.setState({previewCodeModalVisible: true, codeForPreview: content});
+        this.setState({ previewCodeModalVisible: true, codeForPreview: content });
     };
 
     render() {
-        const {showDatabaseConfig} = this.props;
+        const { showDatabaseConfig } = this.props;
         const {
             activePanelKeys,
             checkedPanels,
@@ -229,34 +237,48 @@ export default class AdminCrud extends Component {
             previewCodeModalVisible,
         } = this.state;
         const fileCount = Object.keys(checkedPanels).reduce((prev, next) => checkedPanels[next] ? prev + 1 : prev, 0);
-        const cardStyle = {
-            marginBottom: '16px',
-        };
-
+        const { baseInfo: { showMore } } = this.props;
         return (
             <PageContent styleName="root">
-                <Card
-                    title="基础命名"
-                    style={cardStyle}
-                    bodyStyle={{paddingBottom: 0}}
-                >
-                    <BaseInfo
-                        validate={validate => this.validateBaseInfo = validate}
-                    />
-                </Card>
+
 
                 <Collapse activeKey={activePanelKeys} onChange={this.handlePanelChange}>
+                    <Panel
+                        header={(
+                            <span>基础命名
+                                <a style={{ marginLeft: 16 }} onClick={e => {
+                                    this.preventDefault(e)
+                                    this.props.action.baseInfo
+                                        .setFields({ showMore: !showMore });
+                                }}>{showMore ? '隐藏更多' : '显示更多'}</a>
+                                <Popconfirm title="您确认清空吗？" onCancel={this.preventDefault}
+                                    onConfirm={e => {
+                                        this.preventDefault(e)
+                                        //清空子组件表单
+                                        this.baseInfo.props.form.resetFields()
+                                    }}>
+                                    <a style={{ marginLeft: 16 }} onClick={this.preventDefault}>清空</a>
+                                </Popconfirm>
+                            </span>
+
+                        )}
+                        key="basename"
+                    >
+                        <BaseInfo onRef={ref => this.baseInfo = ref}
+                            validate={validate => this.validateBaseInfo = validate}
+                        />
+                    </Panel>
                     <Panel
                         header={(
                             <span>
                                 数据库配置
                                 <a
-                                    style={{marginLeft: 16}}
+                                    style={{ marginLeft: 16 }}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
                                         this.props.action.database
-                                            .setFields({showConfig: !showDatabaseConfig})
+                                            .setFields({ showConfig: !showDatabaseConfig })
                                     }}
                                 >
                                     {showDatabaseConfig ? '隐藏配置' : '显示配置'}
@@ -286,8 +308,8 @@ export default class AdminCrud extends Component {
                 <PreviewCodeModal
                     visible={previewCodeModalVisible}
                     code={codeForPreview}
-                    onCancel={() => this.setState({previewCodeModalVisible: false})}
-                    onOk={() => this.setState({previewCodeModalVisible: false})}
+                    onCancel={() => this.setState({ previewCodeModalVisible: false })}
+                    onOk={() => this.setState({ previewCodeModalVisible: false })}
                 />
 
                 <FixBottom>

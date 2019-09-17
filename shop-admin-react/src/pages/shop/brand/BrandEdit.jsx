@@ -18,7 +18,6 @@ export default class BrandEdit extends Component {
         if (!prevProps.visible && visible) {
             // 重置表单，接下来填充新的数据
             resetFields();
-            console.log('rest')
             this.setState({ data: brand })
         }
     }

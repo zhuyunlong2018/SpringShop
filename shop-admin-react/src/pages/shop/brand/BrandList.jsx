@@ -50,7 +50,7 @@ export default class BrandList extends Component {
                                 del({ id }).then(() => {
                                     let dataSource = [...this.state.dataSource]
                                     dataSource.forEach((e, i) => {
-                                        if (id == e.id) {
+                                        if (id === e.id) {
                                             dataSource.splice(i, 1)
                                         }
                                     });
@@ -105,7 +105,7 @@ export default class BrandList extends Component {
                 }
             });
         } else {
-            dataSource = [data, ... this.state.dataSource]
+            dataSource = [data, ...this.state.dataSource]
         }
         this.setState({ visible: false, dataSource })
     }

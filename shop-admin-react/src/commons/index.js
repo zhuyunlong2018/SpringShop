@@ -14,6 +14,7 @@ const sessionStorage = window.sessionStorage;
  */
 export function hasPermission(code) {
     const loginUser = getLoginUser();
+    //TODO 登录用户权限融合
     return loginUser?.permissions?.includes(code);
 }
 
