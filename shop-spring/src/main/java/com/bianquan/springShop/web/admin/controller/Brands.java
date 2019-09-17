@@ -47,7 +47,7 @@ public class Brands extends AbstractController {
         if (!result) {
             throw new RRException("更新失败");
         }
-        return Response.ok();
+        return Response.ok(brandEntity);
     }
 
     @DeleteMapping("/del")

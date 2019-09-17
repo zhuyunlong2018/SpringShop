@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {Table} from 'antd';
+import React, { Component } from 'react';
+import { Table } from 'antd';
 import {
     Pagination,
     Operator,
+    ToolBar,
 } from "@/library/antd";
 import PageContent from '@/layouts/page-content';
 import config from '@/commons/config-hoc';
+import { getList, del } from "@/api/brand"
 import BrandEdit from './BrandEdit';
 
 @config({
     path: '/brand/list',
-    ajax: true,
 })
 export default class BrandList extends Component {
     state = {
@@ -20,20 +21,18 @@ export default class BrandList extends Component {
         pageSize: 10,
         pageNum: 1,
         params: {},
-        id: void 0,
         visible: false,
         brand: {},
     };
 
     columns = [
-        {title: '品牌名称', dataIndex: 'name'},
-        {title: '品牌描述', dataIndex: 'description'},
+        { title: '品牌名称', dataIndex: 'name' },
+        { title: '品牌描述', dataIndex: 'description' },
         {
             title: '操作',
             key: 'operator',
             render: (text, record) => {
-                const {id, name} = record;
-                const successTip = `删除“${name}”成功！`;
+                const { id, name } = record;
                 const items = [
                     {
                         label: '修改',
@@ -47,17 +46,23 @@ export default class BrandList extends Component {
                         confirm: {
                             title: `您确定要删除“${name}”？`,
                             onConfirm: () => {
-                                this.setState({loading: true});
-                                this.props.ajax
-                                    .del(`/admins/brands/del/${id}`, null, {successTip})
-                                    .then(() => this.handleSearch())
-                                    .finally(() => this.setState({loading: false}));
+                                this.setState({ loading: true });
+                                del({ id }).then(() => {
+                                    let dataSource = [...this.state.dataSource]
+                                    dataSource.forEach((e, i) => {
+                                        if (id == e.id) {
+                                            dataSource.splice(i, 1)
+                                        }
+                                    });
+                                    this.setState({ dataSource })
+                                })
+                                    .finally(() => this.setState({ loading: false }));
                             },
                         },
                     },
                 ];
 
-                return (<Operator items={items}/>);
+                return (<Operator items={items} />);
             },
         },
     ];
@@ -67,30 +72,43 @@ export default class BrandList extends Component {
     }
 
     handleSearch = () => {
-        const {params, pageNum, pageSize} = this.state;
+        const { params, pageNum, pageSize } = this.state;
 
-        this.setState({loading: true});
-        this.props.ajax
-            .get('/admin/brands/list', {...params, pageNum, pageSize})
-            .then(res => {
-                if (res) {
-                    const {records: dataSource, total} = res;
-                    this.setState({
-                        dataSource,
-                        total,
-                    });
-                }
-            })
-            .finally(() => this.setState({loading: false}));
+        this.setState({ loading: true });
+        getList({ ...params, pageNum, pageSize }).then(res => {
+            if (res) {
+                const { records: dataSource, total } = res;
+                this.setState({
+                    dataSource,
+                    total,
+                });
+            }
+        })
+            .finally(() => this.setState({ loading: false }));
     };
 
     handleAdd = () => {
-        this.setState({id: void 0, visible: true});
+        this.setState({ brand: {}, visible: true });
     };
 
     handleEdit = (brand) => {
-        this.setState({brand, visible: true});
+        this.setState({ brand, visible: true });
     };
+
+    handleOk(id, data) {
+        let dataSource = []
+        if (id) {
+            dataSource = [...this.state.dataSource]
+            dataSource.forEach((e, i) => {
+                if (e.id === id) {
+                    dataSource[i] = data
+                }
+            });
+        } else {
+            dataSource = [data, ... this.state.dataSource]
+        }
+        this.setState({ visible: false, dataSource })
+    }
 
     render() {
         const {
@@ -105,6 +123,11 @@ export default class BrandList extends Component {
 
         return (
             <PageContent loading={loading}>
+                <ToolBar
+                    items={[
+                        { type: 'primary', text: '添加品牌', onClick: this.handleAdd }
+                    ]}
+                />
                 <Table
                     columns={this.columns}
                     dataSource={dataSource}
@@ -116,15 +139,15 @@ export default class BrandList extends Component {
                     total={total}
                     pageNum={pageNum}
                     pageSize={pageSize}
-                    onPageNumChange={pageNum => this.setState({pageNum}, this.handleSearch)}
-                    onPageSizeChange={pageSize => this.setState({pageSize, pageNum: 1}, this.handleSearch)}
+                    onPageNumChange={pageNum => this.setState({ pageNum }, this.handleSearch)}
+                    onPageSizeChange={pageSize => this.setState({ pageSize, pageNum: 1 }, this.handleSearch)}
                 />
 
                 <BrandEdit
                     brand={brand}
                     visible={visible}
-                    onOk={() => this.setState({visible: false})}
-                    onCancel={() => this.setState({visible: false})}
+                    onOk={this.handleOk.bind(this)}
+                    onCancel={() => this.setState({ visible: false })}
                 />
             </PageContent>
         );
