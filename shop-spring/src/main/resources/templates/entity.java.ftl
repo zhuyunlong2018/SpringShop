@@ -28,7 +28,7 @@ public class ${table.entityName} implements Serializable {
 <#if field.keyFlag>
     <#if field.keyIdentityFlag>
     @TableId(value = "${field.name}", type = IdType.AUTO)
-    <#elseif (!$null.isNull(idType) && "$!idType" != "")>
+    <#elseif (idType??)>
     @TableId(value = "${field.name}", type = IdType.${idType})
     <#elseif (field.convert)>
     @TableId("${field.name}")
@@ -51,7 +51,6 @@ public class ${table.entityName} implements Serializable {
     </#if>
 </#if>
     private ${field.propertyType} ${field.propertyName};
-
 
 </#list>
 }

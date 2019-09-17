@@ -1,10 +1,10 @@
-package ${package.Controller};
+package null.product.controller;
 
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import ${package.Service}.${table.serviceName};
-import ${package.Entity}.${entity};
+import null.product.service.IProductsService;
+import null.product.entity.ProductsEntity;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -15,30 +15,20 @@ import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.exception.RRException;
 import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
-<#if superControllerClassPackage??>
-import ${superControllerClassPackage};
-</#if>
 
 /**
- * ${table.comment!} 前端控制器
- * @author ${author}
- * @since ${date}
+ * 商品表 前端控制器
+ * @author zhuyunlong2018
+ * @since 2019-09-16
  */
-@Api(tags = "${table.comment!}")
+@Api(tags = "商品表")
 @RestController
-@RequestMapping("<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
-<#if kotlin>
-class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
-<#else>
-    <#if superControllerClass??>
-public class ${table.controllerName} extends ${superControllerClass} {
-    <#else>
-public class ${table.controllerName} {
-    </#if>
+@RequestMapping("/product/products-entity")
+public class ProductsController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ${table.serviceName} ${(table.serviceName?substring(1))?uncap_first};
+    private IProductsService productsService;
 
     /**
      * 查询分页数据
@@ -47,8 +37,8 @@ public class ${table.controllerName} {
     @GetMapping("/list")
     public Response findListByPage(@RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
                                    @RequestParam(name = "pageSize", defaultValue = "20") int pageSize){
-        Page<${entity}> page = new Page<>(currentPage, pageSize);
-        IPage<${entity}> list = ${(table.serviceName?substring(1))?uncap_first}.page(page);
+        Page<ProductsEntity> page = new Page<>(currentPage, pageSize);
+        IPage<ProductsEntity> list = productsService.page(page);
         return Response.ok(list);
     }
 
@@ -57,13 +47,13 @@ public class ${table.controllerName} {
      */
     @ApiOperation("新增数据")
     @PostMapping("/add")
-    public Response add(@RequestBody ${entity} ${entity?uncap_first}){
+    public Response add(@RequestBody ProductsEntity productsEntity){
 
-        boolean result = ${(table.serviceName?substring(1))?uncap_first}.save(${entity?uncap_first});
+        boolean result = productsService.save(productsEntity);
         if (!result) {
             throw new RRException("添加失败");
         }
-        return Response.ok(${entity?uncap_first});
+        return Response.ok(productsEntity);
     }
 
     /**
@@ -71,13 +61,13 @@ public class ${table.controllerName} {
      */
     @ApiOperation("更新数据")
     @PutMapping("/edit")
-    public Response edit(@RequestBody ${entity} ${entity?uncap_first}){
+    public Response edit(@RequestBody ProductsEntity productsEntity){
 
-        boolean result = ${(table.serviceName?substring(1))?uncap_first}.updateById(${entity?uncap_first});
+        boolean result = productsService.updateById(productsEntity);
         if (!result) {
             throw new RRException("更新失败");
         }
-        return Response.ok(${entity?uncap_first});
+        return Response.ok(productsEntity);
      }
 
     /**
@@ -86,7 +76,7 @@ public class ${table.controllerName} {
     @ApiOperation("删除数据")
     @DeleteMapping("/del")
     public Response del(@RequestParam("id") int id){
-        boolean result = ${(table.serviceName?substring(1))?uncap_first}.removeById(id);
+        boolean result = productsService.removeById(id);
         if (!result) {
             throw new RRException("删除失败");
         }
@@ -94,4 +84,3 @@ public class ${table.controllerName} {
     }
 
 }
-</#if>
