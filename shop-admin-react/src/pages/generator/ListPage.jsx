@@ -26,8 +26,6 @@ const Table = rowDraggable(TableEditable);
         const listPage = props.listPage;
 
         [
-            'ajaxUrl',
-            'routePath',
             'outPutDir',
             'outPutFile',
             'template',
@@ -669,29 +667,7 @@ export default class ListPage extends Component {
                             />
                         </div>
                     </Col>
-                    <Col span={5}>
-                        <FormElement
-                            label="ajax"
-                            field="ajaxUrl"
-                            decorator={{
-                                rules: [
-                                    {required: true, message: '请输入ajax请求路径'},
-                                ],
-                            }}
-                        />
-                    </Col>
 
-                    <Col span={5}>
-                        <FormElement
-                            label="路由"
-                            field="routePath"
-                            decorator={{
-                                rules: [
-                                    {required: true, message: '请输入页面路由地址'},
-                                ],
-                            }}
-                        />
-                    </Col>
                 </Row>
                 {getFieldDecorator('fields', {getValueFromEvent: (nextDataSource) => nextDataSource, valuePropName: 'dataSource'})(
                     <Table

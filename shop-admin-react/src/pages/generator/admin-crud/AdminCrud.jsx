@@ -71,9 +71,22 @@ export default class AdminCrud extends Component {
                 if (checkedPanels.listEditModel) {
                     params.listEditModel = values.shift();
                 }
+                
+                let ajaxApi = {
+                    template: "templates/ajax.ejs",
+                    outPutDir: "",
+                    outPutFile: baseInfo.name + ".js"
+                }
+                
+                //将生成api文件放在前端位置配置
+                this.props.srcDirectories.forEach(e => {
+                    if (e.title === "api") {
+                        ajaxApi.outPutDir = e.value
+                    }
+                });
+                params.ajaxApi = ajaxApi
 
-                //TODO 将生成api文件放在前端位置配置
-
+                
                 this.doSubmit(params, baseInfo);
 
             }).catch(console.error);
@@ -92,7 +105,7 @@ export default class AdminCrud extends Component {
             });
 
         });
-
+        console.log(params)
         // 校验文件是否存在
         this.props.action.generator.checkFileExist({
             params: { files },

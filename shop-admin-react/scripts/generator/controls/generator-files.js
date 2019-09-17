@@ -22,7 +22,7 @@ function getFileLevel(filePath) {
 
 module.exports = {
     generatorFiles(req, res, next) {
-        const { baseInfo, listPage, editPage, listEditModel } = req.body;
+        const { baseInfo, listPage, editPage, ajaxApi } = req.body;
         const generates = [];
 
         if (listPage) {
@@ -33,7 +33,6 @@ module.exports = {
                 ...listPage,
                 outPutFile,
                 fileLevel,
-                editPageRoutePath: editPage ? editPage.routePath : `${listPage.routePath}/+edit`,
             };
             generates.push(generateFile(config));
         }
@@ -46,32 +45,18 @@ module.exports = {
                 ...editPage,
                 outPutFile,
                 fileLevel,
-                listPageRoutePath: listPage ? listPage.routePath : `/${baseInfo.name}`
             };
             generates.push(generateFile(config));
         }
 
-        if (listEditModel) {
-            const outPutFile = path.resolve(listEditModel.outPutDir, listEditModel.outPutFile);
-            const fileLevel = getFileLevel(outPutFile);
-
-            const config = {
-                ...listEditModel,
-                ajaxUrl: listPage ? listPage.ajaxUrl : editPage.ajaxUrl,
-                outPutFile,
-                fileLevel,
-            };
-            generates.push(generateFile(config));
+        if (ajaxApi) {
+            //生成api文件
+            generates.push(generateFile({
+                template: ajaxApi.template,
+                outPutFile: path.resolve(ajaxApi.outPutDir, ajaxApi.outPutFile),
+                ajaxUrl: baseInfo.ajaxPrefix,
+            }));
         }
-
-        //TODO 生成api文件
-        generates.push(generateFile({
-            template: "templates/ajax.ejs",
-            ajaxUrl: listPage ? listPage.ajaxUrl : editPage.ajaxUrl,
-            outPutFile: path.resolve(__dirname + "/../../../src/api/", baseInfo.name + ".js")
-        }));
-
-        console.log(path.resolve(__dirname + "/../../../src/api/", baseInfo.name + ".js"))
 
         Promise.all(generates).then(() => {
             res.send({ code: 200, data: true });
@@ -83,8 +68,6 @@ module.exports = {
         const outPutFile = path.resolve(pageInfo.outPutDir, pageInfo.outPutFile);
         const fileLevel = getFileLevel(outPutFile);
 
-        const editPageRoutePath = `${pageInfo.routePath}/+edit`;
-        const listPageRoutePath = `/${baseInfo.name}`;
         const ajaxUrl = `/${baseInfo.name}`;
 
         const config = {
@@ -92,9 +75,6 @@ module.exports = {
             ...pageInfo,
             outPutFile,
             fileLevel,
-
-            editPageRoutePath,
-            listPageRoutePath,
             ajaxUrl,
         };
 
@@ -105,7 +85,7 @@ module.exports = {
     getSrcDirs(req, res, next) {
         const dirs = getDirs();
         if (dirs && dirs.children) {
-            res.send({code: 200, data: dirs.children});
+            res.send({ code: 200, data: dirs.children });
             return;
         }
         res.send({ code: 200, data: [] });

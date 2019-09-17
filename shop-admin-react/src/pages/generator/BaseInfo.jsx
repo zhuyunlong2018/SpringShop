@@ -173,6 +173,30 @@ export default class BaseInfo extends Component {
                             field="permissionPrefix"
                         />
                     </Col>
+
+                    <Col span={span}>
+                        <FormElement
+                            label="ajax请求前缀"
+                            field="ajaxPrefix"
+                            decorator={{
+                                rules: [
+                                    {required: true, message: '请输入ajax请求地址前缀',},
+                                ],
+                            }}
+                        />
+                    </Col>
+
+                    <Col span={span}>
+                        <FormElement
+                            label="页面路由地址"
+                            field="routePath"
+                            decorator={{
+                                rules: [
+                                    {required: true, message: '请输入页面路由地址',},
+                                ],
+                            }}
+                        />
+                    </Col>
                 </Row>
             </Form>
         );
