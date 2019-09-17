@@ -51,7 +51,7 @@ export default function handleError({error, errorTip}) {
     const description = getErrorTip({error, errorTip});
     console.log(description)
     notification.error({
-        message: '失败',
+        message: '操作失败',
         description,
     });
 }

@@ -36,7 +36,7 @@ export default class SXAjax {
      * @param isMock 区分哪些请求需要mock，比如：url以约定'/mock'开头的请求，使用mock等方式。
      */
     constructor({
-        onShowSuccessTip = (/* response, successTip  */) => true,
+        onShowSuccessTip = (/* successTip  */) => true,
         onShowErrorTip = (/* err, errorTip */) => true,
         isMock = (/* url, data, method, options */) => false,
     } = {}) {
@@ -156,9 +156,10 @@ export default class SXAjax {
                 ...options,
             }).then(response => {
                 //TODO 后端返回未登录、登录失效等errorCode，进行跳转登录页面
-                if (response.data.code === 200) {
-                    this.onShowSuccessTip(response, successTip);
-                    resolve(response.data.data, response);
+                const { data, code } = response.data
+                if (code === 200) {
+                    this.onShowSuccessTip(successTip);
+                    resolve(data, response);
                 } else {
                     this.onShowErrorTip(response.data, errorTip);
                     reject(response.data);
@@ -197,7 +198,7 @@ export default class SXAjax {
      * @returns {Promise}
      */
     post(url, data, options) {
-        return this.ajax(url, data, 'post', options);
+        return this.ajax(url, data, 'post', {...options, successTip: "添加成功！"});
     }
 
 
@@ -209,7 +210,7 @@ export default class SXAjax {
      * @returns {Promise}
      */
     put(url, data, options) {
-        return this.ajax(url, data, 'put', options);
+        return this.ajax(url, data, 'put', {...options, successTip: "更新成功！"});
     }
 
     /**
@@ -220,7 +221,7 @@ export default class SXAjax {
      * @returns {Promise}
      */
     patch(url, data, options) {
-        return this.ajax(url, data, 'patch', options);
+        return this.ajax(url, data, 'patch', {...options, successTip: "更新成功！"});
     }
 
     /**
@@ -231,6 +232,6 @@ export default class SXAjax {
      * @returns {Promise}
      */
     del(url, data, options) {
-        return this.ajax(url, data, 'delete', options);
+        return this.ajax(url, data, 'delete', {...options, successTip: "删除成功！"});
     }
 }

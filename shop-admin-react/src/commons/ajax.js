@@ -18,7 +18,7 @@ export function isMock(url /* url, data, method, options */) {
  */
 export const sxAjax = new SXAjax({
     onShowErrorTip: (error, errorTip) => handleError({error, errorTip}),
-    onShowSuccessTip: (response, successTip) => handleSuccess({successTip}),
+    onShowSuccessTip: (successTip) => handleSuccess({successTip}),
     isMock,
 });
 
