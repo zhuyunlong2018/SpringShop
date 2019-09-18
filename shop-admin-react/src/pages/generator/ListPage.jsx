@@ -334,7 +334,7 @@ export default class ListPage extends Component {
                 decorator: {
                     getValueFromEvent: e => {
                         const {value} = e.target;
-                        return value ? value.toUpperCase() : '';
+                        return value ? value : '';
                     },
                 },
             },
@@ -439,7 +439,7 @@ export default class ListPage extends Component {
                 decorator: {
                     getValueFromEvent: e => {
                         const {value} = e.target;
-                        return value ? value.toUpperCase() : '';
+                        return value ? value : '';
                     },
                 },
             },

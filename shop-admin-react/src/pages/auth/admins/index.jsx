@@ -7,6 +7,7 @@ import {
     ToolBar,
 } from "@/library/antd";
 import AdminEdit from "./AdminEdit"
+import {hasPermission} from '@/commons';
 import config from '@/commons/config-hoc';
 import { getAdmins, del } from "@/api/admin"
 
@@ -49,10 +50,12 @@ export default class AdminCenter extends Component {
                 const items = [
                     {
                         label: '编辑',
+                        visible: hasPermission('admin:admins:edit'),
                         onClick: () => this.handleEdit(record),
                     },
                     {
                         label: '删除',
+                        visible: hasPermission('admin:admins:edit'),
                         color: 'red',
                         confirm: {
                             title: `您确定删除"${name}"?`,
@@ -145,9 +148,13 @@ export default class AdminCenter extends Component {
         return (
             <PageContent>
                 <ToolBar
-                    items={[
-                        { type: 'primary', text: '添加管理员', icon: 'admin-add', onClick: this.handleAdd }
-                    ]}
+                    items={[{
+                        type: 'primary', 
+                        text: '添加管理员', 
+                        icon: 'admin-add', 
+                        onClick: this.handleAdd,
+                        visible: hasPermission('admin:admins:add'),
+                    }]}
                 />
 
                 <Table

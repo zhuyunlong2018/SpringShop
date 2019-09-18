@@ -105,7 +105,6 @@ export default class AdminCrud extends Component {
             });
 
         });
-        console.log(params)
         // 校验文件是否存在
         this.props.action.generator.checkFileExist({
             params: { files },

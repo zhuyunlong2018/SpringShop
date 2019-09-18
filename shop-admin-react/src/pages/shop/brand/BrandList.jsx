@@ -5,6 +5,7 @@ import {
     Operator,
     ToolBar,
 } from "@/library/antd";
+import {hasPermission} from '@/commons';
 import PageContent from '@/layouts/page-content';
 import config from '@/commons/config-hoc';
 import { getList, del } from "@/api/brand"
@@ -36,12 +37,14 @@ export default class BrandList extends Component {
                 const items = [
                     {
                         label: '修改',
+                        visible: hasPermission('admin:brands:edit'),
                         onClick: () => {
                             this.handleEdit(record);
                         },
                     },
                     {
                         label: '删除',
+                        visible: hasPermission('admin:brands:del'),
                         color: 'red',
                         confirm: {
                             title: `您确定要删除“${name}”？`,
@@ -124,8 +127,11 @@ export default class BrandList extends Component {
         return (
             <PageContent loading={loading}>
                 <ToolBar
-                    items={[
-                        { type: 'primary', text: '添加品牌', onClick: this.handleAdd }
+                    items={[{ 
+                            type: 'primary', 
+                            text: '添加品牌', 
+                            onClick: this.handleAdd, 
+                            visible: hasPermission('admin:brands:add'), }
                     ]}
                 />
                 <Table

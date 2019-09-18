@@ -5,6 +5,7 @@ import PageContent from '@/layouts/page-content';
 import { convertToTree } from "@/library/utils/tree-utils";
 import { ToolBar, Operator, FormElement } from '@/library/antd';
 import IconPicker from "@/components/icon-picker";
+import {hasPermission} from '@/commons';
 import './style.less';
 import { getMenus, add, edit, del } from "@/api/menu"
 
@@ -58,10 +59,12 @@ export default class index extends Component {
                     {
                         label: '编辑',
                         icon: 'form',
+                        visible: hasPermission('admin:menus:edit'),
                         onClick: () => this.handleEditNode(record),
                     },
                     {
                         label: '删除',
+                        visible: hasPermission('admin:menus:del'),
                         icon: 'delete',
                         color: 'red',
                         confirm: {
@@ -71,6 +74,7 @@ export default class index extends Component {
                     },
                     {
                         label: '添加子菜单',
+                        visible: hasPermission('admin:menus:edit'),
                         icon: 'folder-add',
                         onClick: () => this.handleAddSubMenu(record),
                     },
@@ -211,7 +215,12 @@ export default class index extends Component {
 
         return (
             <PageContent styleName="root">
-                <ToolBar items={[{ type: 'primary', text: '添加顶级', onClick: this.handleAddTopMenu }]} />
+                <ToolBar items={[{ 
+                    type: 'primary', 
+                    text: '添加顶级', 
+                    onClick: this.handleAddTopMenu,
+                    visible: hasPermission('admin:menus:add'),
+                    }]} />
                 <Table
                     loading={loading}
                     columns={this.columns}

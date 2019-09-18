@@ -9,6 +9,7 @@ import {
     Operator,
     ToolBar,
 } from "@/library/antd";
+import {hasPermission} from '@/commons';
 import UserEdit from "./UserEdit"
 import config from '@/commons/config-hoc';
 import { getUsers, del } from "@/api/user"
@@ -60,9 +61,9 @@ export default class UserCenter extends Component {
     ];
 
     columns = [
-        { title: '用户名', dataIndex: 'userName', key: 'name' },
-        { title: '手机号', dataIndex: 'userMobile', key: 'mobile' },
-        { title: '邮箱', dataIndex: 'userEmail', key: 'email' },
+        { title: '用户名', dataIndex: 'userName', key: 'userName' },
+        { title: '手机号', dataIndex: 'userMobile', key: 'userMobile' },
+        { title: '邮箱', dataIndex: 'userEmail', key: 'userEmail' },
         {
             title: '操作', dataIndex: 'operator', key: 'operator',
             render: (value, record) => {
@@ -70,11 +71,12 @@ export default class UserCenter extends Component {
                 const items = [
                     {
                         label: '编辑',
-                        // onClick: () => this.props.history.push(`/users/_/UserEdit/${id}?name=${name}`),
+                        visible: hasPermission('admin:member:edit'),
                         onClick: () => this.handleEdit(record),
                     },
                     {
                         label: '删除',
+                        visible: hasPermission('admin:member:del'),
                         color: 'red',
                         confirm: {
                             title: `您确定删除"${name}"?`,
@@ -197,15 +199,19 @@ export default class UserCenter extends Component {
                 </QueryBar>
 
                 <ToolBar
-                    items={[
-                        { type: 'primary', text: '添加用户', icon: 'user-add', onClick: this.handleAdd }
-                    ]}
+                    items={[{ 
+                        type: 'primary', 
+                        text: '添加用户', 
+                        icon: 'user-add', 
+                        onClick: this.handleAdd,
+                        visible: hasPermission('admin:member:add'),
+                    }]}
                 />
 
                 <Table
                     columns={this.columns}
                     dataSource={dataSource}
-                    rowKey="id"
+                    rowKey="userId"
                     pagination={false}
                 />
 

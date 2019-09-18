@@ -135,11 +135,12 @@ export function getSelectedMenuByPath(path, menuTreeData) {
  * @param menus 扁平化菜单数据
  */
 export function getMenuTreeDataAndPermissions(menus) {
-    // 用户权限code，通过菜单携带过来的 1 => 菜单 2 => 功能
-    const permissions = menus.map(item => {
-        if (item.type === 1) return item.key;
-        if (item.type === 2) return item.code;
-        return null;
+    // 用户权限
+    let permissions = []
+    menus.forEach(item => {
+        if (item.type === 2 && item.code) {
+            permissions.push(item.code)
+        }
     });
 
     // 获取菜单，过滤掉功能码

@@ -68,14 +68,11 @@ module.exports = {
         const outPutFile = path.resolve(pageInfo.outPutDir, pageInfo.outPutFile);
         const fileLevel = getFileLevel(outPutFile);
 
-        const ajaxUrl = `/${baseInfo.name}`;
-
         const config = {
             ...baseInfo,
             ...pageInfo,
             outPutFile,
             fileLevel,
-            ajaxUrl,
         };
 
         getFileContent(config)
