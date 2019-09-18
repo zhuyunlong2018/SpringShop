@@ -129,7 +129,8 @@ export default class BrandList extends Component {
                 <ToolBar
                     items={[{ 
                             type: 'primary', 
-                            text: '添加品牌', 
+                            text: '添加品牌',
+                            icon: 'plus',
                             onClick: this.handleAdd, 
                             visible: hasPermission('admin:brands:add'), }
                     ]}

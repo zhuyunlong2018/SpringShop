@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Modal, Icon, Row, Col, Button, Input} from 'antd';
 
-
 const icons = [
     {
         title: '方向性图标',

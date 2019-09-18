@@ -11,7 +11,6 @@ export default class Base extends Component {
                 placeholder="请选择一项"
                 defaultValue="11"
                 loadDataByUserInput={(value) => {
-                    console.log(value);
                     return Promise.resolve([
                         {value: '11', label: '我是11'},
                         {value: '22', label: '我是22'},
@@ -19,7 +18,6 @@ export default class Base extends Component {
                     ])
                 }}
                 loadDataByValue={(value) => {
-                    console.log(value);
                     return Promise.resolve([
                         {value: '11', label: '我是11'},
                     ])

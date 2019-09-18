@@ -4,7 +4,6 @@ import com.bianquan.springShop.common.exception.RRException;
 import com.bianquan.springShop.common.utils.RedisUtil;
 import com.bianquan.springShop.dao.admin.MenuDao;
 import com.bianquan.springShop.entity.admin.MenuEntity;
-import com.bianquan.springShop.web.admin.controller.SystemController;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
