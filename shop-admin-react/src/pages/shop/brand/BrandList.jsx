@@ -12,7 +12,7 @@ import { getList, del } from "@/api/brand"
 import BrandEdit from './BrandEdit';
 
 @config({
-    path: '/brand/list',
+    path: '/brands',
 })
 export default class BrandList extends Component {
     state = {

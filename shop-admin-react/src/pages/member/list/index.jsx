@@ -9,7 +9,7 @@ import {
     Operator,
     ToolBar,
 } from "@/library/antd";
-import {hasPermission} from '@/commons';
+import { hasPermission } from '@/commons';
 import UserEdit from "./UserEdit"
 import config from '@/commons/config-hoc';
 import { getUsers, del } from "@/api/user"
@@ -155,7 +155,7 @@ export default class UserCenter extends Component {
 
     onOke(user) {
         if (this.state.user) {
-            let dataSource = [ ...this.state.dataSource ]
+            let dataSource = [...this.state.dataSource]
             for (let index in dataSource) {
                 if (dataSource[index].id === user.id) {
                     dataSource[index] = user
@@ -199,10 +199,10 @@ export default class UserCenter extends Component {
                 </QueryBar>
 
                 <ToolBar
-                    items={[{ 
-                        type: 'primary', 
-                        text: '添加用户', 
-                        icon: 'user-add', 
+                    items={[{
+                        type: 'primary',
+                        text: '添加用户',
+                        icon: 'user-add',
                         onClick: this.handleAdd,
                         visible: hasPermission('admin:member:add'),
                     }]}

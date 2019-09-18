@@ -26,7 +26,7 @@ import ${superControllerClassPackage};
  */
 @Api(tags = "${table.comment!}")
 @RestController
-@RequestMapping("<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping("/admin/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
 <#else>
@@ -43,8 +43,8 @@ public class ${table.controllerName} {
     /**
      * 查询分页数据
      */
-    @ApiOperation("查询分页数据")
     @GetMapping("/list")
+    @ApiOperation("查询分页数据")
     public Response findListByPage(@RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
                                    @RequestParam(name = "pageSize", defaultValue = "20") int pageSize){
         Page<${entity}> page = new Page<>(currentPage, pageSize);
@@ -55,8 +55,8 @@ public class ${table.controllerName} {
     /**
      * 新增
      */
-    @ApiOperation("新增数据")
     @PostMapping("/add")
+    @ApiOperation("新增数据")
     public Response add(@RequestBody ${entity} ${entity?uncap_first}){
 
         boolean result = ${(table.serviceName?substring(1))?uncap_first}.save(${entity?uncap_first});
@@ -69,8 +69,8 @@ public class ${table.controllerName} {
     /**
      * 修改
      */
-    @ApiOperation("更新数据")
     @PutMapping("/edit")
+    @ApiOperation("更新数据")
     public Response edit(@RequestBody ${entity} ${entity?uncap_first}){
 
         boolean result = ${(table.serviceName?substring(1))?uncap_first}.updateById(${entity?uncap_first});
@@ -83,8 +83,8 @@ public class ${table.controllerName} {
     /**
      * 删除
      */
-    @ApiOperation("删除数据")
     @DeleteMapping("/del")
+    @ApiOperation("删除数据")
     public Response del(@RequestParam("id") int id){
         boolean result = ${(table.serviceName?substring(1))?uncap_first}.removeById(id);
         if (!result) {

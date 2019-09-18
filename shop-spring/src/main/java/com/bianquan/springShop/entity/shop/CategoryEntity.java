@@ -37,6 +37,16 @@ public class CategoryEntity implements Serializable {
     //分类描述
     private String description;
 
+    //分类级别，共三个级别，1位顶级分类
+    @TableField("`level`")
+    private Integer level;
+
+    //图标
+    private String img;
+
+    //排序
+    private Integer sortOrder;
+
     private Date createTime;
 
     private Date updateTime;

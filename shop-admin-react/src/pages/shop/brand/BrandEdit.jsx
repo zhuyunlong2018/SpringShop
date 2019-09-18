@@ -81,7 +81,7 @@ export default class BrandEdit extends Component {
                             decorator={{
                                 initialValue: data.name,
                                 rules: [
-                                    { required: false, message: '品牌名称不能为空！' },
+                                    { required: true, message: '品牌名称不能为空！' },
                                     { max: 80, message: '最多80个字符！' },
                                 ],
                             }}
@@ -94,7 +94,7 @@ export default class BrandEdit extends Component {
                             decorator={{
                                 initialValue: data.description,
                                 rules: [
-                                    { required: false, message: '品牌描述不能为空！' },
+                                    { required: true, message: '品牌描述不能为空！' },
                                     { max: 512, message: '最多512个字符！' },
                                 ],
                             }}

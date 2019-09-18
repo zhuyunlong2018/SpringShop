@@ -11,7 +11,7 @@ export default class <%= capitalName %>Edit extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        const {dataForm, visible, form: {resetFields}} = this.props;
+        const {formData, visible, form: {resetFields}} = this.props;
 
         // 打开弹框
         if (!prevProps.visible && visible) {
@@ -19,7 +19,7 @@ export default class <%= capitalName %>Edit extends Component {
             resetFields();
 
             // 填充数据
-            this.setState({ data: dataForm })
+            this.setState({ data: formData })
         }
     }
 
@@ -92,7 +92,7 @@ export default class <%= capitalName %>Edit extends Component {
                             decorator={{
                                 initialValue: data.<%= fields[i].dataIndex%>,
                                 rules: [
-                                    {required: <%= fields[i].isRequired %>, message: '<%= fields[i].title%>不能为空！'},<%if(fields[i].length){%>
+                                    {required: true, message: '<%= fields[i].title%>不能为空！'},<%if(fields[i].length){%>
                                     {max: <%= fields[i].length%>, message: '最多<%= fields[i].length%>个字符！'},<%}%>
                                 ],
                             }}
