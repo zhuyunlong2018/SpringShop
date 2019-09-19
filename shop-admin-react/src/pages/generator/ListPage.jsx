@@ -506,13 +506,9 @@ export default class ListPage extends Component {
         const capitalName = nextProps.baseInfo.capitalName.value;
 
         if (name !== oldName) {
-            const ajaxUrl = `/${name}`;
-            const routePath = `/${name}`;
             const outPutFile = `${name}/${capitalName}List.jsx`;
 
             setFieldsValue({
-                ajaxUrl,
-                routePath,
                 outPutFile,
             });
         }

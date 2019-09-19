@@ -58,7 +58,6 @@ export default class DatabaseConfig extends Component {
                 successTip: '获取数据库表成功',
                 errorTip: '获取数据库表失败',
                 onResolve: (data) => {
-                    console.log(data)
                     if (data?.length && !getFieldValue('table')) {
                         const value = data[0];
 
