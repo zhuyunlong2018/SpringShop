@@ -3,6 +3,8 @@ package com.bianquan.springShop.entity.shop;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
@@ -11,35 +13,44 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * 商品表 实体类
+ * @author zhuyunlong2018
+ * @since 2019-09-19
+ */
 @Data
 @FieldNameConstants(prefix = "")
 @TableName("sp_products")
 @Document(indexName = "sp_products", type = "doc")
+@ApiModel(value="ProductsEntity对象")
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 5650088466120913205L;
 
     @Id
     @TableId
+    @ApiModelProperty(value = "商品id，同时也是商品编号,新增不传",example="1")
     private Long id;
 
-    //标题
+    @ApiModelProperty(value = "商品标题")
     private String title;
 
-    //商品卖点
+    @ApiModelProperty(value = "商品卖点")
     private String sellPoint;
 
-    //商品主图
+    @ApiModelProperty(value = "价格区间")
+    private String priceRange;
+
+    @ApiModelProperty(value = "商品图片")
     private String image;
 
-    //所属分类
+    @ApiModelProperty(value = "所属类目，叶子类目",example="1")
     private Long categoryId;
 
-    //所属品牌ID
+    @ApiModelProperty(value = "所属品牌",example="1")
     private Long brandId;
 
-    //商品状态
+    @ApiModelProperty(value = "商品状态，1-正常，2-下架，3-删除",example="1")
     private Integer status;
 
     //商品详情
@@ -54,7 +65,9 @@ public class ProductEntity implements Serializable {
     @TableField(exist = false)
     private List<ProductsSkuEntity> sku;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 }

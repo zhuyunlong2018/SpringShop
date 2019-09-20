@@ -620,7 +620,6 @@ export default class ListPage extends Component {
             form: {getFieldDecorator},
             pagesDirectories,
         } = this.props;
-
         const FormElement = this.FormElement;
         return (
             <Form>

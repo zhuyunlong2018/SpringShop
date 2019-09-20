@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("shop/shoppingCart")
-@Api(tags = "商品购物车")
+@Api(tags = "web商城-商品购物车")
 public class ShoppingCart {
 
     @Autowired

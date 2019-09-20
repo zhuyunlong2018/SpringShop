@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/menus")
-@Api(tags = "管理菜单操作")
+@Api(tags = "后台管理-菜单操作")
 public class Menus extends AbstractController {
 
     @Autowired

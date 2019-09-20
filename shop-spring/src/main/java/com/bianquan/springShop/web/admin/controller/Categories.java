@@ -17,13 +17,15 @@ import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.exception.RRException;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 商品类目 前端控制器
  * @author zhuyunlong2018
  * @since 2019-09-18
  */
-@Api(tags = "商品类目")
-@RestController
+@RestController("admin_categories")
+@Api(tags = "后台管理-商品类目")
 @RequestMapping("/admin/categories")
 public class Categories {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -93,6 +95,16 @@ public class Categories {
             throw new RRException("删除失败");
         }
         return Response.ok();
+    }
+
+    @ApiOperation("根据级别获取类目")
+    @GetMapping("/listByLevels")
+    @RequiresPermissions("admin:categories:list")
+    public Response getListByLevel(@RequestParam("levels[]") List<Integer> levels) {
+        QWrapper<CategoryEntity> wrapper = new QWrapper<>();
+        wrapper.in(CategoryEntity.LEVEL, levels);
+        List<CategoryEntity> list = categoryService.list(wrapper);
+        return Response.ok(list);
     }
 
 }

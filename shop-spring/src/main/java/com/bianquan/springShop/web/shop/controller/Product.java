@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("shop/product")
-@Api(tags = "商品信息")
+@Api(tags = "web商城-商品信息")
 public class Product {
 
     @Autowired

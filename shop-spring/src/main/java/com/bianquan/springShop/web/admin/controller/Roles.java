@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/roles")
-@Api(tags = "管理后台-角色操作")
+@Api(tags = "后台管理-角色操作")
 public class Roles extends AbstractController {
 
     @Autowired

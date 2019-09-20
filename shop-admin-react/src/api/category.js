@@ -11,3 +11,6 @@ export const edit = params => sxAjax.put("admin/categories/edit", params)
 
 //删除
 export const del = params => sxAjax.del("admin/categories/del", params)
+
+//通过等级获取列表
+export const listByLevels = params => sxAjax.get("admin/categories/listByLevels", params)

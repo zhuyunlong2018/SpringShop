@@ -1,7 +1,26 @@
 import React, { Component } from 'react';
-import { Modal, Form, Spin } from 'antd';
+import { Modal, Form, Spin, Upload, Icon, message } from 'antd';
 import { FormElement } from '@/library/antd';
 import { add, edit } from '@/api/category'
+
+
+function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  }
 
 @Form.create()
 export default class CategoryEdit extends Component {
@@ -31,11 +50,10 @@ export default class CategoryEdit extends Component {
         const { onOk, form: { validateFieldsAndScroll } } = this.props;
         //表单验证
         validateFieldsAndScroll((err, values) => {
-            if (err) return;
-            const params = { ...values };
-            const { id } = values;
 
-            // TODO ajax 提交数据
+            if (err) return;
+            const { id, status } = values;
+            const params = { ...values, status: status ? 1 : 2 };
             // id存在未修改，不存在未添加
             const ajax = id ? edit(params) : add(params);
 
@@ -63,13 +81,38 @@ export default class CategoryEdit extends Component {
         this.props.form.resetFields();
     };
 
+
+    handleChange = info => {
+        if (info.file.status === 'uploading') {
+          this.setState({ loading: true });
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          getBase64(info.file.originFileObj, imageUrl =>
+            this.setState({
+              imageUrl,
+              loading: false,
+            }),
+          );
+        }
+      };
+
+
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { visible, radioOptions } = this.props;
+        const { visible, treeNode, form: { setFieldsValue } } = this.props;
         const { loading, data } = this.state;
         const title = data.id ? '修改分类管理' : '添加分类管理';
         const FormElement = this.FormElement;
+        const imageUrl =""
+        const uploadButton = (
+            <div>
+              <Icon type={this.state.loading ? 'loading' : 'plus'} />
+              <div className="ant-upload-text">Upload</div>
+            </div>
+          );
         return (
             <Modal
                 destroyOnClose
@@ -84,25 +127,27 @@ export default class CategoryEdit extends Component {
                         {data.id ? (<FormElement type="hidden" field="id" decorator={{ initialValue: data.id }} />) : null}
                         <FormElement
                             label="类目等级"
-                            type="radio-group"
+                            type="hidden"
                             field="level"
-                            options={radioOptions}
                             decorator={{
-                                initialValue: data.level,
-                                rules: [
-                                    { required: true, message: '类目等级不能为空！' },
-                                ],
+                                initialValue: data.level ? data.level : 1,
                             }}
                         />
 
                         <FormElement
                             label="父类目"
-                            type="number"
+                            type="select-tree"
                             field="pid"
+                            options={treeNode}
+                            showSearch
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            wrapperStyle={{ flex: 0 }}
+                            onChange={(value, label, extra) => setFieldsValue({ level: extra.triggerNode.props.level + 1 })}
+                            treeNodeFilterProp="title"
                             decorator={{
-                                initialValue: data.pid,
+                                initialValue: data.pid ? data.pid : '0',
                                 rules: [
-                                    { required: true, message: '父类目ID=0时，代表的是一级的类目不能为空！' },
+                                    { required: true, message: '父类目不能为空！' },
                                 ],
                             }}
                         />
@@ -144,7 +189,21 @@ export default class CategoryEdit extends Component {
                                     { max: 255, message: '最多255个字符！' },
                                 ],
                             }}
-                        />
+                        >
+                            <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleChange}
+                        >
+                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                        </Upload>
+                            </FormElement>
+
+                        
 
                         <FormElement
                             label="排序"
@@ -162,21 +221,18 @@ export default class CategoryEdit extends Component {
                             label="状态"
                             type="switch"
                             field="status"
-                            checked={data.status===1}
-                            onClick={()=>{
+                            checked={data.status === 1}
+                            onClick={() => {
                                 let status
                                 if (data.status === 1) {
                                     status = 2
                                 } else {
                                     status = 1
                                 }
-                                this.setState({data: {...data, status}})
+                                this.setState({ data: { ...data, status } })
                             }}
                             decorator={{
-                                initialValue: data.status,
-                                rules: [
-                                    { required: true, message: '状态' },
-                                ],
+                                initialValue: data.status === 1,
                             }}
                         />
 

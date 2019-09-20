@@ -470,3 +470,25 @@ export function getFirstValue(treeData, node, property) {
     }
     return firstValue;
 }
+
+/**
+ * 递归按无限极分类整理为树状子集数据
+ * @param  arr 需要整理的数组
+ * @param  id 所要获取下级成员的上级id
+ * @param  call 对返回数据进行包装的回调函数
+ * @param  idKey 数据本身的ID
+ * @param  pidKey 数据关联自身的上级ID外键
+ */
+export function makeChildren(arr, id=0,call=null, idKey='id', pidKey='pid'){
+    const list = []
+    for (const data of arr) {
+      if (data[pidKey] === id) {
+        data.children = makeChildren(arr, data[idKey], call, idKey, pidKey)
+        if (call) {
+          call(data)
+        }
+        list.push(data)
+      }
+    }
+    return list;
+  }

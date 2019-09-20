@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-@Api(tags = "后台登录操作")
+@Api(tags = "后台管理-登录操作")
 public class AdminLogin extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(AdminLogin.class);
 

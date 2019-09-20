@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shop/ad")
-@Api(tags = "获取广告栏目")
+@Api(tags = "web商城-广告栏目")
 public class Ad {
 
     @Autowired

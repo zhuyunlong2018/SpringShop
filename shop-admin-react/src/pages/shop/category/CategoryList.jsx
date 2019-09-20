@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Table, Avatar } from 'antd';
 import {
     QueryBar,
     QueryItem,
@@ -11,7 +11,8 @@ import PageContent from '@/layouts/page-content';
 import config from '@/commons/config-hoc';
 import { hasPermission } from '@/commons';
 import CategoryEdit from './CategoryEdit';
-import { list, del } from '@/api/category';
+import { list, del, listByLevels } from '@/api/category';
+import { makeChildren } from '@/library/utils/tree-utils'
 
 @config({
     path: '/categories',
@@ -29,10 +30,11 @@ export default class CategoryList extends Component {
         visible: false,
         levels: {}, //类目级别
         selectOptions: [
-            { value: '1', label: '一级类目' },
-            { value: '2', label: '二级类目' },
-            { value: '3', label: '三级类目' }
+            { value: 1, label: '一级类目' },
+            { value: 2, label: '二级类目' },
+            { value: 3, label: '三级类目' }
         ],
+        firstAndSecondTree: [],
     };
 
     // TODO 顶部工具条
@@ -75,17 +77,20 @@ export default class CategoryList extends Component {
         // {title: '父类目', dataIndex: 'pid'},
         { title: '类目名称', dataIndex: 'title' },
         { title: '描述', dataIndex: 'description' },
-        { title: '图片', dataIndex: 'img' },
+        { title: '图片', dataIndex: 'img', render: (value) => <Avatar  shape="square" src={value} onClick={() => {
+
+            this.props.action.global.showPreviewVisible(value, '')
+        }} /> },
         { title: '排序', dataIndex: 'sortOrder' },
         {
             title: '级别', dataIndex: 'level',
-            render: (value, record) => {
+            render: (value) => {
                 return this.state.levels[value]
             }
         },
         {
             title: '状态', dataIndex: 'status',
-            render: (value, record) => {
+            render: (value) => {
                 if (value === 2) return <span>删除</span>;
                 return "正常";
             }
@@ -93,7 +98,7 @@ export default class CategoryList extends Component {
         {
             title: '操作',
             key: 'operator',
-            render: (text, record) => {
+            render: (record) => {
                 const { id, pid } = record;
                 const items = [
                     {
@@ -127,6 +132,8 @@ export default class CategoryList extends Component {
         this.setState({ levels: stateLevels });
 
         this.handleSearch();
+
+        this.fetchFirstAndSecondCategories()
     }
 
     /**
@@ -148,6 +155,25 @@ export default class CategoryList extends Component {
             })
             .finally(() => this.setState({ loading: false }));
     };
+
+    /**
+     * 获取所有第一级和第二级类目列表并整理为treeNode
+     */
+    fetchFirstAndSecondCategories() {
+        listByLevels({levels: [1,2]}).then(res => {
+            const nodes = makeChildren(res, 0, (data) => {
+                data.key = data.id
+                data.value = data.id
+            });
+            nodes.unshift({
+                key: "topper",
+                value: '0',
+                title: "顶级类目",
+                level: 1,
+            })
+            this.setState({firstAndSecondTree: nodes})
+        })
+    }
 
     /**
      * 处理queryItem的options
@@ -178,7 +204,7 @@ export default class CategoryList extends Component {
      * 处理添加
      */
     handleAdd = () => {
-        this.setState({ formData: {}, visible: true });
+        this.setState({ formData: { level: 1, status: 1 }, visible: true });
     };
 
     /**
@@ -215,8 +241,8 @@ export default class CategoryList extends Component {
             pageNum,
             pageSize,
             visible,
-            selectOptions,
             formData,
+            firstAndSecondTree,
         } = this.state;
 
         return (
@@ -253,8 +279,8 @@ export default class CategoryList extends Component {
 
                 <CategoryEdit
                     formData={formData}
+                    treeNode={firstAndSecondTree}
                     visible={visible}
-                    radioOptions={selectOptions}
                     onOk={this.handleOk.bind(this)}
                     onCancel={() => this.setState({ visible: false })}
                 />
