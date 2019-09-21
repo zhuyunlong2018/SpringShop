@@ -1,0 +1,109 @@
+@header-height: 64px;
+
+.trigger {
+    font-size: 18px;
+    line-height: @header-height;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}
+
+.operation-icon {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+
+    .button {
+        margin-right: 8px;
+    }
+}
+
+:global(.ant-layout-sider) {
+    background: #fff !important;
+}
+
+:global(.ant-layout) {
+    background: #fff !important;
+}
+
+:global(.anticon.anticon-delete) {
+    display: none;
+}
+
+.content {
+    padding: "24";
+    background: '#fff';
+    min-height: 360;
+
+    .image-list {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+
+        .img-box {
+            width: 100px;
+            height: 100px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+
+            border: 1px solid rgb(218, 216, 216);
+            border-radius: 5px;
+
+            .img {
+                padding: 10px;
+                position: relative;
+
+                &::before {
+                    content: ' ';
+                    position: absolute;
+                    z-index: 1;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    -webkit-transition: all 0.3s;
+                    transition: all 0.3s;
+                    width: 80px;
+                    height: 80px;
+                    opacity: 0;
+                }
+
+                &:hover::before {
+                    opacity: .8;
+                }
+
+                .priview {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    -webkit-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+                    z-index: 100;
+                    white-space: nowrap;
+                    opacity: 0;
+                    color: #fff;
+                    -webkit-transition: all 0.3s;
+                    transition: all 0.3s;
+                    cursor: pointer;
+                }
+
+                &:hover .priview {
+                    opacity: 1;
+                }
+            }
+
+
+            img {
+                width: 100%;
+
+
+
+            }
+        }
+
+        .selected {
+            border: 2px dashed rgb(53, 175, 53);
+        }
+    }
+}
