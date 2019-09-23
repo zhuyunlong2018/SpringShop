@@ -1,5 +1,6 @@
 /shop-spring/HELP.md
 /shop-spring/target/
+/shop-spring/src/main/resources/static/
 !/shop_spring/.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###

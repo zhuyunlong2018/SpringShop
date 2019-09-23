@@ -76,4 +76,28 @@ public class DateUtil {
         return 0;
     }
 
+    /**
+     * 获取现在年份
+     * @return
+     */
+    public static String getYear() {
+        return timeStamp2Date(timeStamp(), "yyyy");
+    }
+
+    /**
+     * 获取现在月份
+     * @return
+     */
+    public static String getMonth() {
+        return timeStamp2Date(timeStamp(), "MM");
+    }
+
+    /**
+     * 获取现在日期
+     * @return
+     */
+    public static String getDay() {
+        return timeStamp2Date(timeStamp(), "dd");
+    }
+
 }

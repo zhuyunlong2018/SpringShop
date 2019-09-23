@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 图片分类表 实体类
@@ -38,9 +37,9 @@ public class ImagesClassEntity implements Serializable {
     private String size;
 
     @ApiModelProperty(value = "")
-    private Date createTime;
+    private long createTime;
 
     @ApiModelProperty(value = "")
-    private Date updateTime;
+    private long updateTime;
 
 }

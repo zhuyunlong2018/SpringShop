@@ -1,38 +1,56 @@
 @header-height: 64px;
 
-.trigger {
-    font-size: 18px;
-    line-height: @header-height;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-}
+.header {
+    list-style: none;
+    margin: 10px;
+    display: flex;
+    padding: 0;
 
-.trigger:hover {
-    color: #1890ff;
-}
-
-.operation-icon {
-    height: 32px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 16px;
-
-    .button {
-        margin-right: 8px;
+    .list {
+        width: 300px;
+        height: 32px;
+        line-height: 22px;
     }
 }
 
-:global(.ant-layout-sider) {
-    background: #fff !important;
+
+.left-sider {
+
+    .trigger {
+        font-size: 18px;
+        line-height: @header-height;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .trigger:hover {
+        color: #1890ff;
+    }
+
+    .operation-icon {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+
+        .button {
+            margin-right: 8px;
+        }
+    }
+
+    :global(.ant-layout-sider) {
+        background: #fff !important;
+    }
+
+    :global(.ant-layout) {
+        background: #fff !important;
+    }
+
+    :global(.anticon.anticon-delete) {
+        display: none;
+    }
 }
 
-:global(.ant-layout) {
-    background: #fff !important;
-}
-
-:global(.anticon.anticon-delete) {
-    display: none;
-}
 
 .content {
     padding: "24";
@@ -55,6 +73,7 @@
 
             .img {
                 padding: 10px;
+                height: 100%;
                 position: relative;
 
                 &::before {
@@ -96,9 +115,7 @@
 
             img {
                 width: 100%;
-
-
-
+                height: 100%;
             }
         }
 

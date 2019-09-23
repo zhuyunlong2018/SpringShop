@@ -28,6 +28,7 @@ export function isInputLikeElement(type) {
     return [
         'input',
         'hidden',
+        'input-hidden',
         'number',
         'textarea',
         'password',
@@ -53,7 +54,7 @@ function getElement(item) {
         if (type === 'number') return <InputNumber {...props}/>;
         if (type === 'textarea') return <TextArea {...props}/>;
         if (type === 'password') return <Password {...props}/>;
-
+        if (type === 'input-hidden') return <Input type='hidden' {...props}/>;
         return <Input type={type} {...props}/>;
     }
 

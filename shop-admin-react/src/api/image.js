@@ -16,7 +16,7 @@ export const delClass = params => sxAjax.del("admin/imagesClass/del", params)
 export const list = params => sxAjax.get("admin/images/list", params)
 
 //添加图片
-export const add = params => sxAjax.post("admin/images/add", params)
+export const add = params => sxAjax.post("admin/images/upload", params)
 
 //删除图片
 export const del = params => sxAjax.del("admin/images/del", params)

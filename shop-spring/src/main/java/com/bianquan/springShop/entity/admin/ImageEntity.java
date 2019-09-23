@@ -1,7 +1,6 @@
 package com.bianquan.springShop.entity.admin;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 图片存储管理 实体类
@@ -32,6 +30,9 @@ public class ImageEntity implements Serializable {
     @ApiModelProperty(value = "图片标题")
     private String title;
 
+    @ApiModelProperty(value = "图片关键词")
+    private String keywords;
+
     @ApiModelProperty(value = "地址")
     private String src;
 
@@ -39,7 +40,7 @@ public class ImageEntity implements Serializable {
     private Integer origin;
 
     @ApiModelProperty(value = "大小")
-    private String size;
+    private long size;
 
     @ApiModelProperty(value = "链接数（被引用次数）",example="1")
     private Integer links;
@@ -51,9 +52,9 @@ public class ImageEntity implements Serializable {
     private Integer classification;
 
     @ApiModelProperty(value = "")
-    private Date createTime;
+    private long createTime;
 
     @ApiModelProperty(value = "")
-    private Date updateTime;
+    private long updateTime;
 
 }

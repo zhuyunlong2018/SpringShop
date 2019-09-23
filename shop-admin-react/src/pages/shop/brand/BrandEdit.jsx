@@ -4,6 +4,7 @@ import { FormElement } from '@/library/antd';
 import { add, edit } from '@/api/brand'
 
 
+
 @Form.create()
 export default class BrandEdit extends Component {
     state = {

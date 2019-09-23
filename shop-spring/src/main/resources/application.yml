@@ -21,8 +21,8 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 10MB
+      max-request-size: 5MB
       enabled: true
   main:
     allow-bean-definition-overriding: true
@@ -88,3 +88,6 @@ bianquan:
     # token有效时长，7天，单位秒
     expire: 604800
     header: token
+  upload:
+    #文件上传路劲
+    path: D:\documents\owner\springShop\shop-spring\src\main\resources\static\images\

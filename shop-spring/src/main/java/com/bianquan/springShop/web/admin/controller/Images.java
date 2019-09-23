@@ -1,7 +1,9 @@
 package com.bianquan.springShop.web.admin.controller;
 
 
+import com.bianquan.springShop.common.utils.DateUtil;
 import com.bianquan.springShop.common.utils.FileUtil;
+import com.bianquan.springShop.common.utils.QWrapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bianquan.springShop.service.admin.ImageService;
@@ -17,7 +19,6 @@ import com.bianquan.springShop.common.exception.RRException;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
 
 /**
  * 图片存储管理 前端控制器
@@ -33,12 +34,22 @@ public class Images {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private FileUtil fileUtil;
+
     @GetMapping("/list")
     @ApiOperation("查询分页数据")
-    public Response findListByPage(@RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
-                                   @RequestParam(name = "pageSize", defaultValue = "20") int pageSize){
+    public Response findListByPage(
+            @RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
+            @RequestParam(name = "searchKey", defaultValue = "") String searchKey,
+            @RequestParam(name = "classification", defaultValue = "0") int classification
+    ){
         Page<ImageEntity> page = new Page<>(currentPage, pageSize);
-        IPage<ImageEntity> list = imageService.page(page);
+        QWrapper<ImageEntity> wrapper = new QWrapper<>();
+        wrapper.like(!"".equals(searchKey), ImageEntity.KEYWORDS, searchKey)
+                .eq(classification > 0, ImageEntity.CLASSIFICATION, classification);
+        IPage<ImageEntity> list = imageService.page(page, wrapper);
         return Response.ok(list);
     }
 
@@ -79,27 +90,31 @@ public class Images {
      * @param file 要上传的文件
      * @return
      */
-    @PostMapping("fileUpload")
-    public String upload(@RequestParam("fileName") MultipartFile file, Map<String, Object> map){
-
-        // 要上传的目标文件存放路径
-        String localPath = "E:/Develop/Files/Photos";
-        // 上传成功或者失败的提示
-        String msg = "";
-
-        if (FileUtil.upload(file, localPath, file.getOriginalFilename())){
-            // 上传成功，给出页面提示
-            msg = "上传成功！";
-        }else {
-            msg = "上传失败！";
-
+    @PostMapping("/upload")
+    public Response upload(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("keywords") String keywords,
+            @RequestParam("classification") int classification
+    ) {
+        if (!fileUtil.upload(file)){
+            throw new RRException("上传失败");
         }
+        ImageEntity img = new ImageEntity();
+        img.setKeywords(keywords);
+        img.setTitle(file.getOriginalFilename());
+        img.setSize(file.getSize());
+        img.setDir(fileUtil.getDirPath());
+        img.setSrc(fileUtil.getFileFullName());
+        img.setOrigin(1);
+        img.setClassification(classification);
+        img.setCreateTime(DateUtil.time());
+        img.setUpdateTime(DateUtil.time());
 
-        // 显示图片
-        map.put("msg", msg);
-        map.put("fileName", file.getOriginalFilename());
-
-        return "forward:/test";
+        boolean result = imageService.save(img);
+        if (!result) {
+            throw new RRException("图片信息保存失败");
+        }
+        return Response.ok(img);
     }
 
 }

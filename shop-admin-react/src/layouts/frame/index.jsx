@@ -11,7 +11,6 @@ import { connect } from '@/models/index';
 import { getSelectedMenuByPath } from '@/commons';
 import { PAGE_FRAME_LAYOUT } from '@/models/settings';
 import ImagePreview from '@/components/image-preview/index'
-import ImagesUpload from '@/components/images-upload/index'
 import './style.less';
 
 @withRouter
@@ -206,7 +205,6 @@ export default class FrameTopSideMenu extends Component {
                     <Spin spinning size="large" />
                 </div>
                 <ImagePreview />
-                <ImagesUpload />
             </div>
         );
     }
