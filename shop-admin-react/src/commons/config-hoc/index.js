@@ -8,6 +8,7 @@ import pubSubHoc from '@/library/utils/pub-sub-hoc'
 import eventHoc from '@/library/utils/dom-event-hoc';
 import PubSub from 'pubsub-js'
 import {ROUTE_BASE_NAME} from '@/router/AppRouter';
+import {propertiesHoc} from '@/library/properties/properties-hoc'
 
 /**
  * 页面配置高阶组件，整合了多个高阶组件
@@ -15,7 +16,6 @@ import {ROUTE_BASE_NAME} from '@/router/AppRouter';
  * @returns {function(*): WithConfig}
  */
 export default (options) => {
-    console.log(options)
     return WrappedComponent => {
         const {
             // path = void 0,       // 页面路由地址，如果存在path配置，会通过脚本抓取，当前组件将会作为路由页面，path将作为路由地址
@@ -34,6 +34,7 @@ export default (options) => {
             connect = false,        // 是否与redux进行连接，true：只注入了this.props.action相关方法；false：不与redux进行连接；(state) => ({title: state.page.title})：将函数返回的数据注入this.props
             event = false,          // 是否添加event高阶组件，可以使用this.props.addEventListener添加dom事件，并在组件卸载时会自动清理；通过this.props.removeEventListener移出dom事件
             pubSub = false,         // 是否添加发布订阅高阶组件，可以使用this.props.subscribe(topic, (msg, data) => {...})订阅事件，并在组件卸载时，会自动取消订阅; 通过this.props.publish(topic, data)发布事件
+            properties = false,     // 是否添加全局环境配置,组件要注入.env .env.development或者.env.production的配置，使用@config({properties: true}),
         } = options;
 
         const hocFuncs = [];
@@ -53,6 +54,8 @@ export default (options) => {
         if (connect === true) hocFuncs.push(reduxConnect());
 
         if (typeof connect === 'function') hocFuncs.push(reduxConnect(connect));
+
+        if (properties) hocFuncs.push(propertiesHoc())
 
         const hocs = compose(hocFuncs);
 

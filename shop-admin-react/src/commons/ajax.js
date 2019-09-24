@@ -2,6 +2,7 @@ import SXAjax, {createAjaxHoc} from '@/library/ajax';
 import mockUrls from '../mock/url-config';
 import handleError from './handle-error';
 import handleSuccess from './handle-success';
+import properties from '@/library/properties'
 
 /**
  * 判断请求是否是mock
@@ -23,8 +24,7 @@ export const sxAjax = new SXAjax({
 });
 
 // 默认配置
-// sxAjax.defaults.baseURL = '/api';
-sxAjax.defaults.baseURL = 'http://localhost:8083';
+sxAjax.defaults.baseURL = properties.api;
 sxAjax.defaults.timeout = 1000 * 60;
 sxAjax.mockDefaults.baseURL = '/';
 

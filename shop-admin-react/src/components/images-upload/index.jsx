@@ -15,13 +15,12 @@ const { Search } = Input;
 export default class ImagesUpload extends Component {
     state = {
         loading: false, //模态框加载图标
-        visible: false, //图片管理弹框
         uploadLoading: false,   //图片上传加载图标
         uploadMessage: "",  //上传图片关键词描述
         searchKey: "",      //检索图片关键词
         selectedKeys: [],   //侧边栏分类，被选中的分类菜单，example: ['1']
         fileList: [],   //内容图片列表
-        pageSize: 10,   //内容每页数量
+        pageSize: 21,   //内容每页数量
         pageNum: 1,     //内容页码
         total: 0,       //总图片数
     };
@@ -37,13 +36,6 @@ export default class ImagesUpload extends Component {
 
             this.setState({ total: res.total, fileList: res.records })
         }).finally(() => this.setState({ loading: false }))
-    }
-
-    /**
-     * 关闭图片资源管理器
-     */
-    handleCancel = () => {
-        this.setState({ visible: false })
     }
 
     //处理自定义上传图片
@@ -93,10 +85,10 @@ export default class ImagesUpload extends Component {
 
     render() {
         const {
-            visible, uploadLoading, uploadMessage, searchKey, selectedKeys, total, fileList,
+            uploadLoading, uploadMessage, searchKey, selectedKeys, total, fileList,
             pageNum, pageSize, loading
         } = this.state;
-
+        const {visible, handleCancel} = this.props;
         const classification = selectedKeys.length === 0 ? 0 : selectedKeys[0]
         const uploadProps = {
             name: 'file',
@@ -107,7 +99,7 @@ export default class ImagesUpload extends Component {
             data: { keywords: uploadMessage, classification },
             onChange(info) {
                 if (info.file.status !== 'uploading') {
-                    console.log(info.file, info.fileList);
+                    // console.log(info.file, info.fileList);
                 }
                 if (info.file.status === 'done') {
                     message.success(`${info.file.name} 上传成功`, 1);
@@ -120,9 +112,10 @@ export default class ImagesUpload extends Component {
             <div>
                 <Modal visible={visible}
                     confirmLoading={loading}
-                    onCancel={this.handleCancel}
+                    onCancel={handleCancel}
                     width={960}
-                    footer={null}
+                    zIndex={1001}
+                    // footer={null}
                 >
                     <Layout>
                         <LeftSider selectedKeys={selectedKeys}

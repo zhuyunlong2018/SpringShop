@@ -69,6 +69,7 @@ export default class ClassEdit extends Component {
                 title={title}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
+                zIndex={1101}
             >
                 <Spin spinning={loading}>
                     <Form>

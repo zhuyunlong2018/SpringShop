@@ -48,7 +48,8 @@ public class Images {
         Page<ImageEntity> page = new Page<>(currentPage, pageSize);
         QWrapper<ImageEntity> wrapper = new QWrapper<>();
         wrapper.like(!"".equals(searchKey), ImageEntity.KEYWORDS, searchKey)
-                .eq(classification > 0, ImageEntity.CLASSIFICATION, classification);
+                .eq(classification > 0, ImageEntity.CLASSIFICATION, classification)
+                .orderByDesc(ImageEntity.ID);
         IPage<ImageEntity> list = imageService.page(page, wrapper);
         return Response.ok(list);
     }
@@ -99,6 +100,7 @@ public class Images {
         if (!fileUtil.upload(file)){
             throw new RRException("上传失败");
         }
+        //TODO fileUtil单例导致上传图片覆盖
         ImageEntity img = new ImageEntity();
         img.setKeywords(keywords);
         img.setTitle(file.getOriginalFilename());

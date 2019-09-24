@@ -5,12 +5,13 @@ import { add, edit } from '@/api/category'
 import config from '@/commons/config-hoc';
 import ImagesUpload from '@/components/images-upload'
 
-@config({})
+@config({ properties: true })
 @Form.create()
 export default class CategoryEdit extends Component {
     state = {
         loading: false,
         data: {},
+        uploadVisible: false,
     };
 
     componentDidUpdate(prevProps) {
@@ -68,11 +69,11 @@ export default class CategoryEdit extends Component {
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { visible, treeNode, form: { setFieldsValue } } = this.props;
-        const { loading, data } = this.state;
+        const { visible, treeNode, form: { setFieldsValue }, properties } = this.props;
+        const { loading, data, uploadVisible } = this.state;
         const title = data.id ? '修改分类管理' : '添加分类管理';
+        const imgSrc = data.id ? data.img : '';
         const FormElement = this.FormElement;
-
         return (
             <Modal
                 destroyOnClose
@@ -150,7 +151,9 @@ export default class CategoryEdit extends Component {
                                 ],
                             }}
                         >
-                            <Avatar shape="square" size={64} icon="picture"/>
+                            <Avatar shape="square" size={64} icon="picture" src={imgSrc} onClick={() => this.setState({ uploadVisible: true })} />
+                            <ImagesUpload visible={uploadVisible}
+                                handleCancel={() => this.setState({ uploadVisible: false })} />
                         </FormElement>
 
 

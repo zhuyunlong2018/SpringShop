@@ -15,7 +15,7 @@ export default class ImagePreview extends Component {
             action: { global: {hidePreviewVisible }}
         } = this.props
         return (
-            <Modal visible={previewVisible} footer={null} onCancel={hidePreviewVisible} >
+            <Modal visible={previewVisible} footer={null} onCancel={hidePreviewVisible} zIndex={1010} >
                 <img alt={previewAlt} style={{ width: '100%' }} src={previewImage} />
             </Modal>
         )

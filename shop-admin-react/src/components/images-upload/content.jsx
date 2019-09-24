@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Layout, Tooltip } from 'antd';
+import { Layout, Tooltip, Icon } from 'antd';
 import { connect } from '@/models/index';
 import { Pagination } from "@/library/antd";
+import config from '@/commons/config-hoc';
 
 import './style.less'
 
 const { Content } = Layout;
 
+@config({ properties: true })
 @connect(state => ({ global: state.global }))
 export default class RightContent extends Component {
 
@@ -38,10 +40,10 @@ export default class RightContent extends Component {
     }
 
     fileSrc(file) {
-        const preUrl = "http://localhost:8083/images/"
-        if (file.origin ===1) {
+        if (file.origin === 1) {
+            const { properties } = this.props
             //服务器本地图片，需要加上域名等前缀
-            return preUrl + file.src
+            return properties.upload + file.src
         }
         return file.src
     }
@@ -50,7 +52,7 @@ export default class RightContent extends Component {
 
         const { selectList } = this.state;
         const { fileList, total, pageNum, pageSize, onPageNumChange, onPageSizeChange } = this.props;
-        
+        const text = <span>预览</span>;
         //图片容器
         const renderContent = fileList.map(file => {
             return (
@@ -58,11 +60,13 @@ export default class RightContent extends Component {
                     styleName={selectList.indexOf(file) > -1 ? 'img-box selected' : 'img-box'}
                     onClick={() => this.handleSelect(file)}>
                     <div styleName='img' >
-                        <img src={this.fileSrc(file)} alt="" />
-                        <span styleName="priview" onClick={(e) => this.handlePreview(e, this.fileSrc(file))}>
-                            <Tooltip placement="bottom" title="预览">
-                                <svg viewBox="64 64 896 896" data-icon="eye" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path>
-                                </svg>
+                        <img src={this.fileSrc(file)} alt={file.keywords} />
+                        <span styleName="priview">
+                            <Tooltip placement="bottom" title={text}>
+                                <Icon type="search" onClick={(e) => this.handlePreview(e, this.fileSrc(file))}/>
+                            </Tooltip>
+                            <Tooltip placement="bottom" title={file.keywords}>
+                                <Icon type="info-circle" style={{marginLeft: 10}}/>
                             </Tooltip>
                         </span>
                     </div>
