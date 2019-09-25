@@ -7,7 +7,9 @@ import com.bianquan.springShop.service.shop.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
@@ -18,5 +20,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Override
     public List<CategoryEntity> queryWithChildren(Long pid) {
         return categoriesDao.listWithChildren(pid);
+    }
+
+    @Override
+    public Map<String, Object> queryPageWithImage(int currentPage, int pageSize, int level, String title) {
+        int currentIndex = (currentPage - 1) * pageSize;
+        List<CategoryEntity> list = categoriesDao.fetchPageWithImage(currentIndex, pageSize, level, title);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("total", count());
+        map.put("records", list);
+        return map;
     }
 }

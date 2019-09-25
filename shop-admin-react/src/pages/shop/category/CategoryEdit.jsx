@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { Modal, Form, Spin, Avatar } from 'antd';
 import { FormElement } from '@/library/antd';
 import { add, edit } from '@/api/category'
-import config from '@/commons/config-hoc';
 import ImagesUpload from '@/components/images-upload'
 
-@config({ properties: true })
 @Form.create()
 export default class CategoryEdit extends Component {
     state = {
         loading: false,
         data: {},
         uploadVisible: false,
+
     };
 
     componentDidUpdate(prevProps) {
@@ -45,6 +44,7 @@ export default class CategoryEdit extends Component {
             this.setState({ loading: true });
             ajax.then((data) => {
                 //保存成功，执行回调函数修改本地数据
+                data.image = this.state.data.image
                 if (onOk) onOk(id, data)
             })
                 .finally(() => this.setState({ loading: false }));
@@ -66,13 +66,26 @@ export default class CategoryEdit extends Component {
         this.props.form.resetFields();
     };
 
+    /**
+     * 处理选中图片后回调
+     * @param {Object} images 
+     */
+    handelSelectImages(images) {
+        if (images.length > 0) {
+            const selectImage = images[0]
+            this.props.form.setFieldsValue({imageId: selectImage.id})
+            this.setState({data: {...this.state.data, image:selectImage}})
+        }
+        this.setState({ uploadVisible: false })
+    }
+
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { visible, treeNode, form: { setFieldsValue }, properties } = this.props;
+        const { visible, treeNode, form: { setFieldsValue }, fileSrc } = this.props;
         const { loading, data, uploadVisible } = this.state;
         const title = data.id ? '修改分类管理' : '添加分类管理';
-        const imgSrc = data.id ? data.img : '';
+        const imgSrc = data.image ? fileSrc(data.image) : '';
         const FormElement = this.FormElement;
         return (
             <Modal
@@ -142,21 +155,20 @@ export default class CategoryEdit extends Component {
                         <FormElement
                             label="图片"
                             type="input-hidden"
-                            field="img"
+                            field="imageId"
                             decorator={{
-                                initialValue: data.img,
+                                initialValue: data.imageId,
                                 rules: [
                                     { required: true, message: '图片不能为空！' },
-                                    { max: 255, message: '最多255个字符！' },
                                 ],
                             }}
                         >
-                            <Avatar shape="square" size={64} icon="picture" src={imgSrc} onClick={() => this.setState({ uploadVisible: true })} />
+                            <Avatar shape="square" size={64} icon="picture" src={imgSrc}
+                                onClick={() => this.setState({ uploadVisible: true })} />
                             <ImagesUpload visible={uploadVisible}
-                                handleCancel={() => this.setState({ uploadVisible: false })} />
+                                handleCancel={() => this.setState({ uploadVisible: false })}
+                                handelSelectImages={images => this.handelSelectImages(images)} />
                         </FormElement>
-
-
 
                         <FormElement
                             label="排序"

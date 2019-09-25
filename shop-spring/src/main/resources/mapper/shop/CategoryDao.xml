@@ -3,6 +3,8 @@
 
 <mapper namespace="com.bianquan.springShop.dao.shop.CategoryDao">
 
+    <sql id="table_field">id,pid,title,status,description,image_id,sort_order,`level`,create_time,update_time,delete_time</sql>
+
     <!--根据id获取包含所有子类信息,形成递归查询-->
     <select id="listWithChildren" resultType="com.bianquan.springShop.entity.shop.CategoryEntity" resultMap="childrenMap">
         select * from sp_categories where pid = #{pid} and status = 1
@@ -14,5 +16,40 @@
                     select="listWithChildren" column="id"/>
     </resultMap>
 
+    <!--获取分类分页并携带图片对象-->
+    <select id="fetchPageWithImage" resultMap="fetchPageWithImage">
+        SELECT c.id,pid,c.title,c.status,description,image_id,sort_order,`level`, i.id i_id,i.title i_title,i.keywords,i.src,i.origin
+        FROM sp_categories c
+        LEFT JOIN sp_images i ON c.image_id=i.id
+        <where>
+            <if test="level != 0">
+                `level` = #{level}
+            </if>
+            <if test="title != ''">
+                AND c.title like "%"#{title}"%"
+            </if>
+        </where>
+        limit #{currIndex} , #{pageSize}
+    </select>
+    <resultMap type="com.bianquan.springShop.entity.shop.CategoryEntity" id="fetchPageWithImage">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="title" property="title"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="image_id" property="imageId"/>
+        <result column="level" property="level"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <!-- 图片对象-->
+        <collection property="image" ofType="com.bianquan.springShop.entity.admin.ImageEntity">
+        <id property="id" column="i_id"/>
+        <result column="i_title" property="title"/>
+        <result column="keywords" property="keywords"/>
+        <result column="src" property="src"/>
+        <result column="origin" property="origin"/>
+        </collection>
+    </resultMap>
 
 </mapper>

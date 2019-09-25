@@ -53,5 +53,6 @@ export default function handleError({error, errorTip}) {
     notification.error({
         message: '操作失败',
         description,
+        duration: 1.5,
     });
 }

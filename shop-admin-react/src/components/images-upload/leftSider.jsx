@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Layout, Menu, Tooltip, Button, Popconfirm } from 'antd';
 import { getClass, delClass } from '@/api/image'
 import ClassEdit from './ClassEdit'
+import Permission from '../permission'
 import './style.less'
 
 const { Sider } = Layout
@@ -112,26 +113,33 @@ export default class LeftSider extends Component {
             <div styleName="left-sider">
                 <Sider trigger={null} collapsible width={120} style={{ height: '100%' }} >
                     <div styleName="operation-icon">
-                        <Tooltip placement="bottomLeft" title="添加分类">
-                            <Button shape="circle" icon="form" size="small" styleName="button"
-                                onClick={this.handleAdd} />
-                        </Tooltip>
-                        <Tooltip placement="bottomLeft" title="编辑分类">
-                            <Button type="dashed" shape="circle" icon="edit" size="small" styleName="button"
-                                onClick={this.handleEdit} />
-                        </Tooltip>
-                        <Tooltip placement="bottomLeft" title="删除分类">
-                            <Popconfirm
-                                placement="rightTop"
-                                title="确认要删除该分类吗？"
-                                onConfirm={this.handleDel}
-                                okText="Yes"
-                                cancelText="No"
-                            >
-                                <Button type="danger" shape="circle" icon="close" size="small" />
-                            </Popconfirm>
+                        <Permission code="admin:imagesClass:add">
+                            <Tooltip placement="bottomLeft" title="添加分类">
+                                <Button shape="circle" icon="form" size="small" styleName="button"
+                                    onClick={this.handleAdd} />
+                            </Tooltip>
+                        </Permission>
 
-                        </Tooltip>
+                        <Permission code="admin:imagesClass:edit">
+                            <Tooltip placement="bottomLeft" title="编辑分类">
+                                <Button type="dashed" shape="circle" icon="edit" size="small" styleName="button"
+                                    onClick={this.handleEdit} />
+                            </Tooltip>
+                        </Permission>
+                        <Permission code="admin:imagesClass:del">
+                            <Tooltip placement="bottomLeft" title="删除分类">
+                                <Popconfirm
+                                    placement="rightTop"
+                                    title="确认要删除该分类吗？"
+                                    onConfirm={this.handleDel}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <Button type="danger" shape="circle" icon="close" size="small" />
+                                </Popconfirm>
+                            </Tooltip>
+                        </Permission>
+
                     </div>
                     <Menu theme="light" mode="inline"
                         // defaultSelectedKeys={[menuList[0].id.toString()]}

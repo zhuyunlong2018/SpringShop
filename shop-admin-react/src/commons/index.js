@@ -1,7 +1,8 @@
-import {session} from '@/library/utils/storage';
-import {getNodeByPropertyAndValue, convertToTree } from '@/library/utils/tree-utils';
+import { session } from '@/library/utils/storage';
+import { getNodeByPropertyAndValue, convertToTree } from '@/library/utils/tree-utils';
 import pathToRegexp from "path-to-regexp/index";
-import {ROUTE_BASE_NAME} from '@/router/AppRouter';
+import { ROUTE_BASE_NAME } from '@/router/AppRouter';
+import properties from '@/library/properties';
 
 const CURRENT_USER_KEY = 'current-user';
 
@@ -15,7 +16,7 @@ const sessionStorage = window.sessionStorage;
 export function hasPermission(code) {
     const loginUser = getLoginUser();
     //TODO 登录用户权限融合
-    return loginUser?.permissions?.includes(code);
+    return loginUser ?.permissions ?.includes(code);
 }
 
 /**
@@ -23,7 +24,7 @@ export function hasPermission(code) {
  */
 export function setLoginUser(currentUser = {}) {
     // 将用户属性在这里展开，方便查看系统都用到了那些用户属性
-    const {id, name, avatar, token, permissions} = currentUser;
+    const { id, name, avatar, token, permissions } = currentUser;
     const userStr = JSON.stringify({
         id,             // 用户id 必须
         name,           // 用户名 必须
@@ -191,7 +192,7 @@ export function getMenuTreeDataAndPermissions(menus) {
     });
 
     const menuTreeData = convertToTree(orderedData);
-    return {menuTreeData, permissions}
+    return { menuTreeData, permissions }
 }
 
 /**
@@ -208,4 +209,16 @@ export function loadScript(src) {
         script.onerror = reject;
         document.head.appendChild(script);
     });
+}
+
+/**
+ * 根据图片类型获取src
+ * @param {Object} file 
+ */
+export function fileSrc(file) {
+    if (file.origin === 1) {
+        //服务器本地图片，需要加上域名等前缀
+        return properties.upload + file.src
+    }
+    return file.src
 }

@@ -1,6 +1,7 @@
 package com.bianquan.springShop.web.admin.controller;
 
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bianquan.springShop.service.admin.ImageClassService;
@@ -30,13 +31,15 @@ public class ImagesClass {
     private ImageClassService imageClassService;
 
     @GetMapping("/list")
-    @ApiOperation("查询分页数据")
+    @RequiresPermissions("admin:images:list")
+    @ApiOperation("图片分类数据")
     public Response findListByPage(){
         List<ImagesClassEntity> list = imageClassService.list();
         return Response.ok(list);
     }
 
     @PostMapping("/add")
+    @RequiresPermissions("admin:imagesClass:add")
     @ApiOperation("新增数据")
     public Response add(@RequestBody ImagesClassEntity imagesClassEntity){
 
@@ -48,6 +51,7 @@ public class ImagesClass {
     }
 
     @PutMapping("/edit")
+    @RequiresPermissions("admin:imagesClass:edit")
     @ApiOperation("更新数据")
     public Response edit(@RequestBody ImagesClassEntity imagesClassEntity){
 
@@ -59,6 +63,7 @@ public class ImagesClass {
      }
 
     @DeleteMapping("/del")
+    @RequiresPermissions("admin:imagesClass:del")
     @ApiOperation("删除数据")
     public Response del(@RequestParam("id") int id){
         boolean result = imageClassService.removeById(id);

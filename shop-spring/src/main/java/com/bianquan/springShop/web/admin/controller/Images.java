@@ -4,6 +4,7 @@ package com.bianquan.springShop.web.admin.controller;
 import com.bianquan.springShop.common.utils.DateUtil;
 import com.bianquan.springShop.common.utils.FileUtil;
 import com.bianquan.springShop.common.utils.QWrapper;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bianquan.springShop.service.admin.ImageService;
@@ -38,6 +39,7 @@ public class Images {
     private FileUtil fileUtil;
 
     @GetMapping("/list")
+    @RequiresPermissions("admin:images:list")
     @ApiOperation("查询分页数据")
     public Response findListByPage(
             @RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
@@ -92,21 +94,20 @@ public class Images {
      * @return
      */
     @PostMapping("/upload")
+    @RequiresPermissions("admin:images:upload")
+    @ApiOperation("上传图片")
     public Response upload(
             @RequestParam("file") MultipartFile file,
             @RequestParam("keywords") String keywords,
             @RequestParam("classification") int classification
     ) {
-        if (!fileUtil.upload(file)){
+        ImageEntity img = new ImageEntity();
+        if (!fileUtil.upload(file, img)){
             throw new RRException("上传失败");
         }
-        //TODO fileUtil单例导致上传图片覆盖
-        ImageEntity img = new ImageEntity();
         img.setKeywords(keywords);
         img.setTitle(file.getOriginalFilename());
         img.setSize(file.getSize());
-        img.setDir(fileUtil.getDirPath());
-        img.setSrc(fileUtil.getFileFullName());
         img.setOrigin(1);
         img.setClassification(classification);
         img.setCreateTime(DateUtil.time());

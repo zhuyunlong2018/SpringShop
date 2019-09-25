@@ -9,7 +9,7 @@ import {
 } from "@/library/antd";
 import PageContent from '@/layouts/page-content';
 import config from '@/commons/config-hoc';
-import { hasPermission } from '@/commons';
+import { hasPermission, fileSrc } from '@/commons';
 import CategoryEdit from './CategoryEdit';
 import { list, del, listByLevels } from '@/api/category';
 import { makeChildren } from '@/library/utils/tree-utils'
@@ -77,10 +77,13 @@ export default class CategoryList extends Component {
         // {title: '父类目', dataIndex: 'pid'},
         { title: '类目名称', dataIndex: 'title' },
         { title: '描述', dataIndex: 'description' },
-        { title: '图片', dataIndex: 'img', render: (value) => <Avatar  shape="square" src={value} onClick={() => {
-
-            this.props.action.global.showPreviewVisible(value, '')
-        }} /> },
+        {
+            title: '图片', dataIndex: 'imageId',
+            render: (value, record) => <Avatar shape="square" src={fileSrc(record.image)}
+                onClick={() => {
+                    this.props.action.global.showPreviewForFile(record.image)
+                }} />
+        },
         { title: '排序', dataIndex: 'sortOrder' },
         {
             title: '级别', dataIndex: 'level',
@@ -160,7 +163,7 @@ export default class CategoryList extends Component {
      * 获取所有第一级和第二级类目列表并整理为treeNode
      */
     fetchFirstAndSecondCategories() {
-        listByLevels({levels: [1,2]}).then(res => {
+        listByLevels({ levels: [1, 2] }).then(res => {
             const nodes = makeChildren(res, 0, (data) => {
                 data.key = data.id
                 data.value = data.id
@@ -171,7 +174,7 @@ export default class CategoryList extends Component {
                 title: "顶级类目",
                 level: 1,
             })
-            this.setState({firstAndSecondTree: nodes})
+            this.setState({ firstAndSecondTree: nodes })
         })
     }
 
@@ -281,6 +284,7 @@ export default class CategoryList extends Component {
                     formData={formData}
                     treeNode={firstAndSecondTree}
                     visible={visible}
+                    fileSrc={(file) => fileSrc(file)}
                     onOk={this.handleOk.bind(this)}
                     onCancel={() => this.setState({ visible: false })}
                 />

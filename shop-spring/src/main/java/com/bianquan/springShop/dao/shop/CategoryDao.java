@@ -15,4 +15,6 @@ public interface CategoryDao extends BaseMapper<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> listWithChildren(Long pid);
+
+    List<CategoryEntity> fetchPageWithImage(int currIndex, int pageSize, int level, String title);
 }

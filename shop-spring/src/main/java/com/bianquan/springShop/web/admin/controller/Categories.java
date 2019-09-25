@@ -18,6 +18,7 @@ import com.bianquan.springShop.common.exception.RRException;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品类目 前端控制器
@@ -44,13 +45,9 @@ public class Categories {
                                    @RequestParam(name = "level", defaultValue = "0") int level,
                                    @RequestParam(name = "title", defaultValue = "") String title
     ){
-        QWrapper<CategoryEntity> wrapper = new QWrapper<>();
-        wrapper.eq(level>0 ,CategoryEntity.LEVEL, level)
-                .like(!"".equals(title), CategoryEntity.TITLE, title);
 
-        Page<CategoryEntity> page = new Page<>(currentPage, pageSize);
-        IPage<CategoryEntity> list = categoryService.page(page, wrapper);
-        return Response.ok(list);
+        Map<String, Object> result = categoryService.queryPageWithImage(currentPage, pageSize, level, title);
+        return Response.ok(result);
     }
 
     /**

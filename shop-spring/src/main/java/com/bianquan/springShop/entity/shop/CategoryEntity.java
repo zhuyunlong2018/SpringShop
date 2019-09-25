@@ -3,6 +3,7 @@ package com.bianquan.springShop.entity.shop;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.bianquan.springShop.entity.admin.ImageEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -41,8 +42,12 @@ public class CategoryEntity implements Serializable {
     @TableField("`level`")
     private Integer level;
 
-    //图标
-    private String img;
+    //绑定图片ID
+    private Integer imageId;
+
+    //图片对象
+    @TableField(exist = false)
+    private ImageEntity image;
 
     //排序
     private Integer sortOrder;

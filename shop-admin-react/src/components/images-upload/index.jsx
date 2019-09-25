@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Layout, Input, message, Upload, Icon } from 'antd';
+import { Modal, Layout, Input, message, Upload, Icon, Button, Avatar, Tooltip } from 'antd';
+import config from '@/commons/config-hoc';
+import { connect } from '@/models/index';
 import LeftSider from './leftSider'
 import RightContent from './content'
+import Permission from '../permission'
+import { fileSrc } from '@/commons'
 import { add, list } from '@/api/image'
 
 import './style.less'
@@ -12,6 +16,8 @@ import './style.less'
 const { Header } = Layout;
 const { Search } = Input;
 
+@config({ properties: true })
+@connect(state => ({ global: state.global }))
 export default class ImagesUpload extends Component {
     state = {
         loading: false, //模态框加载图标
@@ -23,6 +29,7 @@ export default class ImagesUpload extends Component {
         pageSize: 21,   //内容每页数量
         pageNum: 1,     //内容页码
         total: 0,       //总图片数
+        selectList: [],//已经选中的图片
     };
 
     /**
@@ -34,7 +41,7 @@ export default class ImagesUpload extends Component {
         const classification = selectedKeys.length === 0 ? 0 : selectedKeys[0]
         list({ searchKey, classification, pageNum, pageSize }).then(res => {
 
-            this.setState({ total: res.total, fileList: res.records })
+            this.setState({ total: res.total, fileList: res.records, selectList: [] })
         }).finally(() => this.setState({ loading: false }))
     }
 
@@ -82,13 +89,35 @@ export default class ImagesUpload extends Component {
         };
     }
 
+    /**
+     * 处理选中图片
+     */
+    handleSelect = (file) => {
+        let { selectList } = this.state
+        const index = selectList.indexOf(file)
+        if (index > -1) {
+            selectList.splice(index, 1)
+        } else {
+            selectList = [...selectList, file]
+        }
+        this.setState({ selectList })
+    }
+
+    /**
+     * 处理预览图片
+     */
+    handlePreview = async (e, url) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.props.action.global.showPreviewVisible(url)
+    };
 
     render() {
         const {
             uploadLoading, uploadMessage, searchKey, selectedKeys, total, fileList,
-            pageNum, pageSize, loading
+            pageNum, pageSize, loading, selectList
         } = this.state;
-        const {visible, handleCancel} = this.props;
+        const { visible, handleCancel, handelSelectImages } = this.props;
         const classification = selectedKeys.length === 0 ? 0 : selectedKeys[0]
         const uploadProps = {
             name: 'file',
@@ -108,14 +137,35 @@ export default class ImagesUpload extends Component {
                 }
             },
         };
+
+        const footer = (
+            <div styleName='footer'>
+                <ul styleName="selected">
+                    {
+                        selectList.map(file => {
+                            return (<li styleName="icon" key={file.id}>
+                                <Tooltip placement="top" title={file.keywords} >
+                                    <Avatar src={fileSrc(file)} onClick={e => this.handlePreview(e, fileSrc(file))} />
+                                </Tooltip>
+                            </li>)
+                        })
+                    }
+                </ul>
+                <Button type="primary"
+                    onClick={() => {
+                        handelSelectImages([...selectList])
+                        this.setState({ selectList: [], searchKey: '' })
+                    }}>选择({selectList.length}张)</Button>
+            </div>
+        )
         return (
             <div>
                 <Modal visible={visible}
                     confirmLoading={loading}
                     onCancel={handleCancel}
-                    width={960}
+                    width={970}
                     zIndex={1001}
-                    // footer={null}
+                    footer={footer}
                 >
                     <Layout>
                         <LeftSider selectedKeys={selectedKeys}
@@ -135,35 +185,42 @@ export default class ImagesUpload extends Component {
                                             }} />
                                     </li>
                                     <li styleName="list">
-                                        <Upload {...uploadProps}>
-                                            <Input addonAfter={<Icon type={uploadLoading ? 'loading' : "upload"}
-                                                onClick={() => {
-                                                    if (uploadLoading) {
-                                                        return message.error("正在上传中，请耐心等待……", 1)
-                                                    }
-                                                    if (uploadMessage === "") {
-                                                        return message.error("请填写要上传图片关键词!", 1);
-                                                    }
-                                                }} />}
-                                                placeholder="请输入上传图片描述！"
-                                                onChange={(e) => {
-                                                    this.setState({ uploadMessage: e.target.value })
-                                                }}
-                                                value={uploadMessage} onClick={e => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                }} />
-                                        </Upload>
+                                        <Permission code="admin:images:list">
+                                            <Upload {...uploadProps}>
+                                                <Input addonAfter={<Icon type={uploadLoading ? 'loading' : "upload"}
+                                                    onClick={() => {
+                                                        if (uploadLoading) {
+                                                            return message.error("正在上传中，请耐心等待……", 1)
+                                                        }
+                                                        if (uploadMessage === "") {
+                                                            return message.error("请填写要上传图片关键词!", 1);
+                                                        }
+                                                    }} />}
+                                                    placeholder="请输入上传图片描述！"
+                                                    onChange={(e) => {
+                                                        this.setState({ uploadMessage: e.target.value })
+                                                    }}
+                                                    value={uploadMessage} onClick={e => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                    }} />
+                                            </Upload>
+                                        </Permission>
+
                                     </li>
                                 </ul>
                             </Header>
                             <RightContent total={total} fileList={fileList} pageNum={pageNum} pageSize={pageSize}
+                                selectList={selectList}
                                 onPageNumChange={(pageNum) => {
                                     this.setState({ pageNum }, this.fetchList)
                                 }}
                                 onPageSizeChange={(pageSize) => {
                                     this.setState({ pageSize, pageNum: 1 }, this.fetchList)
-                                }} />
+                                }}
+                                handleSelect={(file) => this.handleSelect(file)}
+                                fileSrc={(file) => fileSrc(file)}
+                                handlePreview={(e, url) => this.handlePreview(e, url)} />
                         </Layout>
                     </Layout>
                 </Modal>
