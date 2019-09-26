@@ -162,7 +162,10 @@ export default class ImagesUpload extends Component {
             <div>
                 <Modal visible={visible}
                     confirmLoading={loading}
-                    onCancel={handleCancel}
+                    onCancel={() => {
+                        this.setState({ selectList: [], searchKey: '' })
+                        handleCancel()
+                    }}
                     width={970}
                     zIndex={1001}
                     footer={footer}

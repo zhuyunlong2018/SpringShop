@@ -18,9 +18,11 @@
 
     <!--获取分类分页并携带图片对象-->
     <select id="fetchPageWithImage" resultMap="fetchPageWithImage">
-        SELECT c.id,pid,c.title,c.status,description,image_id,sort_order,`level`, i.id i_id,i.title i_title,i.keywords,i.src,i.origin
+        SELECT c.id,pid,c.title,c.status,description,image_id,sort_order,`level`, i.id i_id,i.title i_title,i.keywords,
+                i.src,i.origin, ca.params,ca.id ca_id
         FROM sp_categories c
         LEFT JOIN sp_images i ON c.image_id=i.id
+        LEFT JOIN sp_category_attributes ca ON c.id=ca.category_id
         <where>
             <if test="level != 0">
                 `level` = #{level}
@@ -49,6 +51,11 @@
         <result column="keywords" property="keywords"/>
         <result column="src" property="src"/>
         <result column="origin" property="origin"/>
+        </collection>
+        <!-- 属性组-->
+        <collection property="params" ofType="com.bianquan.springShop.entity.shop.CategoryAttributeEntity">
+            <id property="id" column="ca_id"/>
+            <result column="params" property="params"/>
         </collection>
     </resultMap>
 

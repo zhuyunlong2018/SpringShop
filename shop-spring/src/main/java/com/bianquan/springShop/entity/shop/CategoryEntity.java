@@ -49,6 +49,10 @@ public class CategoryEntity implements Serializable {
     @TableField(exist = false)
     private ImageEntity image;
 
+    //分类所属属性
+    @TableField(exist = false)
+    private CategoryAttributeEntity params;
+
     //排序
     private Integer sortOrder;
 

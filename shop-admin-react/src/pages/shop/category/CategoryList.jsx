@@ -11,6 +11,7 @@ import PageContent from '@/layouts/page-content';
 import config from '@/commons/config-hoc';
 import { hasPermission, fileSrc } from '@/commons';
 import CategoryEdit from './CategoryEdit';
+import Attributes from './Attributes'
 import { list, del, listByLevels } from '@/api/category';
 import { makeChildren } from '@/library/utils/tree-utils'
 
@@ -27,14 +28,15 @@ export default class CategoryList extends Component {
         collapsed: true,    // 是否收起
         params: {},
         formData: {},//添加、编辑表单数据
-        visible: false,
+        visible: false, //编辑框显示隐藏
         levels: {}, //类目级别
         selectOptions: [
             { value: 1, label: '一级类目' },
             { value: 2, label: '二级类目' },
             { value: 3, label: '三级类目' }
         ],
-        firstAndSecondTree: [],
+        firstAndSecondTree: [], //分类第一级和第二级组成的node tree
+        attrVisible: false, //属性编辑框显示、隐藏
     };
 
     // TODO 顶部工具条
@@ -107,9 +109,13 @@ export default class CategoryList extends Component {
                     {
                         label: '修改',
                         visible: hasPermission('admin:categories:edit'),
-                        onClick: () => {
-                            this.handleEdit(record);
-                        },
+                        onClick: () => this.handleEdit(record),
+                    },
+                    {
+                        label: '属性',
+                        color: 'red',
+                        visible: hasPermission('admin:categories:del'),
+                        onClick: () => this.handleEditAttr(record),
                     },
                     {
                         label: '删除',
@@ -235,6 +241,14 @@ export default class CategoryList extends Component {
         this.setState({ visible: false, dataSource })
     }
 
+    /**
+     * 处理编辑属性
+     * @param {Object} formData 
+     */
+    handleEditAttr(formData) {
+        this.setState({ formData, attrVisible: true })
+    }
+
     render() {
         const {
             loading,
@@ -246,6 +260,7 @@ export default class CategoryList extends Component {
             visible,
             formData,
             firstAndSecondTree,
+            attrVisible,
         } = this.state;
 
         return (
@@ -288,6 +303,10 @@ export default class CategoryList extends Component {
                     onOk={this.handleOk.bind(this)}
                     onCancel={() => this.setState({ visible: false })}
                 />
+
+                <Attributes visible={attrVisible}
+                    formData={formData}
+                    onCancel={() => this.setState({ attrVisible: false })} />
             </PageContent>
         );
     }

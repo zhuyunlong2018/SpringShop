@@ -4,6 +4,9 @@ import { FormElement } from '@/library/antd';
 import { add, edit } from '@/api/category'
 import ImagesUpload from '@/components/images-upload'
 
+/**
+ * 编辑框
+ */
 @Form.create()
 export default class CategoryEdit extends Component {
     state = {
