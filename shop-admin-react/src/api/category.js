@@ -14,3 +14,6 @@ export const del = params => sxAjax.del("admin/categories/del", params)
 
 //通过等级获取列表
 export const listByLevels = params => sxAjax.get("admin/categories/listByLevels", params)
+
+//保存类目的属性组
+export const saveAttributes = params => sxAjax.post("admin/categories/saveAttributes", params)

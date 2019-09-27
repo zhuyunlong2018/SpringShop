@@ -27,7 +27,8 @@ export function allUpperCase(str) {
 
 export const typeOptions = [
     {label: 'input(输入框)', value: 'input'},
-    {label: '隐藏(隐藏输入框)', value: 'hidden'},
+    {label: '隐藏(隐藏输入框组)', value: 'hidden'},
+    {label: '隐藏(只隐藏输入框)', value: 'input-hidden'},
     {label: 'number(数字输入框)', value: 'number'},
     {label: 'textarea(文本框)', value: 'textarea'},
     {label: 'password(密码框)', value: 'password'},

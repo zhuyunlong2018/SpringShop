@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
 import { TableEditable, rowDraggable, Operator } from '@/library/antd';
-import { Modal, Collapse, Input, Popconfirm } from 'antd';
-
+import { Modal, Collapse, Input, Popconfirm, Tooltip, Icon, message } from 'antd';
+import { saveAttributes } from '@/api/category'
 import './style.less'
 
 const { Panel } = Collapse;
@@ -13,7 +13,6 @@ const { Search } = Input;
 /**
  * 分类属性编辑框
  */
-
 
 function focusAndSelect(e, index) {
     // 获取父级tr
@@ -28,17 +27,19 @@ function focusAndSelect(e, index) {
     }
 }
 
+const typeOptions = [
+    { label: '单一属性', value: 'single' },
+    { label: '复合属性', value: 'mutiple' },
+];
+
 export default class Attributes extends Component {
+
     state = {
-        dataSource: [
-            {
-                id: "111111111",
-                group: "基本属性",
-                params: []
-            },
-        ],
+        dataSource: [],
         loading: false,
         inputGroup: "",    //添加属性组的输入框
+        activeKey: [],   //默认展开项
+        submitForm: {},     //提交后端的form
     };
     columns = [
         {
@@ -62,16 +63,17 @@ export default class Attributes extends Component {
                 onPressEnter: (e) => focusAndSelect(e, 2),
                 decorator: {
                     rules: [
-                        { required: true, message: '请输入默认值!' }
+                        // { required: true, message: '请输入默认值!' }
                     ],
                 },
             }
         },
         {
-            title: '类型', dataIndex: 'age', key: 'age',
+            title: '类型', dataIndex: 'type', key: 'type',
+            width: '180px',
             props: {
-                type: 'input',
-                placeholder: '请输入年龄',
+                type: 'select',
+                placeholder: '请选择属性类型',
                 onPressEnter: e => {
                     const currentTr = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
                     const nextTr = currentTr.nextSibling;
@@ -81,9 +83,11 @@ export default class Attributes extends Component {
                 },
                 decorator: {
                     rules: [
-                        { required: true, message: '请输入年龄!' }
+                        { required: true, message: '请选择属性类型!' }
                     ],
                 },
+                getValue: e => e,
+                options: typeOptions,
             }
         },
         {
@@ -116,14 +120,25 @@ export default class Attributes extends Component {
         },
     ];
 
+    componentWillMount() {
+        this.resetDataSource()
+    }
+
     componentDidUpdate(prevProps) {
-        const { formData:{params}, visible } = this.props;
+        const { formData, visible } = this.props;
 
         // 打开弹框
-        if (!prevProps.visible && visible && params) {
-            
-            // 填充数据
-            this.setState({ dataSource: JSON.parse(params.params) })
+        if (!prevProps.visible && visible) {
+            const { id, params } = formData
+            let submitForm = { categoryId: id }
+            if (params) {
+                const attr = JSON.parse(params.params)
+                // 填充数据
+                const defaultKey = attr.length > 0 ?[attr[0].id] : [];
+                this.setState({ dataSource: JSON.parse(params.params), activeKey: defaultKey })
+                submitForm.id = params.id
+            }
+            this.setState({ submitForm })
         }
     }
 
@@ -132,11 +147,25 @@ export default class Attributes extends Component {
      * 处理添加参数组
      */
     handleAddGroup(value) {
-        console.log(value)
         if (value && value !== "") {
             const group = { id: uuid(), group: value, params: [] }
-            this.setState({ dataSource: [...this.state.dataSource, group], inputGroup: ""})
+            this.setState({ dataSource: [...this.state.dataSource, group], inputGroup: "" })
         }
+    }
+
+    /**
+     * 重置属性数据
+     */
+    resetDataSource() {
+        const id = uuid()
+        const dataSource = [
+            {
+                id,
+                group: "基本属性",
+                params: []
+            },
+        ];
+        this.setState({ dataSource, activeKey: [id] })
     }
 
     /**
@@ -144,6 +173,7 @@ export default class Attributes extends Component {
      */
     handleCancel = () => {
         const { onCancel } = this.props;
+        this.resetDataSource()
         if (onCancel) onCancel();
     };
 
@@ -158,6 +188,34 @@ export default class Attributes extends Component {
         this.setState({ dataSource })
     };
 
+    /**
+     * 处理提交给后台保存属性
+     */
+    handleSubmit = () => {
+        const { dataSource, submitForm } = this.state
+        let hasErr = false
+        const transData = dataSource.map((item, index) => {
+            const form = this["form" + item.id]
+            form && form.validateFieldsAndScroll((err, values) => {
+                if (err) {
+                    hasErr = true
+                }
+            });
+            const newParams = item.params.map(e => {
+                const { id, key, type, defaultValue } = e
+                return { id, key, type, defaultValue }
+            })
+            return {
+                ...item,
+                params: newParams
+            }
+        });
+        if (hasErr) return message.error('有必填项为空，请检查');
+        this.setState({ loading: true })
+        saveAttributes({ ...submitForm, params: JSON.stringify(transData) }).then(res => {
+            this.props.onOk(submitForm.categoryId, { ...this.props.formData, params: res })
+        }).finally(() => this.setState({ loading: false }))
+    }
 
     preventDefault(e) {
         e.preventDefault();
@@ -165,15 +223,12 @@ export default class Attributes extends Component {
     }
 
     render() {
-        const { dataSource, loading, inputGroup } = this.state;
-        const { visible, } = this.props
-        let defaultActiveKey = []
-        if (dataSource.length > 0) {
-            defaultActiveKey = [dataSource[0].id]
-        }
+        const { dataSource, loading, inputGroup, activeKey } = this.state;
+        const { visible, formData } = this.props
+        
         const title = (
             <div styleName="attr-header">
-                <span>编辑属性</span>
+                <span>{formData.title} -- 属性编辑</span>
                 <div styleName='input'>
                     <Search
                         value={inputGroup}
@@ -193,26 +248,32 @@ export default class Attributes extends Component {
                 width={800}
                 title={title}
                 onCancel={this.handleCancel}
+                onOk={this.handleSubmit}
             >
-                <Collapse defaultActiveKey={defaultActiveKey} accordion={true}>
+                <Collapse activeKey={activeKey} accordion={true} bordered={false}
+                    onChange={key => this.setState({ activeKey: [key] })}>
                     {
                         dataSource.map((data, index) => {
                             const { id, group, params } = data
                             return (
                                 <Panel key={id}
+                                    forceRender={false}
                                     header={(
-                                        <span>
+                                        <div>
                                             {group}
+                                            <Tooltip title="属性默认值多项时用逗号隔开">
+                                                <Icon type="info-circle" />
+                                            </Tooltip>
                                             <Popconfirm title="您确认移除该组吗？" onCancel={this.preventDefault}
                                                 onConfirm={e => {
                                                     this.preventDefault(e)
                                                     const dataSource = [...this.state.dataSource]
                                                     dataSource.splice(index, 1)
-                                                    this.setState({dataSource})
+                                                    this.setState({ dataSource })
                                                 }}>
                                                 <a style={{ marginLeft: 16 }} onClick={this.preventDefault}>移除该组</a>
                                             </Popconfirm>
-                                        </span>
+                                        </div>
 
                                     )}
                                 >
@@ -221,6 +282,7 @@ export default class Attributes extends Component {
                                         showAddButton
                                         rowKey="id"
                                         id={id}
+                                        formRef={form => this["form" + id] = form}
                                         title={this.renderTableTitle}
                                         onChange={params => {
                                             const newData = { ...data, params }

@@ -238,7 +238,7 @@ export default class CategoryList extends Component {
         } else {
             dataSource = [data, ...this.state.dataSource]
         }
-        this.setState({ visible: false, dataSource })
+        this.setState({ attrVisible: false, visible: false, dataSource })
     }
 
     /**
@@ -306,7 +306,8 @@ export default class CategoryList extends Component {
 
                 <Attributes visible={attrVisible}
                     formData={formData}
-                    onCancel={() => this.setState({ attrVisible: false })} />
+                    onCancel={() => this.setState({ attrVisible: false })} 
+                    onOk={(id, data) => this.handleOk(id, data)}/>
             </PageContent>
         );
     }

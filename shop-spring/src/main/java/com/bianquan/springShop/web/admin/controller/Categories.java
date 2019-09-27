@@ -2,13 +2,13 @@ package com.bianquan.springShop.web.admin.controller;
 
 
 import com.bianquan.springShop.common.utils.QWrapper;
+import com.bianquan.springShop.entity.shop.CategoryAttributeEntity;
 import com.bianquan.springShop.entity.shop.CategoryEntity;
+import com.bianquan.springShop.service.shop.CategoryAttributeService;
 import com.bianquan.springShop.service.shop.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -33,6 +33,9 @@ public class Categories {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryAttributeService categoryAttributesService;
 
     /**
      * 查询分页数据
@@ -102,6 +105,17 @@ public class Categories {
         wrapper.in(CategoryEntity.LEVEL, levels);
         List<CategoryEntity> list = categoryService.list(wrapper);
         return Response.ok(list);
+    }
+
+    @PostMapping("/saveAttributes")
+    @ApiOperation("保存分类参数组")
+    public Response add(@RequestBody CategoryAttributeEntity categoryAttributesEntity){
+
+        boolean result = categoryAttributesService.saveOrUpdate(categoryAttributesEntity);
+        if (!result) {
+            throw new RRException("保存属性组失败");
+        }
+        return Response.ok(categoryAttributesEntity);
     }
 
 }
