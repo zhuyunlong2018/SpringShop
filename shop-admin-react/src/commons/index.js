@@ -216,9 +216,12 @@ export function loadScript(src) {
  * @param {Object} file 
  */
 export function fileSrc(file) {
-    if (file.origin === 1) {
-        //服务器本地图片，需要加上域名等前缀
-        return properties.upload + file.src
+    if (file) {
+        if (file.origin === 1) {
+            //服务器本地图片，需要加上域名等前缀
+            return properties.upload + file.src
+        }
+        return file.src
     }
-    return file.src
+    return ""
 }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import uuid from 'uuid/v4';
 import { TableEditable, rowDraggable, Operator } from '@/library/antd';
-import { Modal, Collapse, Input, Popconfirm, Tooltip, Icon, message } from 'antd';
+import { Modal, Collapse, Input, Popconfirm, Tooltip, Icon, message, Spin } from 'antd';
 import { saveAttributes } from '@/api/category'
 import './style.less'
 
@@ -134,7 +134,7 @@ export default class Attributes extends Component {
             if (params) {
                 const attr = JSON.parse(params.params)
                 // 填充数据
-                const defaultKey = attr.length > 0 ?[attr[0].id] : [];
+                const defaultKey = attr.length > 0 ? [attr[0].id] : [];
                 this.setState({ dataSource: JSON.parse(params.params), activeKey: defaultKey })
                 submitForm.id = params.id
             }
@@ -225,7 +225,7 @@ export default class Attributes extends Component {
     render() {
         const { dataSource, loading, inputGroup, activeKey } = this.state;
         const { visible, formData } = this.props
-        
+
         const title = (
             <div styleName="attr-header">
                 <span>{formData.title} -- 属性编辑</span>
@@ -250,57 +250,58 @@ export default class Attributes extends Component {
                 onCancel={this.handleCancel}
                 onOk={this.handleSubmit}
             >
-                <Collapse activeKey={activeKey} accordion={true} bordered={false}
-                    onChange={key => this.setState({ activeKey: [key] })}>
-                    {
-                        dataSource.map((data, index) => {
-                            const { id, group, params } = data
-                            return (
-                                <Panel key={id}
-                                    forceRender={false}
-                                    header={(
-                                        <div>
-                                            {group}
-                                            <Tooltip title="属性默认值多项时用逗号隔开">
-                                                <Icon type="info-circle" />
-                                            </Tooltip>
-                                            <Popconfirm title="您确认移除该组吗？" onCancel={this.preventDefault}
-                                                onConfirm={e => {
-                                                    this.preventDefault(e)
-                                                    const dataSource = [...this.state.dataSource]
-                                                    dataSource.splice(index, 1)
-                                                    this.setState({ dataSource })
-                                                }}>
-                                                <a style={{ marginLeft: 16 }} onClick={this.preventDefault}>移除该组</a>
-                                            </Popconfirm>
-                                        </div>
+                <Spin spinning={loading}>
+                    <Collapse activeKey={activeKey} accordion={true} bordered={false}
+                        onChange={key => this.setState({ activeKey: [key] })}>
+                        {
+                            dataSource.map((data, index) => {
+                                const { id, group, params } = data
+                                return (
+                                    <Panel key={id}
+                                        forceRender={false}
+                                        header={(
+                                            <div>
+                                                {group}
+                                                <Tooltip title="属性默认值多项时用逗号隔开">
+                                                    <Icon type="info-circle" />
+                                                </Tooltip>
+                                                <Popconfirm title="您确认移除该组吗？" onCancel={this.preventDefault}
+                                                    onConfirm={e => {
+                                                        this.preventDefault(e)
+                                                        const dataSource = [...this.state.dataSource]
+                                                        dataSource.splice(index, 1)
+                                                        this.setState({ dataSource })
+                                                    }}>
+                                                    <a style={{ marginLeft: 16 }} onClick={this.preventDefault}>移除该组</a>
+                                                </Popconfirm>
+                                            </div>
 
-                                    )}
-                                >
-                                    <Table
-                                        size="small"
-                                        showAddButton
-                                        rowKey="id"
-                                        id={id}
-                                        formRef={form => this["form" + id] = form}
-                                        title={this.renderTableTitle}
-                                        onChange={params => {
-                                            const newData = { ...data, params }
-                                            const source = [...dataSource]
-                                            source.splice(index, 1, newData)
-                                            this.setState({ dataSource: source })
-                                        }}
-                                        columns={this.columns}
-                                        dataSource={params}
-                                        helperClass="generator-helper-element"
-                                        onSortEnd={({ oldIndex, newIndex }) => this.handleSubSortEnd({ oldIndex, newIndex, index })}
-                                    />
-                                </Panel>
-                            )
-                        })
-                    }
-                </Collapse>
-
+                                        )}
+                                    >
+                                        <Table
+                                            size="small"
+                                            showAddButton
+                                            rowKey="id"
+                                            id={id}
+                                            formRef={form => this["form" + id] = form}
+                                            title={this.renderTableTitle}
+                                            onChange={params => {
+                                                const newData = { ...data, params }
+                                                const source = [...dataSource]
+                                                source.splice(index, 1, newData)
+                                                this.setState({ dataSource: source })
+                                            }}
+                                            columns={this.columns}
+                                            dataSource={params}
+                                            helperClass="generator-helper-element"
+                                            onSortEnd={({ oldIndex, newIndex }) => this.handleSubSortEnd({ oldIndex, newIndex, index })}
+                                        />
+                                    </Panel>
+                                )
+                            })
+                        }
+                    </Collapse>
+                </Spin>
             </Modal>
         );
     }

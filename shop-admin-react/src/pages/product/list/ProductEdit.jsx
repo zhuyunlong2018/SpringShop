@@ -1,61 +1,82 @@
-import React, {Component} from 'react';
-import {Modal, Form, Spin} from 'antd';
-import {FormElement} from '@/library/antd';
+import React, { Component } from 'react';
+import { Modal, Spin, Steps, Button } from 'antd';
 import { add, edit } from '@/api/product'
+import ProductInfo from './ProductInfo'
+import './style.less'
 
-@Form.create()
+const { Step } = Steps;
+
 export default class ProductEdit extends Component {
     state = {
         loading: false,
         data: {},
+        infoData: {},
+        current: 0,
     };
 
+    /**
+     * 下一步操作
+     */
+    next() {
+        const { loading, current } = this.state;
+        if (loading) return;
+        let next = false
+        if (current === 0) {
+            //完成商品信息
+            const { handleSubmit } = this.infoForm
+            next = !handleSubmit(infoData => { this.setState({ infoData })})
+        }
+
+        if (next) this.setState({ current: current + 1 });
+    }
+
+    /**
+     * 返回上一步
+     */
+    prev() {
+        const current = this.state.current - 1;
+        this.setState({ current });
+    }
+
     componentDidUpdate(prevProps) {
-        const {formData, visible, form: {resetFields}} = this.props;
+        const { formData, visible } = this.props;
 
         // 打开弹框
         if (!prevProps.visible && visible) {
-            // 重置表单，接下来填充新的数据
-            resetFields();
-
             // 填充数据
             this.setState({ data: formData })
         }
     }
 
-    /**
-     * 处理提交保存
-     */
-    handleSubmit = () => {
-        const {loading} = this.state;
-        if (loading) return;
-        const {onOk, form: {validateFieldsAndScroll}} = this.props;
-        //表单验证
-        validateFieldsAndScroll((err, values) => {
-            if (err) return ;
-            const params = {...values};
-            const {id} = values;
+    saveInfo() {
+        const {infoData} = this.state
+        const {onOk} = this.props
+        // TODO ajax 提交数据
+        // id存在未修改，不存在未添加
+        const ajax = infoData.id ? edit(infoData) : add(infoData);
 
-            // TODO ajax 提交数据
-            // id存在未修改，不存在未添加
-            const ajax = id ? edit(params) : add(params);
-
-            this.setState({loading: true});
-            ajax.then((data) => {
-                //保存成功，执行回调函数修改本地数据
-                if (onOk)  onOk(id, data)
-            })
-                .finally(() => this.setState({loading: false}));
-        });
-    };
+        this.setState({ loading: true });
+        ajax.then((data) => {
+            //保存成功，执行回调函数修改本地数据
+            if (onOk) onOk(infoData.id, data)
+        })
+            .finally(() => this.setState({ loading: false }));
+    }
 
     /**
      * 处理取消操作
      */
     handleCancel = () => {
-        const {onCancel} = this.props;
+        const { onCancel } = this.props;
         if (onCancel) onCancel();
     };
+
+    /**
+     * 处理保存数据
+     */
+    handleOk = () => {
+
+    }
 
     /**
      * 处理重置表单
@@ -63,117 +84,55 @@ export default class ProductEdit extends Component {
     handleReset = () => {
         this.props.form.resetFields();
     };
-
-    FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props}/>;
-
     render() {
-        const {visible} = this.props;
-        const {loading, data} = this.state;
+        const { visible } = this.props;
+        const { loading, current, data } = this.state;
         const title = data.id ? '修改商品' : '添加商品';
-        const FormElement = this.FormElement;
+        const steps = [
+            {
+                title: '商品信息',
+                content: <ProductInfo data={data} onRef={ref => this.infoForm = ref}
+                setData={data => this.setState({data})} />,
+            },
+            {
+                title: '商品属性',
+                content: 'Second-content',
+            },
+            {
+                title: '商品详情',
+                content: 'Last-content',
+            },
+        ];
 
+        const footer = (
+            <div className="steps-action">
+                {current > 0 && (
+                    <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>上一步</Button>
+                )}
+                {current < steps.length - 1 && (
+                    <Button type="primary" onClick={() => this.next()}>下一步</Button>
+                )}
+                {current === steps.length - 1 && (
+                    <Button type="primary" onClick={this.handleOk}>完成</Button>
+                )}
+            </div>
+        )
         return (
-            <Modal
+            <Modal width={800}
                 destroyOnClose
                 confirmLoading={loading}
                 visible={visible}
                 title={title}
-                onOk={this.handleSubmit}
+                footer={footer}
                 onCancel={this.handleCancel}
             >
                 <Spin spinning={loading}>
-                    <Form>
-                        {data.id ? (<FormElement type="hidden" field="id" decorator={{initialValue: data.id}}/>) : null}
-                        
-                        <FormElement
-                            label="商品标题"
-                            type="input"
-                            field="title"
-                            decorator={{
-                                initialValue: data.title,
-                                rules: [
-                                    {required: true, message: '商品标题不能为空！'},
-                                    {max: 100, message: '最多100个字符！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="商品卖点"
-                            type="textarea"
-                            field="sellPoint"
-                            decorator={{
-                                initialValue: data.sellPoint,
-                                rules: [
-                                    {required: true, message: '商品卖点不能为空！'},
-                                    {max: 500, message: '最多500个字符！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="价格区间"
-                            type="input"
-                            field="priceRange"
-                            decorator={{
-                                initialValue: data.priceRange,
-                                rules: [
-                                    {required: true, message: '价格区间不能为空！'},
-                                    {max: 128, message: '最多128个字符！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="商品图片"
-                            type="input"
-                            field="image"
-                            decorator={{
-                                initialValue: data.image,
-                                rules: [
-                                    {required: true, message: '商品图片不能为空！'},
-                                    {max: 500, message: '最多500个字符！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="所属类目，叶子类目"
-                            type="select-tree"
-                            field="categoryId"
-                            decorator={{
-                                initialValue: data.categoryId,
-                                rules: [
-                                    {required: true, message: '所属类目，叶子类目不能为空！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="所属品牌"
-                            type="select"
-                            field="brandId"
-                            decorator={{
-                                initialValue: data.brandId,
-                                rules: [
-                                    {required: true, message: '所属品牌不能为空！'},
-                                ],
-                            }}
-                        />
-                        
-                        <FormElement
-                            label="商品状态，1-正常，2-下架，3-删除"
-                            type="switch"
-                            field="status"
-                            decorator={{
-                                initialValue: data.status,
-                                rules: [
-                                    {required: true, message: '商品状态，1-正常，2-下架，3-删除不能为空！'},
-                                ],
-                            }}
-                        />
-                        
-                    </Form>
+                    <Steps current={current}>
+                        {steps.map(item => (
+                            <Step key={item.title} title={item.title} />
+                        ))}
+                    </Steps>
+                    <div styleName="edit-container">{steps[current].content}</div>
                 </Spin>
             </Modal>
         );

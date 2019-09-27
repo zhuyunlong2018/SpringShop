@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Layout, Input, message, Upload, Icon, Button, Avatar, Tooltip } from 'antd';
+import { Modal, Layout, Input, message, Upload, Icon, Button, Avatar, Tooltip, Spin } from 'antd';
 import config from '@/commons/config-hoc';
 import { connect } from '@/models/index';
 import LeftSider from './leftSider'
@@ -170,62 +170,64 @@ export default class ImagesUpload extends Component {
                     zIndex={1001}
                     footer={footer}
                 >
-                    <Layout>
-                        <LeftSider selectedKeys={selectedKeys}
-                            setKeys={(selectedKeys) => {
-                                this.setState({ selectedKeys, pageNum: 1 }, this.fetchList)
-                            }} />
+                    <Spin spinning={loading}>
                         <Layout>
-                            <Header style={{ background: '#fff', padding: 0 }}>
-                                <ul styleName="header">
-                                    <li styleName="list">
-                                        <Search placeholder="通过关键词检索"
-                                            value={searchKey}
-                                            onSearch={() => this.setState({ pageNum: 1 }, this.fetchList)}
-                                            enterButton
-                                            onChange={e => {
-                                                this.setState({ searchKey: e.target.value })
-                                            }} />
-                                    </li>
-                                    <li styleName="list">
-                                        <Permission code="admin:images:list">
-                                            <Upload {...uploadProps}>
-                                                <Input addonAfter={<Icon type={uploadLoading ? 'loading' : "upload"}
-                                                    onClick={() => {
-                                                        if (uploadLoading) {
-                                                            return message.error("正在上传中，请耐心等待……", 1)
-                                                        }
-                                                        if (uploadMessage === "") {
-                                                            return message.error("请填写要上传图片关键词!", 1);
-                                                        }
-                                                    }} />}
-                                                    placeholder="请输入上传图片描述！"
-                                                    onChange={(e) => {
-                                                        this.setState({ uploadMessage: e.target.value })
-                                                    }}
-                                                    value={uploadMessage} onClick={e => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                    }} />
-                                            </Upload>
-                                        </Permission>
+                            <LeftSider selectedKeys={selectedKeys}
+                                setKeys={(selectedKeys) => {
+                                    this.setState({ selectedKeys, pageNum: 1 }, this.fetchList)
+                                }} />
+                            <Layout>
+                                <Header style={{ background: '#fff', padding: 0 }}>
+                                    <ul styleName="header">
+                                        <li styleName="list">
+                                            <Search placeholder="通过关键词检索"
+                                                value={searchKey}
+                                                onSearch={() => this.setState({ pageNum: 1 }, this.fetchList)}
+                                                enterButton
+                                                onChange={e => {
+                                                    this.setState({ searchKey: e.target.value })
+                                                }} />
+                                        </li>
+                                        <li styleName="list">
+                                            <Permission code="admin:images:list">
+                                                <Upload {...uploadProps}>
+                                                    <Input addonAfter={<Icon type={uploadLoading ? 'loading' : "upload"}
+                                                        onClick={() => {
+                                                            if (uploadLoading) {
+                                                                return message.error("正在上传中，请耐心等待……", 1)
+                                                            }
+                                                            if (uploadMessage === "") {
+                                                                return message.error("请填写要上传图片关键词!", 1);
+                                                            }
+                                                        }} />}
+                                                        placeholder="请输入上传图片描述！"
+                                                        onChange={(e) => {
+                                                            this.setState({ uploadMessage: e.target.value })
+                                                        }}
+                                                        value={uploadMessage} onClick={e => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                        }} />
+                                                </Upload>
+                                            </Permission>
 
-                                    </li>
-                                </ul>
-                            </Header>
-                            <RightContent total={total} fileList={fileList} pageNum={pageNum} pageSize={pageSize}
-                                selectList={selectList}
-                                onPageNumChange={(pageNum) => {
-                                    this.setState({ pageNum }, this.fetchList)
-                                }}
-                                onPageSizeChange={(pageSize) => {
-                                    this.setState({ pageSize, pageNum: 1 }, this.fetchList)
-                                }}
-                                handleSelect={(file) => this.handleSelect(file)}
-                                fileSrc={(file) => fileSrc(file)}
-                                handlePreview={(e, url) => this.handlePreview(e, url)} />
+                                        </li>
+                                    </ul>
+                                </Header>
+                                <RightContent total={total} fileList={fileList} pageNum={pageNum} pageSize={pageSize}
+                                    selectList={selectList}
+                                    onPageNumChange={(pageNum) => {
+                                        this.setState({ pageNum }, this.fetchList)
+                                    }}
+                                    onPageSizeChange={(pageSize) => {
+                                        this.setState({ pageSize, pageNum: 1 }, this.fetchList)
+                                    }}
+                                    handleSelect={(file) => this.handleSelect(file)}
+                                    fileSrc={(file) => fileSrc(file)}
+                                    handlePreview={(e, url) => this.handlePreview(e, url)} />
+                            </Layout>
                         </Layout>
-                    </Layout>
+                    </Spin>
                 </Modal>
             </div>
         );

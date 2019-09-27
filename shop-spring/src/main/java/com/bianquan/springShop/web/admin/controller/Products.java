@@ -3,6 +3,7 @@ package com.bianquan.springShop.web.admin.controller;
 
 import com.bianquan.springShop.entity.shop.ProductEntity;
 import com.bianquan.springShop.service.shop.ProductService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,8 +16,11 @@ import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.exception.RRException;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * 商品表 前端控制器
+ *
  * @author zhuyunlong2018
  * @since 2019-09-19
  */
@@ -34,11 +38,15 @@ public class Products extends AbstractController {
      */
     @GetMapping("/list")
     @ApiOperation("查询分页数据")
-    public Response findListByPage(@RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
-                                   @RequestParam(name = "pageSize", defaultValue = "20") int pageSize){
-        Page<ProductEntity> page = new Page<>(currentPage, pageSize);
-        IPage<ProductEntity> list = productService.page(page);
-        return Response.ok(list);
+    @RequiresPermissions("admin:products:list")
+    public Response findListByPage(
+            @RequestParam(name = "pageNum", defaultValue = "1") int currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
+            @RequestParam(name = "categoryId", defaultValue = "0") long categoryId,
+            @RequestParam(name = "title", defaultValue = "") String title
+    ) {
+        Map<String, Object> result = productService.queryPageWithRelations(currentPage, pageSize, categoryId, title);
+        return Response.ok(result);
     }
 
     /**
@@ -46,7 +54,8 @@ public class Products extends AbstractController {
      */
     @PostMapping("/add")
     @ApiOperation("新增数据")
-    public Response add(@RequestBody ProductEntity productEntity){
+    @RequiresPermissions("admin:products:add")
+    public Response add(@RequestBody ProductEntity productEntity) {
 
         boolean result = productService.save(productEntity);
         if (!result) {
@@ -59,22 +68,24 @@ public class Products extends AbstractController {
      * 修改
      */
     @PutMapping("/edit")
+    @RequiresPermissions("admin:products:edit")
     @ApiOperation("更新数据")
-    public Response edit(@RequestBody ProductEntity productEntity){
+    public Response edit(@RequestBody ProductEntity productEntity) {
 
         boolean result = productService.updateById(productEntity);
         if (!result) {
             throw new RRException("更新失败");
         }
         return Response.ok(productEntity);
-     }
+    }
 
     /**
      * 删除
      */
     @DeleteMapping("/del")
+    @RequiresPermissions("admin:products:del")
     @ApiOperation("删除数据")
-    public Response del(@RequestParam("id") int id){
+    public Response del(@RequestParam("id") int id) {
         boolean result = productService.removeById(id);
         if (!result) {
             throw new RRException("删除失败");

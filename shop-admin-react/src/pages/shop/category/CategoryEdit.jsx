@@ -13,7 +13,6 @@ export default class CategoryEdit extends Component {
         loading: false,
         data: {},
         uploadVisible: false,
-
     };
 
     componentDidUpdate(prevProps) {

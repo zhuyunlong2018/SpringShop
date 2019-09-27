@@ -3,6 +3,7 @@ package com.bianquan.springShop.entity.shop;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.bianquan.springShop.entity.admin.ImageEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -42,13 +43,25 @@ public class ProductEntity implements Serializable {
     private String priceRange;
 
     @ApiModelProperty(value = "商品图片")
-    private String image;
+    private Long imageId;
+
+    //主图对象
+    @TableField(exist = false)
+    private ImageEntity mainImage;
 
     @ApiModelProperty(value = "所属类目，叶子类目",example="1")
     private Long categoryId;
 
+    //分类对象
+    @TableField(exist = false)
+    private CategoryEntity category;
+
     @ApiModelProperty(value = "所属品牌",example="1")
     private Long brandId;
+
+    //商品品牌
+    @TableField(exist = false)
+    private BrandEntity brand;
 
     @ApiModelProperty(value = "商品状态，1-正常，2-下架，3-删除",example="1")
     private Integer status;
