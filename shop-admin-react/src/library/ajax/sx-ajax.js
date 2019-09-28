@@ -65,7 +65,7 @@ export default class SXAjax {
         instance.defaults.headers.post['Content-Type'] = 'application/json';
         instance.defaults.headers.get['Content-Type'] = 'application/json';
         instance.defaults.baseURL = '/';
-        instance.defaults.withCredentials = true; // 跨域携带cookie
+        instance.defaults.withCredentials = false; // 跨域携带cookie
     }
 
     /**
@@ -161,11 +161,11 @@ export default class SXAjax {
                     this.onShowSuccessTip(successTip);
                     resolve(data, response);
                 } else {
-                    this.onShowErrorTip(response.data, errorTip);
+                    this.onShowErrorTip(response, errorTip);
                     reject(response.data);
                 }
             }, err => {
-                this.onShowErrorTip(err, errorTip);
+                this.onShowErrorTip(err.response, errorTip);
                 reject(err);
             }).catch(error => {
                 reject(error);

@@ -178,7 +178,7 @@ export default class CategoryList extends Component {
                 key: "topper",
                 value: '0',
                 title: "顶级类目",
-                level: 1,
+                level: 0,
             })
             this.setState({ firstAndSecondTree: nodes })
         })

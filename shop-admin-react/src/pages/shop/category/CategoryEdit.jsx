@@ -42,7 +42,7 @@ export default class CategoryEdit extends Component {
             const params = { ...values, status: status ? 1 : 2 };
             // id存在未修改，不存在未添加
             const ajax = id ? edit(params) : add(params);
-
+            console.log(params)
             this.setState({ loading: true });
             ajax.then((data) => {
                 //保存成功，执行回调函数修改本地数据
@@ -118,7 +118,9 @@ export default class CategoryEdit extends Component {
                             showSearch
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             wrapperStyle={{ flex: 0 }}
-                            onChange={(value, label, extra) => setFieldsValue({ level: extra.triggerNode.props.level + 1 })}
+                            onChange={(value, label, extra) => {
+                                setFieldsValue({ level: extra.triggerNode.props.level + 1 })
+                            }}
                             treeNodeFilterProp="title"
                             decorator={{
                                 initialValue: data.pid ? data.pid : '0',

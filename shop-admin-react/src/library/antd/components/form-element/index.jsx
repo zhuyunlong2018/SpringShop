@@ -68,7 +68,6 @@ function getElement(item) {
             </Select>
         );
     }
-
     if (type === 'select-tree') return <TreeSelect {...props} treeData={props.options}/>;
     if (type === 'checkbox-group') return <Checkbox.Group {...props}/>;
     if (type === 'radio-group') return <Radio.Group {...props}/>;

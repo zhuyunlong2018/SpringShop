@@ -1,5 +1,6 @@
 package com.bianquan.springShop.web.admin.config.shiro;
 
+
 import com.bianquan.springShop.common.utils.Response;
 import com.bianquan.springShop.common.utils.JwtUtil;
 import com.google.gson.Gson;
@@ -66,6 +67,11 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         if(StringUtils.isBlank(token)){
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setContentType("application/json;charset=utf-8");
+            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, If-Modified-Since, token");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+            httpResponse.setHeader("Access-Control-Max-Age", "3600");
+            httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
             String json = new Gson().toJson(Response.error(HttpStatus.SC_UNAUTHORIZED, JwtUtil.HEADER_TOKEN +"不能为空"));
             httpResponse.getWriter().print(json);
             return false;
@@ -88,6 +94,9 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         return token;
     }
 
+
+
+
     /**
      * 登录认证失败后处理，返回前端json
      * @param token
@@ -100,11 +109,18 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setContentType("application/json;charset=utf-8");
+        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, If-Modified-Since, token");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        httpResponse.setHeader("Access-Control-Max-Age", "3600");
+        httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            Response r = Response.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
+            Response r = Response.error(4001, throwable.getMessage());
             String json = new Gson().toJson(r);
+            httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
+
             httpResponse.getWriter().print(json);
         } catch (IOException e1) {
 
@@ -121,6 +137,5 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         }
         return super.onPreHandle(request, response, mappedValue);
     }
-
 
 }

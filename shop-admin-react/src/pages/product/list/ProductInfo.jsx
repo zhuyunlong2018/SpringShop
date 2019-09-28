@@ -3,6 +3,8 @@ import { Form, Avatar } from 'antd';
 import { FormElement } from '@/library/antd';
 import ImagesUpload from '@/components/images-upload'
 import { fileSrc } from '@/commons';
+
+
 @Form.create()
 export default class ProductInfo extends Component {
 
@@ -37,7 +39,7 @@ export default class ProductInfo extends Component {
             const {data, setData, form: {setFieldsValue}} = this.props
             const selectImage = images[0]
             setFieldsValue({imageId: selectImage.id})
-            setData({...data, image:selectImage})
+            setData({...data, mainImage:selectImage})
         }
         this.setState({ uploadVisible: false })
     }
@@ -45,13 +47,47 @@ export default class ProductInfo extends Component {
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { data } = this.props;
+        const { data, brandOptions, categoryTree, onLoadData } = this.props;
         const {uploadVisible} = this.state
         const FormElement = this.FormElement;
         const imgSrc = data.mainImage ? fileSrc(data.mainImage) : '';
         return (
             <Form>
                 {data.id ? (<FormElement type="hidden" field="id" decorator={{ initialValue: data.id }} />) : null}
+                
+                <FormElement
+                    label="所属类目"
+                    type="select-tree"
+                    field="categoryId"
+                    options={categoryTree}
+                    showSearch={true}
+                    treeNodeFilterProp="title"
+                    searchPlaceholder="搜索仅支持一、二级类目"
+                    loadData={(node) => onLoadData(node)}
+                    dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                    decorator={{
+                        initialValue: data.categoryId,
+                        rules: [
+                            { required: true, message: '所属类目不能为空！' },
+                        ],
+                    }}
+                />
+
+                <FormElement
+                    label="所属品牌"
+                    type="select"
+                    field="brandId"
+                    optionFilterProp="label"
+                    showSearch
+                    options={brandOptions}
+                    decorator={{
+                        initialValue: data.brandId,
+                        rules: [
+                            { required: true, message: '所属品牌不能为空！' },
+                        ],
+                    }}
+                />
+                
                 <FormElement
                     label="商品标题"
                     type="input"
@@ -94,7 +130,7 @@ export default class ProductInfo extends Component {
                 <FormElement
                     label="商品主图"
                     type="input-hidden"
-                    field="image"
+                    field="imageId"
                     decorator={{
                         initialValue: data.imageId,
                         rules: [
@@ -109,38 +145,16 @@ export default class ProductInfo extends Component {
                         handelSelectImages={images => this.handelSelectImages(images)} />
                 </FormElement>
 
-                <FormElement
-                    label="所属类目，叶子类目"
-                    type="select-tree"
-                    field="categoryId"
-                    decorator={{
-                        initialValue: data.categoryId,
-                        rules: [
-                            { required: true, message: '所属类目，叶子类目不能为空！' },
-                        ],
-                    }}
-                />
+         
 
                 <FormElement
-                    label="所属品牌"
-                    type="select"
-                    field="brandId"
-                    decorator={{
-                        initialValue: data.brandId,
-                        rules: [
-                            { required: true, message: '所属品牌不能为空！' },
-                        ],
-                    }}
-                />
-
-                <FormElement
-                    label="商品状态，1-正常，2-下架，3-删除"
+                    label="商品状态"
                     type="switch"
                     field="status"
                     decorator={{
                         initialValue: data.status,
                         rules: [
-                            { required: true, message: '商品状态，1-正常，2-下架，3-删除不能为空！' },
+                            { required: true, message: '商品状态不能为空！' },
                         ],
                     }}
                 />

@@ -68,12 +68,6 @@ public class MyRealm extends AuthorizingRealm {
 
         Claims claims = jwtUtil.getClaimByToken(token);
 
-        if (ObjectUtils.isNull(claims)) {
-            throw new AuthenticationException(jwtUtil.getHeader() + "无效");
-        }
-        if (jwtUtil.isTokenExpired(claims.getExpiration())) {
-            throw new AuthenticationException(jwtUtil.getHeader() + "token过期");
-        }
         return new SimpleAuthenticationInfo(claims.getSubject(), token, "my_realm");
     }
 

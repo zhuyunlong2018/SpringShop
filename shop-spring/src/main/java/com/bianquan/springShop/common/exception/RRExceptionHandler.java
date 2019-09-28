@@ -3,7 +3,6 @@ package com.bianquan.springShop.common.exception;
 
 
 import com.bianquan.springShop.common.utils.Response;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

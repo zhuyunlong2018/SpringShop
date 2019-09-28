@@ -40,14 +40,13 @@ export default class QueryItem extends Component {
 
     state = {};
 
-    UNSAFE_componentWillMount() {
-        const {formRef, form, loadOptions} = this.props;
 
+    componentWillMount() {
+        const {formRef, form, loadOptions} = this.props;
         if (formRef) formRef(form);
 
         if (loadOptions) {
             const result = loadOptions(form);
-
             if (result instanceof Promise) {
                 loadOptions(form).then((data) => this.setState(data));
             }
@@ -56,6 +55,19 @@ export default class QueryItem extends Component {
                 this.setState(result);
             }
         }
+    }
+
+    componentDidMount() {
+        const {onRef} = this.props
+        onRef && onRef(this)
+    }
+
+    /**
+     * 暴露给外部设置state，使用需谨慎
+     * @param {Object} data 
+     */
+    setData(data) {
+        this.setState(data)
     }
 
     handleSubmit = (e) => {

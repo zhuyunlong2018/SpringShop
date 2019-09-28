@@ -12,6 +12,8 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Api(tags = "后台管理-品牌管理")
 @RequestMapping("/admin/brands")
@@ -22,7 +24,7 @@ public class Brands extends AbstractController {
 
     @GetMapping("/list")
     @RequiresPermissions("admin:brands:list")
-    @ApiOperation("获取品牌列表")
+    @ApiOperation("分页获取品牌列表")
     public Response getPage(@RequestParam("pageNum") int currentPage, @RequestParam("pageSize") int pageSize) {
         IPage<BrandEntity> page = brandService.page(currentPage, pageSize);
         return Response.ok(page);
@@ -59,5 +61,13 @@ public class Brands extends AbstractController {
             throw new RRException("删除失败");
         }
         return Response.ok();
+    }
+
+    @GetMapping("/all")
+    @RequiresPermissions("admin:brands:all")
+    @ApiOperation("获取所有品牌列表")
+    public Response getAll() {
+        List<BrandEntity> list = brandService.list();
+        return Response.ok(list);
     }
 }

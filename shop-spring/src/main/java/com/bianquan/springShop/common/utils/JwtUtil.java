@@ -1,10 +1,9 @@
 package com.bianquan.springShop.common.utils;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.Data;
+import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -66,9 +65,25 @@ public class JwtUtil {
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (Exception e) {
-            logger.debug("validate is token error ", e);
-            return null;
+        }
+        catch (UnsupportedJwtException e) {
+            throw new AuthenticationException(HEADER_TOKEN + "不正确");
+        }
+        catch (MalformedJwtException e) {
+            throw new AuthenticationException(HEADER_TOKEN + "不是一个有效jwt");
+        }
+        catch (SignatureException e) {
+            throw new AuthenticationException(HEADER_TOKEN + "签名校验错误");
+        }
+        catch (ExpiredJwtException e) {
+            throw new AuthenticationException(HEADER_TOKEN + "已过期");
+        }
+        catch (IllegalArgumentException e) {
+            throw new AuthenticationException(HEADER_TOKEN + "为空");
+        }
+        catch (Exception e) {
+            logger.error("token解析出现未知错误"+e.getMessage(), e);
+            throw new AuthenticationException(HEADER_TOKEN + "不正确");
         }
     }
 

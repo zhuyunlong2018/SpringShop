@@ -24,7 +24,7 @@ export default class ProductEdit extends Component {
         if (current === 0) {
             //完成商品信息
             const { handleSubmit } = this.infoForm
-            next = !handleSubmit(infoData => { this.setState({ infoData })})
+            next = !handleSubmit(infoData => { this.setState({ infoData }) })
         }
 
         if (next) this.setState({ current: current + 1 });
@@ -49,8 +49,8 @@ export default class ProductEdit extends Component {
     }
 
     saveInfo() {
-        const {infoData} = this.state
-        const {onOk} = this.props
+        const { infoData } = this.state
+        const { onOk } = this.props
         // TODO ajax 提交数据
         // id存在未修改，不存在未添加
         const ajax = infoData.id ? edit(infoData) : add(infoData);
@@ -85,14 +85,17 @@ export default class ProductEdit extends Component {
         this.props.form.resetFields();
     };
     render() {
-        const { visible } = this.props;
+        const { visible, brandOptions, categoryTree, onLoadData } = this.props;
         const { loading, current, data } = this.state;
         const title = data.id ? '修改商品' : '添加商品';
         const steps = [
             {
                 title: '商品信息',
                 content: <ProductInfo data={data} onRef={ref => this.infoForm = ref}
-                setData={data => this.setState({data})} />,
+                    brandOptions={brandOptions}
+                    categoryTree={categoryTree}
+                    onLoadData={onLoadData}
+                    setData={data => this.setState({ data })} />,
             },
             {
                 title: '商品属性',

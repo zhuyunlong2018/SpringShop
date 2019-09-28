@@ -12,6 +12,9 @@ import config from '@/commons/config-hoc';
 import { hasPermission, fileSrc } from '@/commons';
 import ProductEdit from './ProductEdit';
 import { list, del } from '@/api/product'
+import { all } from '@/api/brand'
+import { listByLevels } from '@/api/category';
+import { makeChildren } from '@/library/utils/tree-utils'
 
 const statusOptions = [
     { label: "正常", value: 1 },
@@ -32,6 +35,9 @@ export default class ProductList extends Component {
         params: {},
         formData: {},//添加、编辑表单数据
         visible: false,
+        brandOptions: [], //商品品牌列表
+        categoryTree: [], //商品类目的node tree
+        categoryChildrenAlreadyLoaded: [], //商品类目分三级，初步只加载一二级，此处记录已加载了第三级的第二级类目id
     };
 
     // TODO 查询条件
@@ -42,28 +48,38 @@ export default class ProductList extends Component {
                 type: 'input',
                 field: 'title',
                 label: '商品标题',
-                placeholder: '请选择级别',
-                itemStyle: { flex: '0 0 200px' }, // 固定宽度
+                placeholder: '请输入商品标题',
+                itemStyle: { flex: '0 0 300px' }, // 固定宽度
             },
             {
                 collapsedShow: true, // 收起时显示
-                type: 'number',
+                type: 'select-tree',
                 field: 'categoryId',
                 label: '所属类目',
+                showSearch: true,
+                treeDataSimpleMode: {},
+                treeNodeFilterProp: "title",
+                dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+                searchPlaceholder: "搜索仅支持一、二级类目",
+                loadData: (node) => this.onLoadData(node),
                 placeholder: '请输入类目名称',
-                itemStyle: { flex: '0 0 200px' }, // 固定宽度
+                itemStyle: { flex: '0 0 300px' }, // 固定宽度
             },
         ],
         [
             {
-                type: 'number',
+                type: 'select',
                 field: 'brandId',
                 label: '所属品牌',
+                showSearch: true,
+                optionFilterProp: 'label',
+                itemStyle: { flex: '0 0 300px' }, // 固定宽度
             },
             {
                 type: 'select',
                 field: 'status',
                 label: '商品状态',
+                itemStyle: { flex: '0 0 300px' }, // 固定宽度
             },
         ],
 
@@ -91,7 +107,7 @@ export default class ProductList extends Component {
                     this.props.action.global.showPreviewForFile(value)
                 }} />
         },
-        { title: '所属类目', dataIndex: 'category', render: value => value?value.title: ""},
+        { title: '所属类目', dataIndex: 'category', render: value => value ? value.title : "" },
         { title: '所属品牌', dataIndex: 'brand', render: (value) => value ? value.name : "" },
         {
             title: '商品状态', dataIndex: 'status',
@@ -130,8 +146,98 @@ export default class ProductList extends Component {
     ];
 
     componentDidMount() {
-        this.handleSearch();
+        this.handleSearch()
+        this.fetchBrands()
+        this.fetchFirstAndSecondCategories()
+
     }
+
+    /**
+     * 获取品牌列表
+     */
+    fetchBrands() {
+        all().then(res => {
+            const brandOptions = res.map(brand => {
+                const { id, name } = brand;
+                return { value: id, label: name }
+            })
+            this.setState({ brandOptions }, this.queryItem.setData({ brandId: brandOptions }))
+        })
+    }
+
+    /**
+     * 获取所有第一级和第二级类目列表并整理为treeNode
+     */
+    fetchFirstAndSecondCategories() {
+        listByLevels({ levels: [1, 2] }).then(res => {
+            const nodes = makeChildren(res, 0, (data) => {
+                data.key = data.id
+                data.value = data.id
+                data.selectable = false
+                if (data.level === 2) {
+                    data.children = []
+                }
+            });
+
+            const newNodes = res.map(item => {
+                const {id, pid, title, level} = item
+                return {id, pId:pid, title, value: id, level}
+            })
+            this.setState({ categoryTree: newNodes }, this.queryItem.setData({ categoryId: newNodes }))
+        })
+    }
+
+
+    /**
+     * select-tree异步获取第三级类目数据
+     * todo 修改为简易版本
+     */
+    onLoadData = treeNode =>
+        new Promise(resolve => {
+            const { id, level } = treeNode.props;
+            const { categoryChildrenAlreadyLoaded } = this.state
+            if (level === 2 && categoryChildrenAlreadyLoaded.indexOf(id) === -1) {
+                listByLevels({ levels: [3], pid: id }).then(res => {
+                    const newNode = {
+                        ...treeNode.props, children: res.map(item => {
+                            return { ...item, key: item.id, value: item.id, isLeaf: true }
+                        })
+                    }
+                    const newTree = [...this.state.categoryTree]
+                    newTree.forEach((e, i) => {
+                        //寻找第一层替代数据
+                        if (e.id === newNode.pid) {
+                            e.children.forEach((ele, index) => {
+                                //寻找第二层数据
+                                if (ele.id === newNode.id) {
+                                    e.children.splice(index, 1, newNode)
+                                }
+                            });
+                            newTree.splice(i, 1, e)
+                        }
+                    })
+
+                    const newNodes = res.map(item => {
+                        const {id, pid, title, level} = item
+                        return {id, pId:pid, title, value: id, level}
+                    })
+                    console.log(newNodes)
+                    const otherTree = this.state.categoryTree.concat(newNodes)
+                    this.setState({
+                        categoryTree: otherTree,
+                      }, this.queryItem.setData({ categoryId: otherTree }));
+
+                    // this.setState({
+                    //     categoryTree: newTree,
+                    //     categoryChildrenAlreadyLoaded: [...categoryChildrenAlreadyLoaded, id]
+                    // },
+                    //     this.queryItem.setData({ categoryId: otherTree })
+                    // )
+                }).finally(() => resolve())
+            } else {
+                resolve()
+            }
+        });
 
     /**
      * 获取列表
@@ -182,6 +288,11 @@ export default class ProductList extends Component {
      * 处理编辑
      */
     handleEdit = (formData) => {
+        //注意，商品只能绑定在第三级类目，此处判断要编辑的第三级类目是否已经异步加载好
+        if (this.state.categoryChildrenAlreadyLoaded.indexOf(formData.pid) === -1) {
+            //加载商品所在类目上一级类目的所有子集
+
+        }
         this.setState({ formData, visible: true });
     };
 
@@ -212,13 +323,15 @@ export default class ProductList extends Component {
             pageSize,
             visible,
             formData,
+            brandOptions,
+            categoryTree,
         } = this.state;
 
         return (
             <PageContent loading={loading}>
                 <QueryBar>
                     <QueryItem
-                        loadOptions={this.fetchOptions}
+                        onRef={ref => this.queryItem = ref}
                         items={this.queryItems}
                         onSubmit={params => this.setState({ params }, this.handleSearch)}
                     />
@@ -244,6 +357,9 @@ export default class ProductList extends Component {
                 <ProductEdit
                     formData={formData}
                     visible={visible}
+                    brandOptions={brandOptions}
+                    categoryTree={categoryTree}
+                    onLoadData={this.onLoadData}
                     onOk={this.handleOk.bind(this)}
                     onCancel={() => this.setState({ visible: false })}
                 />
