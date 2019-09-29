@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Spin, Steps, Button } from 'antd';
 import { add, edit } from '@/api/product'
 import ProductInfo from './ProductInfo'
+import DetailEditor from './DetailEditor'
 import './style.less'
 
 const { Step } = Steps;
@@ -24,9 +25,16 @@ export default class ProductEdit extends Component {
         if (current === 0) {
             //完成商品信息
             const { handleSubmit } = this.infoForm
-            next = !handleSubmit(infoData => { this.setState({ infoData }) })
-        }
+            next = !handleSubmit(infoData => { this.setState({ infoData })})
 
+            //todo 获取商品属性
+        } else if (current === 1) {
+            //完成商品属性
+            console.log(this.state.infoData)
+            next = true
+            //todo 获取商品详情
+        }
+        console.log(next)
         if (next) this.setState({ current: current + 1 });
     }
 
@@ -44,7 +52,7 @@ export default class ProductEdit extends Component {
         // 打开弹框
         if (!prevProps.visible && visible) {
             // 填充数据
-            this.setState({ data: formData })
+            this.setState({ data: formData, current: 0 })
         }
     }
 
@@ -75,7 +83,10 @@ export default class ProductEdit extends Component {
      * 处理保存数据
      */
     handleOk = () => {
+        //先校验商品详情
 
+
+        //提交表单数据
     }
 
     /**
@@ -99,11 +110,11 @@ export default class ProductEdit extends Component {
             },
             {
                 title: '商品属性',
-                content: 'Second-content',
+                content: "content",
             },
             {
                 title: '商品详情',
-                content: 'Last-content',
+                content: <DetailEditor />,
             },
         ];
 

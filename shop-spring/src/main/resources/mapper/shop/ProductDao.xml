@@ -55,7 +55,7 @@
     <select id="fetchPageWithRelations" resultMap="pageWithRelations">
         SELECT p.id,p.title,p.sell_point,p.price_range,p.category_id,p.brand_id,p.status,p.image_id,
             b.id b_id,b.name b_name,
-            c.id c_id,c.title c_title,
+            c.id c_id,c.title c_title,c.pid c_pid,
             i.id i_id,i.title i_title,i.keywords,i.src,i.origin
         FROM sp_products p
         LEFT JOIN sp_brands b ON p.brand_id=b.id
@@ -96,6 +96,7 @@
         <!-- 分类对象-->
         <collection property="category" ofType="com.bianquan.springShop.entity.shop.CategoryEntity">
             <id property="id" column="c_id"/>
+            <result property="pid" column="c_pid" />
             <result property="title" column="c_title" />
         </collection>
     </resultMap>

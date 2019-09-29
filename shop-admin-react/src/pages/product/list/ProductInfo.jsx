@@ -30,7 +30,7 @@ export default class ProductInfo extends Component {
         return hasError
     };
 
-        /**
+    /**
      * 处理选中图片后回调
      * @param {Object} images 
      */
@@ -61,6 +61,7 @@ export default class ProductInfo extends Component {
                     field="categoryId"
                     options={categoryTree}
                     showSearch={true}
+                    treeDataSimpleMode
                     treeNodeFilterProp="title"
                     searchPlaceholder="搜索仅支持一、二级类目"
                     loadData={(node) => onLoadData(node)}
