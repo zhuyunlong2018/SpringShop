@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import SimpleMDEEditor from 'yt-simplemde-editor';
 import marked from 'marked';
+import { fileSrc } from '@/commons';
 import ImagesUpload from '@/components/images-upload'
 import 'yt-simplemde-editor/dist/style.css'
-import { fileSrc } from '@/commons';
+import 'font-awesome/css/font-awesome.css'
 
 /**
  * 商品详情--编辑器
@@ -14,7 +15,7 @@ export default class DetailEditor extends PureComponent {
     state = {
         value: '',
         uploadVisible: false,
-    };
+    }; 
 
     renderMarkdown = text => {
         const html = marked(text, { breaks: true });
@@ -33,25 +34,15 @@ export default class DetailEditor extends PureComponent {
      */
     handelSelectImages(images) {
         if (images.length > 0) {
-            //todo 选中图片后进行后续处理
+            //选中图片后进行后续处理
             images.forEach(image => {
                 const {keywords} = image
                 //要插入内容框的图片地址
                 const imageText = `![${keywords}](${fileSrc(image).replace(/\\/g, "/")})`;
-                //首先在原光标位置插入一个空图片地址
+                //设定插入内容
+                this.simplemde.options.insertTexts.image = ["\n", `${imageText}`]
+                //首先在原光标位置插入一个图片地址
                 this.simplemde.drawImage()
-                //插入的内容标记
-                const imageMark = "![](http://)"
-                const cursor = this.simplemde.codemirror.getCursor();
-                //将标记替换为目标图片地址
-                const text = this.simplemde.codemirror.getValue().replace(imageMark, imageText);
-                //重置内容生效
-                this.simplemde.codemirror.setValue(text);
-                //更新内容长度
-                cursor.ch += imageText.length - imageMark.length;
-                this.simplemde.codemirror.setCursor(cursor);
-                // this.simplemde.codemirror.focus();
-                //todo bug 同时传递多张图片将导致地址拼接出现交错
             });
         }
         this.setState({ uploadVisible: false })
@@ -72,6 +63,7 @@ export default class DetailEditor extends PureComponent {
                 // see https://github.com/sparksuite/simplemde-markdown-editor#configuration
                 spellChecker: false,
                 forceSync: true,
+                autoDownloadFontAwesome: false,
                 autosave: {
                     enabled: true,
                     delay: 5000,

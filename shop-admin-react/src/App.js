@@ -6,6 +6,7 @@ import { connect } from './models';
 import moment from 'moment';
 import { getMenuTreeDataAndPermissions, getLoginUser, setLoginUser } from './commons'
 
+
 @connect()
 export default class App extends React.Component {
     constructor(...props) {
