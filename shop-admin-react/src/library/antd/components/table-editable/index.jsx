@@ -57,9 +57,9 @@ export default class FieldsTable extends Component {
     static getValues = getValues;
 
     UNSAFE_componentWillMount() {
-        const {formRef, form, submitRef} = this.props;
+        const {formRef, form, submitRef, onRef} = this.props;
         if (formRef) formRef(form);
-
+        if (onRef) onRef(this)
         if (submitRef) submitRef(this.handleSubmit);
     }
 
@@ -81,9 +81,8 @@ export default class FieldsTable extends Component {
     renderColumns = (text, record, column) => {
         let {dataIndex, props} = column;
         if (!props) return text;
-
         const {editable = true, showEdit = true} = record;
-
+        
         if (editable === false || showEdit === false) return text;
 
         if (editable?.length && !editable.includes(dataIndex)) return text;
@@ -105,6 +104,7 @@ export default class FieldsTable extends Component {
             record.__formFields = [props.field]
         }
 
+        
         // 校验函数
         if (!record.__validate) {
             record.__validate = (fields, callback) => {

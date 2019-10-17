@@ -3,9 +3,14 @@ import { Modal, Spin, Steps, Button } from 'antd';
 import { add, edit } from '@/api/product'
 import ProductInfo from './ProductInfo'
 import DetailEditor from './DetailEditor'
+import Attributes from './Attributes'
 import './style.less'
 
 const { Step } = Steps;
+
+/**
+ * 商品编辑页
+ */
 
 export default class ProductEdit extends Component {
     state = {
@@ -24,8 +29,8 @@ export default class ProductEdit extends Component {
         let next = false
         if (current === 0) {
             //完成商品信息
-            const { handleSubmit } = this.infoForm
-            next = !handleSubmit(infoData => { this.setState({ infoData })})
+            const { handleComplete } = this.infoForm
+            next = !handleComplete(infoData => { this.setState({ infoData })})
 
             //todo 获取商品属性
         } else if (current === 1) {
@@ -95,6 +100,17 @@ export default class ProductEdit extends Component {
     handleReset = () => {
         this.props.form.resetFields();
     };
+
+    /**
+     * 处理修改商品类目，需要更新类目属性
+     * @param {*} categoryId 
+     */
+    handleChangeCategory(categoryId) {
+        const { categoryIdWithInfo } = this.props
+        const category = categoryIdWithInfo[categoryId]
+        console.log(category)
+    }
+
     render() {
         const { visible, brandOptions, categoryTree, onLoadData } = this.props;
         const { loading, current, data } = this.state;
@@ -106,11 +122,12 @@ export default class ProductEdit extends Component {
                     brandOptions={brandOptions}
                     categoryTree={categoryTree}
                     onLoadData={onLoadData}
+                    handleChangeCategory={categoryId => this.handleChangeCategory(categoryId)}
                     setData={data => this.setState({ data })} />,
             },
             {
                 title: '商品属性',
-                content: "content",
+                content: <Attributes data={data} />,
             },
             {
                 title: '商品详情',

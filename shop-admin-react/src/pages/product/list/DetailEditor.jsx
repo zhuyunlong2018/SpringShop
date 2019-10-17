@@ -10,12 +10,11 @@ import 'font-awesome/css/font-awesome.css'
  * 商品详情--编辑器
  */
 
-
 export default class DetailEditor extends PureComponent {
     state = {
         value: '',
         uploadVisible: false,
-    }; 
+    };
 
     renderMarkdown = text => {
         const html = marked(text, { breaks: true });
@@ -36,7 +35,7 @@ export default class DetailEditor extends PureComponent {
         if (images.length > 0) {
             //选中图片后进行后续处理
             images.forEach(image => {
-                const {keywords} = image
+                const { keywords } = image
                 //要插入内容框的图片地址
                 const imageText = `![${keywords}](${fileSrc(image).replace(/\\/g, "/")})`;
                 //设定插入内容
@@ -123,8 +122,8 @@ export default class DetailEditor extends PureComponent {
             <div>
                 <SimpleMDEEditor {...editorProps} />
                 <ImagesUpload visible={uploadVisible}
-                        handleCancel={() => this.setState({ uploadVisible: false })}
-                        handelSelectImages={images => this.handelSelectImages(images)} />
+                    handleCancel={() => this.setState({ uploadVisible: false })}
+                    handelSelectImages={images => this.handelSelectImages(images)} />
             </div>
 
         )

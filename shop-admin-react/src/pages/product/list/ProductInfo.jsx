@@ -4,7 +4,9 @@ import { FormElement } from '@/library/antd';
 import ImagesUpload from '@/components/images-upload'
 import { fileSrc } from '@/commons';
 
-
+/**
+ * 商品基础信息编辑页
+ */
 @Form.create()
 export default class ProductInfo extends Component {
 
@@ -17,9 +19,9 @@ export default class ProductInfo extends Component {
     }
 
     /**
-     * 处理提交保存
+     * 处理信息填写完成后的校验
      */
-    handleSubmit = (call) => {
+    handleComplete = (call) => {
         const { form: { validateFieldsAndScroll } } = this.props;
         let hasError = false
         //表单验证
@@ -36,10 +38,10 @@ export default class ProductInfo extends Component {
      */
     handelSelectImages(images) {
         if (images.length > 0) {
-            const {data, setData, form: {setFieldsValue}} = this.props
+            const { data, setData, form: { setFieldsValue } } = this.props
             const selectImage = images[0]
-            setFieldsValue({imageId: selectImage.id})
-            setData({...data, mainImage:selectImage})
+            setFieldsValue({ imageId: selectImage.id })
+            setData({ ...data, mainImage: selectImage })
         }
         this.setState({ uploadVisible: false })
     }
@@ -47,14 +49,14 @@ export default class ProductInfo extends Component {
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { data, brandOptions, categoryTree, onLoadData } = this.props;
-        const {uploadVisible} = this.state
+        const { data, brandOptions, categoryTree, onLoadData, handleChangeCategory } = this.props;
+        const { uploadVisible } = this.state
         const FormElement = this.FormElement;
         const imgSrc = data.mainImage ? fileSrc(data.mainImage) : '';
         return (
             <Form>
                 {data.id ? (<FormElement type="hidden" field="id" decorator={{ initialValue: data.id }} />) : null}
-                
+
                 <FormElement
                     label="所属类目"
                     type="select-tree"
@@ -72,6 +74,7 @@ export default class ProductInfo extends Component {
                             { required: true, message: '所属类目不能为空！' },
                         ],
                     }}
+                    onChange={categoryId => handleChangeCategory(categoryId)}
                 />
 
                 <FormElement
@@ -88,7 +91,7 @@ export default class ProductInfo extends Component {
                         ],
                     }}
                 />
-                
+
                 <FormElement
                     label="商品标题"
                     type="input"
@@ -145,8 +148,6 @@ export default class ProductInfo extends Component {
                         handleCancel={() => this.setState({ uploadVisible: false })}
                         handelSelectImages={images => this.handelSelectImages(images)} />
                 </FormElement>
-
-         
 
                 <FormElement
                     label="商品状态"

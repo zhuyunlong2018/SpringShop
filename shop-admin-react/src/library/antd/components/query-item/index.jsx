@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Form, Button} from 'antd';
+import { Form, Button } from 'antd';
 import FormElement from '../form-element';
 import './index.less';
 
@@ -42,7 +42,7 @@ export default class QueryItem extends Component {
 
 
     componentWillMount() {
-        const {formRef, form, loadOptions} = this.props;
+        const { formRef, form, loadOptions } = this.props;
         if (formRef) formRef(form);
 
         if (loadOptions) {
@@ -58,7 +58,7 @@ export default class QueryItem extends Component {
     }
 
     componentDidMount() {
-        const {onRef} = this.props
+        const { onRef } = this.props
         onRef && onRef(this)
     }
 
@@ -72,7 +72,7 @@ export default class QueryItem extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const {onSubmit, form} = this.props;
+        const { onSubmit, form } = this.props;
         form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 onSubmit(values);
@@ -108,8 +108,8 @@ export default class QueryItem extends Component {
                         return (
                             <div key={index} className="query-item-element-container">
                                 {data.map(item => {
-                                    const {itemStyle, field, collapsedShow, ...others} = item;
-                                    const style = {display: 'block'};
+                                    const { itemStyle, field, collapsedShow, ...others } = item;
+                                    const style = { display: 'block' };
 
                                     const options = this.state[field];
                                     if (options && !others.options) others.options = options;
@@ -121,7 +121,7 @@ export default class QueryItem extends Component {
                                     return (
                                         <div
                                             key={field}
-                                            style={{...itemStyle, ...style}}
+                                            style={{ ...itemStyle, ...style }}
                                         >
                                             <FormElement
                                                 form={form}
@@ -132,7 +132,7 @@ export default class QueryItem extends Component {
                                     );
                                 })}
                                 {index === items.length - 1 && (showSubmit || showReset || extra) ? (
-                                    <div className="query-item-button-container" style={{...buttonContainerStyle, paddingTop: '4px'}}>
+                                    <div className="query-item-button-container" style={{ ...buttonContainerStyle, paddingTop: '4px' }}>
                                         {showSubmit ? (
                                             <Button
                                                 type="primary"

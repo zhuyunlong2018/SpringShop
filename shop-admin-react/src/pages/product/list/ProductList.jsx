@@ -13,7 +13,7 @@ import { hasPermission, fileSrc } from '@/commons';
 import ProductEdit from './ProductEdit';
 import { list, del } from '@/api/product'
 import { all } from '@/api/brand'
-import { listByLevels } from '@/api/category';
+import { listByLevels, fetchWithParamsByPid } from '@/api/category';
 
 const statusOptions = [
     { label: "正常", value: 1 },
@@ -36,6 +36,7 @@ export default class ProductList extends Component {
         brandOptions: [], //商品品牌列表
         categoryTree: [], //商品类目的node tree
         categoryChildrenAlreadyLoaded: [], //商品类目分三级，初步只加载一二级，此处记录已加载了第三级的第二级类目id
+        categoryIdWithInfo: {}, //分类ID=>对应法分类对象，example： {categoryId: {...category}},此处存储第三极类目的ID对应对象，只需要通过this.state.categoryIdWithInfo[categoryId]就可以获取到对应的分类对象
     };
 
     // TODO 查询条件
@@ -170,8 +171,8 @@ export default class ProductList extends Component {
     fetchFirstAndSecondCategories() {
         listByLevels({ levels: [1, 2] }).then(res => {
             const newNodes = res.map(item => {
-                const {id, pid, title, level} = item
-                return {id, pId:pid, title, value: id, level, selectable: false}
+                const { id, pid, title, level } = item
+                return { id, pId: pid, title, value: id, level, selectable: false }
             })
             this.setState({ categoryTree: newNodes }, this.queryItem.setData({ categoryId: newNodes }))
         })
@@ -183,16 +184,25 @@ export default class ProductList extends Component {
      * @param {Number} id 
      */
     fetchThirdCategories(id) {
-        return listByLevels({ levels: [3], pid: id }).then(res => {
+        return fetchWithParamsByPid({ pid: id }).then(res => {
+            //建立临时存储第三类目分类变量
+            const newCategoryIdWithInfo = {}
             const newNodes = res.map(item => {
-                const {id, pid, title, level} = item
-                return {id, pId:pid, title, value: id, level, isLeaf: true}
+                const { id, pid, title, level } = item
+                //对象存入临时变量
+                newCategoryIdWithInfo[id] = item
+                //此处返回给可以渲染tree-node的新对象数组
+                return { id, pId: pid, title, value: id, level, isLeaf: true }
             })
             const otherTree = this.state.categoryTree.concat(newNodes)
+            //取出目标state
+            const { categoryChildrenAlreadyLoaded, categoryIdWithInfo } = this.state
+            //更新合并
             this.setState({
                 categoryTree: otherTree,
-                categoryChildrenAlreadyLoaded: [...this.state.categoryChildrenAlreadyLoaded, id]
-              }, this.queryItem.setData({ categoryId: otherTree }));
+                categoryIdWithInfo: { ...categoryIdWithInfo, ...newCategoryIdWithInfo },
+                categoryChildrenAlreadyLoaded: [...categoryChildrenAlreadyLoaded, id]
+            }, this.queryItem.setData({ categoryId: otherTree }));
         })
     }
 
@@ -261,7 +271,7 @@ export default class ProductList extends Component {
      */
     handleEdit = (formData) => {
         //注意，商品只能绑定在第三级类目，此处判断要编辑的第三级类目是否已经异步加载好
-        const {category: {pid}} = formData
+        const { category: { pid } } = formData
         if (this.state.categoryChildrenAlreadyLoaded.indexOf(pid) === -1) {
             //加载商品所在类目上一级类目的所有子集
             this.fetchThirdCategories(pid)
@@ -298,6 +308,7 @@ export default class ProductList extends Component {
             formData,
             brandOptions,
             categoryTree,
+            categoryIdWithInfo,
         } = this.state;
 
         return (
@@ -330,6 +341,7 @@ export default class ProductList extends Component {
                 <ProductEdit
                     formData={formData}
                     visible={visible}
+                    categoryIdWithInfo={categoryIdWithInfo}
                     brandOptions={brandOptions}
                     categoryTree={categoryTree}
                     onLoadData={this.onLoadData}

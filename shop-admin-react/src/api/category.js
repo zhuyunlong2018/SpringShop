@@ -17,3 +17,6 @@ export const listByLevels = params => sxAjax.get("admin/categories/listByLevels"
 
 //保存类目的属性组
 export const saveAttributes = params => sxAjax.post("admin/categories/saveAttributes", params)
+
+//通过上级ID获取携带属性对象的列表
+export const fetchWithParamsByPid = params => sxAjax.get("admin/categories/fetchWithParamsByPid", params)
