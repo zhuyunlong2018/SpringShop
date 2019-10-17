@@ -56,10 +56,12 @@
         SELECT p.id,p.title,p.sell_point,p.price_range,p.category_id,p.brand_id,p.status,p.image_id,
             b.id b_id,b.name b_name,
             c.id c_id,c.title c_title,c.pid c_pid,
+            ca.id ca_id,ca.params ca_params,
             i.id i_id,i.title i_title,i.keywords,i.src,i.origin
         FROM sp_products p
         LEFT JOIN sp_brands b ON p.brand_id=b.id
         LEFT JOIN sp_categories c ON p.category_id=c.id
+        LEFT JOIN sp_category_attributes ca ON p.category_id=ca.category_id
         LEFT JOIN sp_images i ON p.image_id=i.id
         <where>
             <if test="categoryId != 0">
@@ -98,6 +100,12 @@
             <id property="id" column="c_id"/>
             <result property="pid" column="c_pid" />
             <result property="title" column="c_title" />
+        </collection>
+        <!-- 分类属性对象-->
+        <collection property="categoryAttributes" ofType="com.bianquan.springShop.entity.shop.CategoryAttributeEntity">
+            <id property="id" column="ca_id"/>
+            <result property="categoryId" column="c_id" />
+            <result property="params" column="ca_params" />
         </collection>
     </resultMap>
 

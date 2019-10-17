@@ -52,19 +52,15 @@ public class ProductEntity implements Serializable {
     @ApiModelProperty(value = "所属类目，叶子类目",example="1")
     private Long categoryId;
 
-    //分类对象
-    @TableField(exist = false)
-    private CategoryEntity category;
-
     @ApiModelProperty(value = "所属品牌",example="1")
     private Long brandId;
+
+    @ApiModelProperty(value = "商品状态，1-正常，2-下架，3-删除",example="1")
+    private Integer status;
 
     //商品品牌
     @TableField(exist = false)
     private BrandEntity brand;
-
-    @ApiModelProperty(value = "商品状态，1-正常，2-下架，3-删除",example="1")
-    private Integer status;
 
     //商品详情
     @TableField(exist = false)
@@ -77,6 +73,14 @@ public class ProductEntity implements Serializable {
     //sku参数
     @TableField(exist = false)
     private List<ProductsSkuEntity> sku;
+
+    //分类对象
+    @TableField(exist = false)
+    private CategoryEntity category;
+
+    //商品分类属性参数
+    @TableField(exist = false)
+    private CategoryAttributeEntity categoryAttributes;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;

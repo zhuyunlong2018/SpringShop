@@ -31,4 +31,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         map.put("records", list);
         return map;
     }
+
+    @Override
+    public List<CategoryEntity> fetchWithParamsByPid(Long pid) {
+        return categoriesDao.fetchWithParamsByPid(pid);
+    }
 }

@@ -123,4 +123,12 @@ public class Categories {
         return Response.ok(categoryAttributesEntity);
     }
 
+    @ApiOperation("根据上级ID获取携带属性对象的列表")
+    @GetMapping("/fetchWithParamsByPid")
+    @RequiresPermissions("admin:categories:list")
+    public Response fetchWithParamsByPid(@RequestParam("pid") Long pid) {
+        List<CategoryEntity> list = categoryService.fetchWithParamsByPid(pid);
+        return Response.ok(list);
+    }
+
 }

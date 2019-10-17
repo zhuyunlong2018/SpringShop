@@ -59,4 +59,30 @@
         </collection>
     </resultMap>
 
+
+    <!--根据pid获取分类，携带属性信息-->
+    <select id="fetchWithParamsByPid" resultMap="withParamsMap">
+        SELECT
+            c.id,c.pid,c.title,c.status,c.description,c.pid,c.sort_order,c.`level`,
+            ca.params,ca.id ca_id
+        FROM sp_categories c
+        LEFT JOIN sp_category_attributes ca ON c.id=ca.category_id
+        WHERE pid = #{pid} and status = 1
+    </select>
+    <resultMap id="withParamsMap" type="com.bianquan.springShop.entity.shop.CategoryEntity">
+        <id column="id" property="id"/>
+        <result property="pid" column="pid" />
+        <result column="title" property="title"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="level" property="level"/>
+        <!-- 分类属性对象-->
+        <collection property="params" ofType="com.bianquan.springShop.entity.shop.CategoryAttributeEntity">
+            <id property="id" column="ca_id"/>
+            <result property="categoryId" column="id" />
+            <result property="params" column="params" />
+        </collection>
+    </resultMap>
+
 </mapper>

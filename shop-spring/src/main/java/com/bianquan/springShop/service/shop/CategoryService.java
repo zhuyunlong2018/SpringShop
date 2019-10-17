@@ -22,4 +22,11 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     Map<String, Object> queryPageWithImage(int currentPage, int pageSize, int level, String title);
+
+    /**
+     * 通过pid获取列表并携带属性对象
+     * @param pid
+     * @return
+     */
+    List<CategoryEntity> fetchWithParamsByPid(Long pid);
 }

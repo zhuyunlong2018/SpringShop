@@ -17,4 +17,11 @@ public interface CategoryDao extends BaseMapper<CategoryEntity> {
     List<CategoryEntity> listWithChildren(Long pid);
 
     List<CategoryEntity> fetchPageWithImage(int currIndex, int pageSize, int level, String title);
+
+    /**
+     * 通过上级ID获取携带分类属性的列表
+     * @param pid
+     * @return
+     */
+    List<CategoryEntity> fetchWithParamsByPid(long pid);
 }
