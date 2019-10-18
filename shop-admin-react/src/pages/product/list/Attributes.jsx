@@ -24,6 +24,7 @@ export default class Attributes extends Component {
     componentDidMount() {
         const { data } = this.props
         console.log(data)
+        //todo 将商品的attributes和skuList设置到state中
     }
 
     /**
@@ -114,6 +115,7 @@ export default class Attributes extends Component {
 
     FormElement = (props) => <FormElement form={this.props.form} {...props} labelWidth={100} />;
 
+    //属性组表单字段
     columns = [
         { title: '分组名', dataIndex: 'group', key: 'group' },
         {
@@ -139,6 +141,11 @@ export default class Attributes extends Component {
             },
         },
     ];
+
+    //商品sku表单字段
+    skuColumns = [
+
+    ]
 
     /**
      * 处理属性组修改
@@ -180,14 +187,103 @@ export default class Attributes extends Component {
         })
     }
 
+    /**
+     * 生成商品的sku列表，生成策略：从attributes中抽取mutiple(多个选项值)的属性组合
+     */
+    generatorSkuList() {
+        const { categoryAttributes } = this.state
+        let skuAttributes = []
+        let skuColumns = []
+        categoryAttributes.forEach(e => {
+            const { params } = e
+            //从属性中提取多选项类型的属性，获得类二维数组[attr:[...defaultValue], ...]
+            skuAttributes = skuAttributes.concat(
+                //过滤掉非多项属性
+                params.filter(item => item.type === "mutiple").map(item => {
+                    const { defaultValue, key } = item
+                    skuColumns.push({
+                        title: key,
+                        dataIndex: key,
+                        key
+                    })
+                    //返回用于计算笛卡尔积的二维数组
+                    return defaultValue.map(value => {
+                        const res = {}
+                        res[key] = value
+                        return res
+                    })
+                })
+            )
+        });
+        //进行生成table表的列
+        this.generatorSkuTableColumns(skuColumns)
+
+        //通过计算笛卡尔积得到所有sku的属性组合
+        const skuList = this.calcDescartes(skuAttributes)
+        this.setState({ skuList })
+    }
+
+    /**
+     * 生成sku的table列
+     */
+    generatorSkuTableColumns(skuColumns) {
+        const otherColumns = [
+            {
+                title: '操作',
+                width: 200,
+                dataIndex: 'operator',
+                render: (text, record, index) => {
+                    const items = [
+                        {
+                            label: '删除',
+                            confirm: {
+                                title: `您确定要删除该sku商品吗？`,
+                                onConfirm: () => {
+                                    const skuList = [...this.state.skuList]
+                                    skuList.splice(index, 1)
+                                    this.setState({ skuList })
+                                },
+                            },
+                        }
+                    ]
+                    return <Operator items={items} />
+                },
+            }
+        ]
+
+        //整理成表单形式
+        this.skuColumns = skuColumns.concat(otherColumns)
+    }
+
+    /**
+     * 笛卡尔积算出商品多种属性组合
+     * @param {}} array 
+     */
+    calcDescartes(array) {
+        if (array.length < 2) return array[0] || [];
+        return array.reduce((col, set) => {
+            let res = []
+            col.forEach(c => {
+                set.forEach(s => {
+                    var t = { ...c, ...s, id: uuid() }
+                    res.push(t)
+                })
+            });
+            return res;
+        });
+    }
+
+    /**
+     * 阻止冒泡
+     * @param {*} e 
+     */
     preventDefault(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 
     render() {
-
-        const { categoryAttributes, modalVisible, addIndex, modalTitle } = this.state
+        const { categoryAttributes, modalVisible, addIndex, modalTitle, skuList } = this.state
         const FormElement = this.FormElement;
         return (
             <div>
@@ -217,6 +313,7 @@ export default class Attributes extends Component {
                             showHeader={false}
                             columns={this.columns}
                             rowKey="id"
+                            size="small"
                             expandedRowRender={(record, index) => <ExpandTable
                                 record={record}
                                 index={index}
@@ -230,12 +327,24 @@ export default class Attributes extends Component {
                         header={(
                             <div>
                                 商品SKU列表
-                            <a style={{ marginLeft: 16 }} onClick={e => {
-                                    this.preventDefault(e)
-                                }}>从属性中生成sku</a>
+                                <Popconfirm title="从属性生成会清空现有sku列表，确认要生成？"
+                                    onCancel={this.preventDefault}
+                                    onConfirm={e => {
+                                        this.preventDefault(e)
+                                        this.generatorSkuList()
+                                    }}>
+                                    <a style={{ marginLeft: 16 }} onClick={this.preventDefault}>从属性中生成sku</a>
+                                </Popconfirm>
                             </div>
                         )}>
-                        sku列表
+                        <Table
+                            className="components-table-demo-nested"
+                            pagination={false}
+                            columns={this.skuColumns}
+                            rowKey="id"
+                            size="small"
+                            dataSource={skuList}
+                        />
                     </Panel>
                 </Collapse>
                 <Modal

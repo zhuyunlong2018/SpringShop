@@ -194,6 +194,7 @@ export default class ExpandTable extends Component {
             columns={this.columns}
             dataSource={params}
             rowKey="id"
+            size="small"
         />
     };
 
