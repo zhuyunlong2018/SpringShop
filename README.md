@@ -15,23 +15,23 @@
 
 #### 部分截图
 
-![](doc/images/admin_menu1.png)
+![](./doc/images/admin_menu1.png)
 
-![](doc/images/admin_shop1.png)
+![](./doc/images/admin_shop1.png)
 
-![](doc/images/admin_shop2.png)
+![](./doc/images/admin_shop2.png)
 
-![](doc/images/image_manager.png)
+![](./doc/images/image_manager.png)
 
-![](doc/images/shop_home1.png)
+![](./doc/images/shop_home1.png)
 
-![](doc/images/shop_category.png)
+![](./doc/images/shop_category.png)
 
-![](doc/images/shop_cart.png)
+![](./doc/images/shop_cart.png)
 
-![](doc/images/shop_my.png)
+![](./doc/images/shop_my.png)
 
-![](doc/images/shop_product.png)
+![](./doc/images/shop_product.png)
 #### 参与贡献
 
 1. Fork 本仓库

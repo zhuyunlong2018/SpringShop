@@ -16,6 +16,13 @@ export default class DetailEditor extends PureComponent {
         uploadVisible: false,
     };
 
+    componentDidMount() {
+        //清空内容，赋值
+        this.setState({ value: ""})
+
+        console.log(this.simplemde.value("<h1>hello</h1>"))
+    }
+
     renderMarkdown = text => {
         const html = marked(text, { breaks: true });
         if (/language-/.test(html)) {
@@ -52,12 +59,8 @@ export default class DetailEditor extends PureComponent {
 
         const editorProps = {
             value: this.state.value,
-            getMdeInstance: simplemde => {
-                this.simplemde = simplemde;
-            },
-            onChange: (value) => {
-                this.setState({ value })
-            },
+            getMdeInstance: simplemde => this.simplemde = simplemde,
+            onChange: (value) => this.setState({ value }),
             options: {
                 // see https://github.com/sparksuite/simplemde-markdown-editor#configuration
                 spellChecker: false,

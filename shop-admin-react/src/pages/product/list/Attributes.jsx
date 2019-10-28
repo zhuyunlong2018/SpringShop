@@ -22,9 +22,30 @@ export default class Attributes extends Component {
     }
 
     componentDidMount() {
-        const { data } = this.props
+        const { data, onRef } = this.props
+        if (onRef) onRef(this)
         console.log(data)
         //todo 将商品的attributes和skuList设置到state中
+    }
+
+    /**
+     * 属性编辑完成处理
+     */
+    handleComplete() {
+        const { skuList } = this.state
+        const { data: { id } } = this.props
+        const skuData = skuList.map(item => {
+            let description = ""
+            for (const attr in item) {
+                if (attr !== "id") {
+                    description += item[attr] + " "
+                }
+            }
+            const attributes = JSON.stringify(item)
+            return { productId: id, description, attributes }
+        })
+
+        return skuData
     }
 
     /**
@@ -219,7 +240,7 @@ export default class Attributes extends Component {
         this.generatorSkuTableColumns(skuColumns)
 
         //通过计算笛卡尔积得到所有sku的属性组合
-        const skuList = this.calcDescartes(skuAttributes)
+        const skuList = this.calcDescartes(skuAttributes).map(item => ({ ...item, id: uuid() }))
         this.setState({ skuList })
     }
 
@@ -229,8 +250,11 @@ export default class Attributes extends Component {
     generatorSkuTableColumns(skuColumns) {
         const otherColumns = [
             {
+                title: 'sku编号',
+                dataIndex: 'id',
+            },
+            {
                 title: '操作',
-                width: 200,
                 dataIndex: 'operator',
                 render: (text, record, index) => {
                     const items = [
@@ -265,7 +289,7 @@ export default class Attributes extends Component {
             let res = []
             col.forEach(c => {
                 set.forEach(s => {
-                    var t = { ...c, ...s, id: uuid() }
+                    var t = { ...c, ...s }
                     res.push(t)
                 })
             });

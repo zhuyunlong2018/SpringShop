@@ -15,9 +15,10 @@ const { Step } = Steps;
 export default class ProductEdit extends Component {
     state = {
         loading: false,
-        data: {},
-        infoData: {},
-        current: 0,
+        data: {},       //商品主体
+        infoData: {},   //商品基础信息
+        skuData: [],    //商品sku列表数据
+        current: 0,     //当前编辑项
     };
 
     /**
@@ -30,14 +31,17 @@ export default class ProductEdit extends Component {
         if (current === 0) {
             //完成商品信息
             const { handleComplete } = this.infoForm
-            next = !handleComplete(infoData => { this.setState({ infoData })})
+            next = !handleComplete(infoData => { this.setState({ infoData }) })
 
             //todo 获取商品属性
         } else if (current === 1) {
             //完成商品属性
             console.log(this.state.infoData)
-            next = true
+            const skuData = this.attributes.handleComplete()
+            console.log(skuData)
+            this.setState({ skuData })
             //todo 获取商品详情
+            next = true
         }
         console.log(next)
         if (next) this.setState({ current: current + 1 });
@@ -127,7 +131,7 @@ export default class ProductEdit extends Component {
             },
             {
                 title: '商品属性',
-                content: <Attributes data={data} />,
+                content: <Attributes data={data} onRef={ref => this.attributes = ref} />,
             },
             {
                 title: '商品详情',
