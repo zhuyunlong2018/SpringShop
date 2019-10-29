@@ -14,6 +14,7 @@ const { Panel } = Collapse;
 export default class Attributes extends Component {
 
     state = {
+        attributes: {},     //商品的属性信息
         categoryAttributes: [], //从分类继承过来的属性组
         modalVisible: false,   //模态框显示隐藏
         modalTitle: "",    //模态框标题
@@ -22,9 +23,13 @@ export default class Attributes extends Component {
     }
 
     componentDidMount() {
-        const { data, onRef } = this.props
+        const { data: { id, attributes, sku }, onRef } = this.props
         if (onRef) onRef(this)
-        console.log(data)
+        if (attributes) {
+            this.setState({ attributes, categoryAttributes: JSON.parse(attributes.paramData) })
+        } else {
+            this.setState({ attributes: { productId: id } })
+        }
         //todo 将商品的attributes和skuList设置到state中
     }
 
@@ -32,7 +37,7 @@ export default class Attributes extends Component {
      * 属性编辑完成处理
      */
     handleComplete() {
-        const { skuList } = this.state
+        const { skuList, attributes, categoryAttributes } = this.state
         const { data: { id } } = this.props
         const skuData = skuList.map(item => {
             let description = ""
@@ -44,38 +49,34 @@ export default class Attributes extends Component {
             const attributes = JSON.stringify(item)
             return { productId: id, description, attributes }
         })
-
-        return skuData
+        return { skuData, attributes: { ...attributes, paramData: JSON.stringify(categoryAttributes) } }
     }
 
     /**
      * 从分类属性中继承到商品
      */
     extendsAttributes() {
-        const { data: { categoryAttributes: { params } } } = this.props
-        if (params) {
-            let categoryAttributes = JSON.parse(params)
-            if (categoryAttributes instanceof Array) {
-                categoryAttributes = categoryAttributes.map(group => {
-                    const { params } = group
-                    return {
-                        ...group, params: params.map(param => {
-                            let { defaultValue, type } = param
-                            if (type === "mutiple") {
-                                if (defaultValue === "") {
-                                    defaultValue = []
-                                } else {
-                                    //属性值为多选，且存在默认值，将默认值用逗号分隔解析为数组
-                                    defaultValue = defaultValue.split(",")
-                                }
-                                //添加inputVisible属性
-                                param.inputVisible = false
+        const { categoryParams } = this.props
+        if (categoryParams instanceof Array) {
+            const categoryAttributes = categoryParams.map(group => {
+                const { params } = group
+                return {
+                    ...group, params: params.map(param => {
+                        let { defaultValue, type } = param
+                        if (type === "mutiple") {
+                            if (defaultValue === "") {
+                                defaultValue = []
+                            } else {
+                                //属性值为多选，且存在默认值，将默认值用逗号分隔解析为数组
+                                defaultValue = defaultValue.split(",")
                             }
-                            return { ...param, defaultValue }
-                        })
-                    }
-                })
-            }
+                            //添加inputVisible属性
+                            param.inputVisible = false
+                        }
+                        return { ...param, defaultValue }
+                    })
+                }
+            })
             this.setState({ categoryAttributes })
         }
     }

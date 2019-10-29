@@ -2,6 +2,7 @@ package com.bianquan.springShop.service.shop.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bianquan.springShop.dao.shop.ProductDao;
+import com.bianquan.springShop.dao.shop.ProductsSkuDao;
 import com.bianquan.springShop.entity.shop.ProductEntity;
 import com.bianquan.springShop.service.shop.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao,ProductEntity> im
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private ProductsSkuDao productsSkuDao;
 
     @Override
     public List<ProductEntity> fetchList() {
@@ -36,4 +40,5 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao,ProductEntity> im
         map.put("records", list);
         return map;
     }
+
 }

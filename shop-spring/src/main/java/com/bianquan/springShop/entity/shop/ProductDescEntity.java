@@ -15,8 +15,9 @@ public class ProductDescEntity implements Serializable {
 
     private static final long serialVersionUID = -3937519908308681466L;
 
-    //商品ID
     @TableId
+    private Long id;
+
     private Long productId;
 
     //商品详情描述

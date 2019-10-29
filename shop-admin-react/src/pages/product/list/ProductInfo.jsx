@@ -49,7 +49,7 @@ export default class ProductInfo extends Component {
     FormElement = (props) => <FormElement form={this.props.form} labelWidth={100} {...props} />;
 
     render() {
-        const { data, brandOptions, categoryTree, onLoadData, handleChangeCategory } = this.props;
+        const { data, brandOptions, categoryTree, onLoadData } = this.props;
         const { uploadVisible } = this.state
         const FormElement = this.FormElement;
         const imgSrc = data.mainImage ? fileSrc(data.mainImage) : '';
@@ -74,7 +74,6 @@ export default class ProductInfo extends Component {
                             { required: true, message: '所属类目不能为空！' },
                         ],
                     }}
-                    onChange={categoryId => handleChangeCategory(categoryId)}
                 />
 
                 <FormElement

@@ -11,3 +11,6 @@ export const edit = params => sxAjax.put("admin/products/edit", params)
 
 //删除
 export const del = params => sxAjax.del("admin/products/del", params)
+
+//根据ID获取商品详情、sku、属性
+export const fetchById = params => sxAjax.get("admin/products/fetchById", params)

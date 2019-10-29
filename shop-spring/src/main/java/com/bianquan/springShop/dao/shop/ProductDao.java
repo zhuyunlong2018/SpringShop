@@ -32,4 +32,5 @@ public interface ProductDao extends BaseMapper<ProductEntity> {
      * @return
      */
     List<ProductEntity> fetchPageWithRelations(int currIndex, int pageSize, long categoryId, String title);
+
 }

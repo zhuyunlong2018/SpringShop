@@ -17,10 +17,20 @@ export default class DetailEditor extends PureComponent {
     };
 
     componentDidMount() {
+        const { onRef } = this.props
+        if (onRef) onRef(this)
         //清空内容，赋值
-        this.setState({ value: ""})
+        this.setState({ value: "" })
+        this.simplemde.value("<h1>hello</h1>")
+    }
 
-        console.log(this.simplemde.value("<h1>hello</h1>"))
+    /**
+     * 编辑详情完成，准备好提交了
+     */
+    handleComplete() {
+        const { data: { id } } = this.props
+        const { value } = this.state
+        return { productId: id, productDesc: value };
     }
 
     renderMarkdown = text => {

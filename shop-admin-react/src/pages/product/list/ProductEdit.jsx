@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Spin, Steps, Button } from 'antd';
-import { add, edit } from '@/api/product'
+import { add, edit, fetchById } from '@/api/product'
 import ProductInfo from './ProductInfo'
 import DetailEditor from './DetailEditor'
 import Attributes from './Attributes'
@@ -18,6 +18,8 @@ export default class ProductEdit extends Component {
         data: {},       //商品主体
         infoData: {},   //商品基础信息
         skuData: [],    //商品sku列表数据
+        attributes: {}, //商品基础属性
+        categoryParams: [], //商品基础信息中选中了分类，此处存储该分类的属性值
         current: 0,     //当前编辑项
     };
 
@@ -25,25 +27,31 @@ export default class ProductEdit extends Component {
      * 下一步操作
      */
     next() {
-        const { loading, current } = this.state;
+        const { loading, current, data } = this.state;
         if (loading) return;
         let next = false
         if (current === 0) {
             //完成商品信息
             const { handleComplete } = this.infoForm
-            next = !handleComplete(infoData => { this.setState({ infoData }) })
-
-            //todo 获取商品属性
+            //存储基础信息
+            next = !handleComplete(infoData => {
+                const { categoryIdWithInfo } = this.props
+                //获取基本信息中选中的分类所携带的属性信息
+                const { params: { params } } = categoryIdWithInfo[infoData.categoryId]
+                this.setState({ infoData, categoryParams: params ? JSON.parse(params) : [] })
+            })
+            if (next) {
+                //todo 获取商品属性、详情和sku列表
+                fetchById({id: data.id}).then(data => {
+                    console.log(data)
+                })
+            }
         } else if (current === 1) {
             //完成商品属性
-            console.log(this.state.infoData)
-            const skuData = this.attributes.handleComplete()
-            console.log(skuData)
-            this.setState({ skuData })
-            //todo 获取商品详情
+            const { skuData, attributes } = this.attributes.handleComplete()
+            this.setState({ skuData, attributes })
             next = true
         }
-        console.log(next)
         if (next) this.setState({ current: current + 1 });
     }
 
@@ -62,22 +70,8 @@ export default class ProductEdit extends Component {
         if (!prevProps.visible && visible) {
             // 填充数据
             this.setState({ data: formData, current: 0 })
+            console.log(formData)
         }
-    }
-
-    saveInfo() {
-        const { infoData } = this.state
-        const { onOk } = this.props
-        // TODO ajax 提交数据
-        // id存在未修改，不存在未添加
-        const ajax = infoData.id ? edit(infoData) : add(infoData);
-
-        this.setState({ loading: true });
-        ajax.then((data) => {
-            //保存成功，执行回调函数修改本地数据
-            if (onOk) onOk(infoData.id, data)
-        })
-            .finally(() => this.setState({ loading: false }));
     }
 
     /**
@@ -93,9 +87,27 @@ export default class ProductEdit extends Component {
      */
     handleOk = () => {
         //先校验商品详情
-
-
+        const detailData = this.detail.handleComplete()
+        const { infoData, skuData, attributes } = this.state
         //提交表单数据
+        const { onOk } = this.props
+        // id存在未修改，不存在未添加
+        const data = {
+            ...infoData,    //商品基础信息
+            attributes, //商品基础属性
+            desc: detailData,   //商品详情
+            sku: skuData    //商品sku列表
+        }
+        console.log(data);
+        return;
+        const ajax = data.id ? edit(data) : add(data);
+
+        this.setState({ loading: true });
+        ajax.then((res) => {
+            //保存成功，执行回调函数修改本地数据
+            if (onOk) onOk(infoData.id, res)
+        })
+            .finally(() => this.setState({ loading: false }));
     }
 
     /**
@@ -105,19 +117,9 @@ export default class ProductEdit extends Component {
         this.props.form.resetFields();
     };
 
-    /**
-     * 处理修改商品类目，需要更新类目属性
-     * @param {*} categoryId 
-     */
-    handleChangeCategory(categoryId) {
-        const { categoryIdWithInfo } = this.props
-        const category = categoryIdWithInfo[categoryId]
-        console.log(category)
-    }
-
     render() {
         const { visible, brandOptions, categoryTree, onLoadData } = this.props;
-        const { loading, current, data } = this.state;
+        const { loading, current, data, categoryParams } = this.state;
         const title = data.id ? '修改商品' : '添加商品';
         const steps = [
             {
@@ -131,11 +133,12 @@ export default class ProductEdit extends Component {
             },
             {
                 title: '商品属性',
-                content: <Attributes data={data} onRef={ref => this.attributes = ref} />,
+                content: <Attributes data={data} onRef={ref => this.attributes = ref}
+                    categoryParams={categoryParams} />,
             },
             {
                 title: '商品详情',
-                content: <DetailEditor />,
+                content: <DetailEditor data={data} onRef={ref => this.detail = ref} />,
             },
         ];
 

@@ -28,4 +28,5 @@ public interface ProductService extends IService<ProductEntity> {
      * @return
      */
     Map<String, Object> queryPageWithRelations(int currentPage, int pageSize, long categoryId, String title);
+
 }
