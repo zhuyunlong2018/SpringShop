@@ -19,7 +19,7 @@
 		<commons.lang.version>2.6</commons.lang.version>
 		<mybatis.spring.boot.version>2.0.1</mybatis.spring.boot.version>
 		<mybatisplus.version>3.0.7.1</mybatisplus.version>
-		<mysql.version>5.1.38</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
 		<apache.httpclient.version>4.5.1</apache.httpclient.version>
 		<apache.httpcore.version>4.4.6</apache.httpcore.version>
 		<apache.httpmime.version>4.3.1</apache.httpmime.version>
